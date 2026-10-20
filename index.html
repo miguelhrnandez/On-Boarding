@@ -808,7 +808,7 @@ function construirForm() {
           <div class="field"><label for="f_fecha">Fecha</label><input type="date" id="f_fecha"></div>
           <div class="field"><label for="f_esp">Asesor OB</label><select id="f_esp"></select><span class="hint" id="h_esp"></span></div>
           <div class="field"><label for="f_suc">Sucursal</label><input type="text" id="f_suc" list="dl_suc" autocomplete="off"></div>
-          <div class="field"><label for="f_asesor">Asesor de ventas que cerró</label><input type="text" id="f_asesor" list="dl_asesores" autocomplete="off"></div>
+          <div class="field"><label for="f_asesor">Asesor de ventas que cerró</label><select id="f_asesor"></select><span class="hint" id="h_asesor"></span></div>
           <div class="field"><label for="f_cli">Nombre y apellido del cliente</label><input type="text" id="f_cli" autocomplete="off" placeholder="Ej.: María Gómez"></div>
           <div class="field"><label for="f_dni">DNI</label><input type="text" id="f_dni" inputmode="numeric" autocomplete="off" class="mono"></div>
           <div class="field"><label for="f_tel">Teléfono</label><input type="tel" id="f_tel" autocomplete="off"></div>
@@ -918,7 +918,7 @@ function leerForm() {
   const ck = {};
   for (const it of ITEMS) { const r = $(`input[name="ck_${it.id}"]:checked`); if (r) ck[it.id] = r.value; }
   return {
-    fecha: $('#f_fecha').value, especialista: ($('#f_esp').value || '').trim(), sucursal: $('#f_suc').value.trim(), asesor: $('#f_asesor').value.trim(),
+    fecha: $('#f_fecha').value, especialista: ($('#f_esp').value || '').trim(), sucursal: $('#f_suc').value.trim(), asesor: ($('#f_asesor').value || '').trim(),
     cliente: $('#f_cli').value.trim(), dni: $('#f_dni').value.trim(), telefono: $('#f_tel').value.trim(), contrato: $('#f_contrato').value.trim(),
     ...cuotasDeForm(), ...ahorroDeForm(),
     gestiones: S.gest.map(g => ({id:g.id, tipo:g.tipo, fecha:g.fecha, monto:g.monto || 0, nota:g.nota || '', moneda: g.moneda || 'ARS', ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), ...(g.pacto ? {pacto: true, fechaAcuerdo: g.fechaAcuerdo || ''} : {})})),
@@ -936,7 +936,7 @@ function leerForm() {
 
 function cargarForm(d) {
   $('#f_fecha').value = d.fecha || hoy();
-  fillEsp(d.especialista || ''); $('#f_suc').value = d.sucursal || ''; $('#f_asesor').value = d.asesor || '';
+  fillEsp(d.especialista || ''); $('#f_suc').value = d.sucursal || ''; fillAsesor(d.asesor || '');
   $('#f_cli').value = d.cliente || ''; $('#f_dni').value = d.dni || ''; $('#f_tel').value = d.telefono || ''; $('#f_contrato').value = d.contrato || '';
   { const usd = d.cuotaMoneda === 'USD'; $$('input[name="f_cuMonA"], input[name="f_cuMonF"]').forEach(r => { r.checked = r.value === (usd ? 'USD' : 'ARS'); }); $('#f_cuotaA').value = fmtIn(usd ? d.cuotaAsesorUsd : d.cuotaAsesor); $('#f_cuotaF').value = fmtIn(usd ? d.cuotaFinalUsd : d.cuotaFinal); } $$('input[name="f_ahMon"]').forEach(r => { r.checked = r.value === (d.ahorroMoneda || 'ARS'); }); $('#f_ahorro').value = fmtIn(d.ahorroMoneda === 'USD' ? d.ahorroUsd : d.ahorro);
   S.gest = (d.gestiones || []).map(g => ({...g}));
@@ -1060,7 +1060,7 @@ function validar(d, final) {
   else if (d.cliente.split(/\s+/).filter(w => w.replace(/[^\p{L}]/gu, '').length >= 2).length < 2) err.push(['f_cli', 'Escribir nombre y apellido del cliente (al menos dos palabras).']);
   if (final) {
     if (!d.dni) err.push(['f_dni', 'Falta el DNI del cliente.']);
-    if (!d.asesor) err.push(['f_asesor', 'Falta el asesor de ventas.']);
+    if (!d.asesor) err.push(['f_asesor', 'Falta elegir el asesor de ventas.']);
     if (!d.cuotaAsesor) err.push(['f_cuotaA', 'Falta la cuota pactada por el asesor.']);
     if (d.cuotaFinal && d.cuotaFinal < d.cuotaAsesor) err.push(['f_cuotaF', 'La cuota final es menor que la del asesor.']);
     const pend = ITEMS.filter(i => !d.checklist[i.id]);
@@ -1267,7 +1267,7 @@ function renderFiltros() {
   const espOpts = [['', 'Todos'], ...esp.map(n => [n, n])];
   if (S.f.ent.esp === null) S.f.ent.esp = miNombre();
   if (!esResp()) S.f.ent.esp = miNombre();
-  fillEsp($('#f_esp').value);
+  fillEsp($('#f_esp').value); fillAsesor($('#f_asesor').value);
   if (S.f.ent.esp && !esp.some(n => norm(n) === norm(S.f.ent.esp))) espOpts.push([S.f.ent.esp, S.f.ent.esp]);
   fillSelect($('#fe_esp'), espOpts); $('#fe_esp').value = espOpts.find(o => norm(o[0]) === norm(S.f.ent.esp))?.[0] ?? ''; $('#fe_esp').disabled = !esResp();
   fillSelect($('#fe_per'), [['', 'Todos'], ...meses.map(m => [m, mesLabel(m)])]); $('#fe_per').value = S.f.ent.per;
@@ -1966,6 +1966,16 @@ function fillEsp(v) {
   sel.innerHTML = opts.map(([a, b]) => `<option value="${esc(a)}">${esc(b)}</option>`).join('');
   sel.value = opts.find(o => norm(o[0]) === norm(v))?.[0] ?? '';
   sel.disabled = !esResp() && !!miNombre();
+}
+function fillAsesor(v) {
+  const sel = $('#f_asesor'); const lista = (S.aj.asesores || []).map(n => String(n).trim()).filter(Boolean).sort((a, b) => a.localeCompare(b, 'es'));
+  const opts = [['', lista.length ? 'Elegir asesor de ventas' : 'Sin asesores cargados'], ...lista.map(n => [n, n])];
+  if (v && !lista.some(n => norm(n) === norm(v))) opts.push([v, v + ' (ya no está en la lista)']);
+  sel.innerHTML = opts.map(([a, b]) => `<option value="${esc(a)}">${esc(b)}</option>`).join('');
+  sel.value = opts.find(o => norm(o[0]) === norm(v))?.[0] ?? '';
+  const h = $('#h_asesor');
+  if (!lista.length && S.ajCargado) { h.innerHTML = esResp() ? 'No hay asesores de ventas cargados. <button class="linkbtn" type="button" data-tabgo="ajustes">Cargarlos en Ajustes</button>' : 'La responsable tiene que cargar los asesores de ventas en Ajustes.'; h.classList.add('warn'); }
+  else { h.textContent = ''; h.classList.remove('warn'); }
 }
 function abrirPicker(cancelable) {
   $('#pickTitle').textContent = '👋 ¿Qué asesor OB eres?'; $('#pickTitle').nextElementSibling.textContent = 'Se cargan tus entrevistas, tus datos y tus comisiones.';
