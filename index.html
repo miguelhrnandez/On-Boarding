@@ -687,7 +687,7 @@ function comision(e) {
   const limite = e.fecha ? addMonths(e.fecha, pm) : '';
   const items = [];
   const inc = Math.max(0, (e.cuotaFinal || 0) - (e.cuotaAsesor || 0));
-  if (inc > 0) items.push({concepto:'Incremento de cuota en la entrevista', tipo:'incremento', fecha:e.fecha, mesCom:e.fecha, monto:inc});
+  if (inc > 0) items.push({concepto:'Incremento de cuota en la entrevista', tipo:'incremento', fecha:e.fecha, mesCom:e.fecha, monto:inc, ...(e.cuotaMoneda === 'USD' ? {moneda: 'USD', usd: Math.max(0, (e.cuotaFinalUsd || 0) - (e.cuotaAsesorUsd || 0)), cot: e.cuotaCot || 0} : {})});
   if ((e.ahorro || 0) > 0) items.push({concepto:'Ahorro en la entrevista', tipo:'ahorro', fecha:e.fecha, mesCom:e.fecha, monto:e.ahorro, moneda: e.ahorroMoneda || 'ARS', usd: e.ahorroUsd || 0, cot: e.ahorroCot || 0});
   for (const g of e.gestiones || []) if ((g.monto || 0) > 0) items.push({concepto: g.pacto ? (g.tipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado') : (g.tipo === 'ahorro' ? 'Ahorro posterior' : 'Incremento posterior'), tipo:g.tipo, fecha:g.fecha, mesCom: g.fecha, acuerdo: g.fechaAcuerdo || '', pacto: !!g.pacto, monto:g.monto, nota:g.nota || '', moneda: g.moneda || 'ARS', usd: g.montoUsd || 0, cot: g.cot || 0});
   const tope = e.tope ?? S.aj.tope ?? 0;
@@ -772,8 +772,8 @@ function construirForm() {
       <section class="card" id="sec-montos">
         <div class="card-h"><h2>Cuota, ahorro y comisión</h2><p id="montosSub"></p></div>
         <div class="grid-f">
-          <div class="field"><label for="f_cuotaA">Cuota pactada por el asesor</label><input type="text" id="f_cuotaA" class="money" inputmode="numeric" placeholder="150.000"><span class="hint" id="h_cuotaA"></span></div>
-          <div class="field"><label for="f_cuotaF">Cuota final con la que sale el cliente</label><input type="text" id="f_cuotaF" class="money" inputmode="numeric" placeholder="250.000"><span class="hint" id="h_cuotaF">Si no hubo incremento, dejar igual a la del asesor.</span></div>
+          <div class="field"><label for="f_cuotaA">Cuota pactada por el asesor</label><div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda de la cuota"><input type="radio" name="f_cuMonA" id="f_cuMonA_ARS" value="ARS" checked><label class="ac" for="f_cuMonA_ARS">$</label><input type="radio" name="f_cuMonA" id="f_cuMonA_USD" value="USD"><label class="ac" for="f_cuMonA_USD">US$</label></div><input type="text" id="f_cuotaA" class="money" inputmode="numeric" placeholder="150.000"></div><span class="hint" id="h_cuotaA"></span></div>
+          <div class="field"><label for="f_cuotaF">Cuota final con la que sale el cliente</label><div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda de la cuota final"><input type="radio" name="f_cuMonF" id="f_cuMonF_ARS" value="ARS" checked><label class="ac" for="f_cuMonF_ARS">$</label><input type="radio" name="f_cuMonF" id="f_cuMonF_USD" value="USD"><label class="ac" for="f_cuMonF_USD">US$</label></div><input type="text" id="f_cuotaF" class="money" inputmode="numeric" placeholder="250.000"></div><span class="hint" id="h_cuotaF">Si no hubo incremento, dejar igual a la del asesor.</span></div>
           <div class="field"><label for="f_ahorro">Ahorro que dejó en la entrevista</label>
             <div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda del ahorro"><input type="radio" name="f_ahMon" id="f_ahMon_ARS" value="ARS" checked><label class="ac" for="f_ahMon_ARS">$</label><input type="radio" name="f_ahMon" id="f_ahMon_USD" value="USD"><label class="ac" for="f_ahMon_USD">US$</label></div><input type="text" id="f_ahorro" class="money" inputmode="numeric" placeholder="0"></div>
             <span class="hint" id="h_ahorro">Aporte adicional, por única vez.</span></div>
@@ -849,6 +849,12 @@ function construirForm() {
   $('#sideSecs').innerHTML = SECCIONES.map((s, si) => `<li><button type="button" data-go="sec-${s.id}"><span>${si+1}. ${esc(s.titulo)}</span><span class="count" id="sc_${s.id}">0/${s.items.length}</span></button></li>`).join('');
 }
 
+function cuotasDeForm() {
+  const mon = $('input[name="f_cuMonA"]:checked')?.value || 'ARS'; const a = num($('#f_cuotaA').value), f = num($('#f_cuotaF').value);
+  if (mon !== 'USD') return {cuotaAsesor: a, cuotaFinal: f, cuotaMoneda: 'ARS', cuotaAsesorUsd: 0, cuotaFinalUsd: 0, cuotaCot: 0};
+  const c = cotDe($('#f_fecha').value || hoy());
+  return {cuotaAsesor: c ? Math.round(a * c.ingreso) : 0, cuotaFinal: c && f ? Math.round(f * c.ingreso) : 0, cuotaMoneda: 'USD', cuotaAsesorUsd: a, cuotaFinalUsd: f, cuotaCot: c ? c.ingreso : 0, cuotaCotFecha: c ? c.fecha : ''};
+}
 function ahorroDeForm() {
   const mon = $('input[name="f_ahMon"]:checked')?.value || 'ARS'; const v = num($('#f_ahorro').value);
   if (mon !== 'USD') return {ahorro: v, ahorroMoneda: 'ARS', ahorroUsd: 0, ahorroCot: 0};
@@ -858,7 +864,7 @@ function ahorroDeForm() {
 function segMontoDeForm() {
   const mon = $('input[name="f_segMon"]:checked')?.value || 'ARS'; const v = num($('#f_segMonto').value);
   const tipo = $('input[name="f_segTipo"]:checked')?.value || '';
-  if (mon !== 'USD' || tipo !== 'ahorro') return {seguimientoMonto: v, seguimientoMoneda: 'ARS', seguimientoMontoUsd: 0, seguimientoCot: 0};
+  if (mon !== 'USD' || !['ahorro', 'incremento'].includes(tipo)) return {seguimientoMonto: v, seguimientoMoneda: 'ARS', seguimientoMontoUsd: 0, seguimientoCot: 0};
   const c = cotDe($('#f_segAcuerdo').value || $('#f_fecha').value || hoy());
   return {seguimientoMonto: c ? Math.round(v * c.ingreso) : 0, seguimientoMoneda: 'USD', seguimientoMontoUsd: v, seguimientoCot: c ? c.ingreso : 0};
 }
@@ -868,7 +874,7 @@ function leerForm() {
   return {
     fecha: $('#f_fecha').value, especialista: ($('#f_esp').value || '').trim(), sucursal: $('#f_suc').value.trim(), asesor: $('#f_asesor').value.trim(),
     cliente: $('#f_cli').value.trim(), dni: $('#f_dni').value.trim(), telefono: $('#f_tel').value.trim(), contrato: $('#f_contrato').value.trim(),
-    cuotaAsesor: num($('#f_cuotaA').value), cuotaFinal: num($('#f_cuotaF').value), ...ahorroDeForm(),
+    ...cuotasDeForm(), ...ahorroDeForm(),
     gestiones: S.gest.map(g => ({id:g.id, tipo:g.tipo, fecha:g.fecha, monto:g.monto || 0, nota:g.nota || '', moneda: g.moneda || 'ARS', ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), ...(g.pacto ? {pacto: true, fechaAcuerdo: g.fechaAcuerdo || ''} : {})})),
     checklist: ck,
     fallaAsesor: $('input[name="f_falla"]:checked')?.value || '',
@@ -886,7 +892,7 @@ function cargarForm(d) {
   $('#f_fecha').value = d.fecha || hoy();
   fillEsp(d.especialista || ''); $('#f_suc').value = d.sucursal || ''; $('#f_asesor').value = d.asesor || '';
   $('#f_cli').value = d.cliente || ''; $('#f_dni').value = d.dni || ''; $('#f_tel').value = d.telefono || ''; $('#f_contrato').value = d.contrato || '';
-  $('#f_cuotaA').value = fmtIn(d.cuotaAsesor); $('#f_cuotaF').value = fmtIn(d.cuotaFinal); $$('input[name="f_ahMon"]').forEach(r => { r.checked = r.value === (d.ahorroMoneda || 'ARS'); }); $('#f_ahorro').value = fmtIn(d.ahorroMoneda === 'USD' ? d.ahorroUsd : d.ahorro);
+  { const usd = d.cuotaMoneda === 'USD'; $$('input[name="f_cuMonA"], input[name="f_cuMonF"]').forEach(r => { r.checked = r.value === (usd ? 'USD' : 'ARS'); }); $('#f_cuotaA').value = fmtIn(usd ? d.cuotaAsesorUsd : d.cuotaAsesor); $('#f_cuotaF').value = fmtIn(usd ? d.cuotaFinalUsd : d.cuotaFinal); } $$('input[name="f_ahMon"]').forEach(r => { r.checked = r.value === (d.ahorroMoneda || 'ARS'); }); $('#f_ahorro').value = fmtIn(d.ahorroMoneda === 'USD' ? d.ahorroUsd : d.ahorro);
   S.gest = (d.gestiones || []).map(g => ({...g}));
   for (const it of ITEMS) $$(`input[name="ck_${it.id}"]`).forEach(r => { r.checked = d.checklist?.[it.id] === r.value; });
   $$('input[name="f_falla"]').forEach(r => { r.checked = d.fallaAsesor === r.value; });
@@ -907,7 +913,6 @@ function vaciarForm() {
 }
 
 function recalcG(g) {
-  if (g.tipo !== 'ahorro') g.moneda = 'ARS';
   if (g.moneda === 'USD') { const c = cotDe(g.fecha || hoy()); g.cot = c ? c.ingreso : 0; g.monto = c && g.montoUsd ? Math.round(g.montoUsd * c.ingreso) : 0; }
   else { g.montoUsd = 0; g.cot = 0; }
 }
@@ -920,7 +925,7 @@ function renderGest() {
     return `<div class="g-row" data-gid="${esc(g.id)}">
       <select id="g_${esc(g.id)}_tipo" aria-label="Tipo de gestión" data-k="tipo"><option value="incremento"${g.tipo !== 'ahorro' ? ' selected' : ''}>Incremento de cuota</option><option value="ahorro"${g.tipo === 'ahorro' ? ' selected' : ''}>Ahorro</option></select>
       <input type="date" id="g_${esc(g.id)}_fecha" aria-label="Fecha de la gestión" data-k="fecha" max="${hoy()}" value="${esc(g.fecha || '')}">
-      <select id="g_${esc(g.id)}_moneda" aria-label="Moneda" data-k="moneda"${g.tipo !== 'ahorro' ? ' disabled' : ''}><option value="ARS"${g.moneda !== 'USD' ? ' selected' : ''}>$</option><option value="USD"${g.moneda === 'USD' ? ' selected' : ''}>US$</option></select>
+      <select id="g_${esc(g.id)}_moneda" aria-label="Moneda" data-k="moneda"><option value="ARS"${g.moneda !== 'USD' ? ' selected' : ''}>$</option><option value="USD"${g.moneda === 'USD' ? ' selected' : ''}>US$</option></select>
       <input type="text" class="money" inputmode="numeric" id="g_${esc(g.id)}_monto" aria-label="Monto" placeholder="Monto" data-k="monto" value="${esc(fmtIn(g.moneda === 'USD' ? g.montoUsd : g.monto))}">
       <input type="text" class="g-nota" id="g_${esc(g.id)}_nota" aria-label="Nota" placeholder="Nota (opcional)" data-k="nota" value="${esc(g.nota || '')}">
       <div class="row" style="gap:8px;flex-wrap:nowrap">${g.pacto ? `<span class="g-st" style="color:var(--accent)">Acordado ${fdc(g.fechaAcuerdo)}</span>` : ''}<span class="g-st" id="g_${esc(g.id)}_conv">${convTxt(g)}</span><span class="g-st ${g.fecha ? (dentro ? 'in' : 'out') : ''}" id="g_${esc(g.id)}_st">${g.fecha ? (dentro ? 'En plazo' : 'Fuera de plazo') : ''}</span><button class="btn btn-sm" type="button" data-del="${esc(g.id)}">Quitar</button></div>
@@ -949,23 +954,26 @@ function actualizarForm() {
   const post = c.items.filter(i => !i.concepto.includes('entrevista'));
   const postOk = post.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0);
   $('#calcBox').innerHTML = `
-    <div><small>Incremento de cuota</small><b>${fm(inc)}</b><small>${d.cuotaAsesor ? `${fm(d.cuotaAsesor)} → ${fm(d.cuotaFinal || d.cuotaAsesor)}` : 'Cargar las cuotas'}</small></div>
+    <div><small>Incremento de cuota</small><b>${fm(inc)}</b><small>${d.cuotaAsesor ? (d.cuotaMoneda === 'USD' ? `${fu(d.cuotaAsesorUsd)} → ${fu(d.cuotaFinalUsd || d.cuotaAsesorUsd)}` : `${fm(d.cuotaAsesor)} → ${fm(d.cuotaFinal || d.cuotaAsesor)}`) : 'Cargar las cuotas'}</small></div>
     <div><small>Ahorro en la entrevista</small><b>${fm(d.ahorro)}</b><small>Aporte por única vez</small></div>
     <div><small>Gestiones posteriores</small><b>${fm(postOk)}</b><small>${post.length ? `${post.filter(i => i.dentro).length} de ${post.length} en plazo` : 'Ninguna'}</small></div>
     <div class="hl"><small>Comisión estimada (${c.pct}%)</small><b>${fm(c.total)}</b><small>${c.topeAlcanzado ? `Llegó al tope de ${fm(c.tope)}` : c.tope ? `Tope por cliente: ${fm(c.tope)}` : 'Sujeta a revisión'}</small></div>`;
   $('#montosSub').textContent = `El asesor OB comisiona el ${c.pct}% de lo que aumenta la cuota pactada por el asesor y del ahorro que deja el cliente, dentro de ${(S.editOrig?.plazoMeses ?? S.aj.plazoMeses) === 1 ? 'un mes' : (S.editOrig?.plazoMeses ?? S.aj.plazoMeses) + ' meses'} desde la entrevista${c.tope ? `, con un máximo de ${fm(c.tope)} por cliente` : ''}.`;
   if (c.limite) { const q = diffDays(hoy(), c.limite); $('#plazoTxt').innerHTML = q >= 0 ? `Plazo para sumar incremento o ahorro: hasta el <b>${fd(c.limite)}</b> · quedan ${q} ${q === 1 ? 'día' : 'días'}.` : `El plazo para sumar incremento o ahorro venció el <b>${fd(c.limite)}</b>.`; } else $('#plazoTxt').textContent = '';
   const h = $('#h_cuotaA');
-  if (d.cuotaAsesor && d.cuotaAsesor < S.aj.minimo) { h.textContent = `Por debajo del mínimo de ingreso (${fm(S.aj.minimo)}).`; h.classList.add('warn'); }
+  if (d.cuotaMoneda === 'USD' && d.cuotaAsesorUsd && !d.cuotaCot) { h.textContent = 'No hay cotización del dólar Spazios para la fecha de la entrevista.'; h.classList.add('warn'); }
+  else if (d.cuotaMoneda === 'USD' && d.cuotaAsesorUsd) { h.textContent = `${fu(d.cuotaAsesorUsd)} = ${fm(d.cuotaAsesor)} (dólar Spazios ${COT.format(d.cuotaCot)} del ${fdc(d.cuotaCotFecha)}).${d.cuotaAsesor < S.aj.minimo ? ` Por debajo del mínimo de ingreso (${fm(S.aj.minimo)}).` : ''}`; h.classList.toggle('warn', d.cuotaAsesor < S.aj.minimo); }
+  else if (d.cuotaAsesor && d.cuotaAsesor < S.aj.minimo) { h.textContent = `Por debajo del mínimo de ingreso (${fm(S.aj.minimo)}).`; h.classList.add('warn'); }
   else { h.textContent = `Mínimo de ingreso: ${fm(S.aj.minimo)}.`; h.classList.remove('warn'); }
   const hf = $('#h_cuotaF');
   if (d.cuotaFinal && d.cuotaAsesor && d.cuotaFinal < d.cuotaAsesor) { hf.textContent = 'Es menor que la cuota del asesor.'; hf.classList.add('warn'); }
+  else if (d.cuotaMoneda === 'USD' && d.cuotaFinalUsd && d.cuotaCot) { hf.textContent = `${fu(d.cuotaFinalUsd)} = ${fm(d.cuotaFinal)}. La comisión se paga en pesos.`; hf.classList.remove('warn'); }
   else { hf.textContent = 'Si no hubo incremento, dejar igual a la del asesor.'; hf.classList.remove('warn'); }
   $('#sideMoney').textContent = fm(c.total); $('#bbMoney').textContent = fm(c.total);
   $('#sideMoneySub').textContent = c.total ? `${c.pct}% sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'Sin incremento ni ahorro';
   $('#fallaExtra').hidden = d.fallaAsesor !== 'si';
   $('#segExtra').hidden = d.seguimiento !== 'si';
-  $('#segMonWrap').hidden = d.seguimientoTipo !== 'ahorro';
+  $('#segMonWrap').hidden = !['ahorro', 'incremento'].includes(d.seguimientoTipo);
   { const ha = $('#h_ahorro');
     if (d.ahorroMoneda === 'USD') { if (!d.ahorroCot) { ha.textContent = 'No hay cotización del dólar Spazios para esa fecha. La responsable la puede cargar en Ajustes.'; ha.classList.add('warn'); } else { ha.textContent = `${fu(d.ahorroUsd)} × ${COT.format(d.ahorroCot)} (dólar Spazios ingreso del ${fd(d.ahorroCotFecha)}) = ${fm(d.ahorro)}. La comisión se paga en pesos.`; ha.classList.remove('warn'); } }
     else { ha.textContent = 'Aporte adicional, por única vez.'; ha.classList.remove('warn'); } }
@@ -1019,6 +1027,7 @@ function validar(d, final) {
     if (d.seguimiento === 'si' && d.seguimientoAcuerdo && d.seguimientoFecha && d.seguimientoFecha < d.seguimientoAcuerdo) err.push(['f_segFecha', 'La fecha de pago no puede ser anterior al acuerdo.']);
     if (d.seguimiento === 'si' && d.seguimientoFecha && d.fecha) { const lim = addMonths(d.fecha, S.editOrig?.plazoMeses ?? S.aj.plazoMeses); if (d.seguimientoFecha > lim) err.push(['f_segFecha', `La fecha pactada no puede pasar del ${fd(lim)} (un mes desde la entrevista).`]); else if (d.seguimientoFecha < d.fecha) err.push(['f_segFecha', 'La fecha pactada no puede ser anterior a la entrevista.']); }
   }
+  if (d.cuotaMoneda === 'USD' && d.cuotaAsesorUsd && !d.cuotaCot) err.push(['f_cuotaA', 'Falta la cotización del dólar Spazios para la fecha de la entrevista.']);
   if (d.ahorroMoneda === 'USD' && d.ahorroUsd && !d.ahorroCot) err.push(['f_ahorro', 'Falta la cotización del dólar Spazios para la fecha de la entrevista.']);
   for (const g of d.gestiones) {
     if (g.moneda === 'USD' && g.montoUsd && !g.cot) err.push([`g_${g.id}_monto`, `No hay cotización del dólar Spazios para el ${fd(g.fecha)}.`]);
@@ -1125,7 +1134,8 @@ function bindForm() {
     if (t.id === 'f_fecha') renderGest();
     actualizarForm(); programarBorrador();
   });
-  main.addEventListener('change', ev => { if (ev.target.matches('select,input[type=radio],input[type=checkbox]')) { actualizarForm(); programarBorrador(); } });
+  main.addEventListener('change', ev => {
+    if (ev.target.name === 'f_cuMonA' || ev.target.name === 'f_cuMonF') { const v = ev.target.value; $$('input[name="f_cuMonA"], input[name="f_cuMonF"]').forEach(r => { r.checked = r.value === v; }); } if (ev.target.matches('select,input[type=radio],input[type=checkbox]')) { actualizarForm(); programarBorrador(); } });
   main.addEventListener('focusout', ev => { const t = ev.target; if (t.classList?.contains('money')) t.value = fmtIn(num(t.value)); });
   main.addEventListener('click', ev => {
     const go = ev.target.closest('[data-go]'); if (go) { irA(go.dataset.go); return; }
@@ -1284,8 +1294,8 @@ function renderDetalle() {
     </dl></section>
     <section class="dcard"><h3>Cuota, ahorro y comisión</h3>
       <dl class="kv">
-        <div><dt>Cuota del asesor</dt><dd class="mono">${fm(e.cuotaAsesor)}</dd></div>
-        <div><dt>Cuota al salir</dt><dd class="mono">${fm(e.cuotaFinal || e.cuotaAsesor)}</dd></div>
+        <div><dt>Cuota del asesor</dt><dd class="mono">${e.cuotaMoneda === 'USD' ? `${fu(e.cuotaAsesorUsd)}<br><small class="muted">${fm(e.cuotaAsesor)}</small>` : fm(e.cuotaAsesor)}</dd></div>
+        <div><dt>Cuota al salir</dt><dd class="mono">${e.cuotaMoneda === 'USD' ? `${fu(e.cuotaFinalUsd || e.cuotaAsesorUsd)}<br><small class="muted">${fm(e.cuotaFinal || e.cuotaAsesor)} · dólar ${COT.format(e.cuotaCot || 0)}</small>` : fm(e.cuotaFinal || e.cuotaAsesor)}</dd></div>
         <div><dt>Cuota actual</dt><dd class="mono">${fm(c.cuotaActual)}</dd></div>
       </dl>
       ${c.items.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
@@ -1477,7 +1487,7 @@ function cumplirAviso(id) {
   const e = S.E.find(x => x.id === id); if (!e) return;
   editar(e);
   const gidN = gid();
-  const ng = {id: gidN, tipo: e.seguimientoTipo === 'ahorro' ? 'ahorro' : 'incremento', fecha: hoy(), monto: e.seguimientoMonto || 0, nota: 'Pago de lo pactado', pacto: true, fechaAcuerdo: e.seguimientoAcuerdo || e.fecha, moneda: e.seguimientoMoneda === 'USD' && e.seguimientoTipo === 'ahorro' ? 'USD' : 'ARS', montoUsd: e.seguimientoMontoUsd || 0};
+  const ng = {id: gidN, tipo: e.seguimientoTipo === 'ahorro' ? 'ahorro' : 'incremento', fecha: hoy(), monto: e.seguimientoMonto || 0, nota: 'Pago de lo pactado', pacto: true, fechaAcuerdo: e.seguimientoAcuerdo || e.fecha, moneda: e.seguimientoMoneda === 'USD' ? 'USD' : 'ARS', montoUsd: e.seguimientoMontoUsd || 0};
   recalcG(ng); S.gest.push(ng);
   S.resolverAlGuardar = e.id; S.resolverGid = gidN;
   renderGest(); actualizarForm(); guardarBorradorLocal();
