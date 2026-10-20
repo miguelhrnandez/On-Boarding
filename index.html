@@ -84,6 +84,8 @@ p{margin:0}
 .usd-v small{font-size:11.5px;color:var(--muted)}
 .usd.viejo .usd-v small{color:var(--warn);font-weight:700}
 @media (max-width:560px){.usd{padding:4px 8px}.usd-l{font-size:10px;letter-spacing:.04em}.usd-v small{display:none}.usd-v b{font-size:13.5px}}
+.bar-usd{display:none;font-size:11.5px;color:var(--bar-muted);font-weight:650;white-space:nowrap}
+@media (max-width:440px){.bar-brand{display:none}.usd{display:none!important}.bar-usd{display:block}.bar-in{gap:10px}}
 .bar-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.2}
 .bar-brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--bar-muted);font-weight:650}
 .bar-t b{font-family:var(--f-display);font-size:18px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -113,7 +115,7 @@ main{padding-block:20px 56px}
 .field>label,.lbl{font-size:12.5px;font-weight:650;color:var(--muted);letter-spacing:.02em}
 .field .hint{font-size:12.5px;color:var(--muted)}
 .field .hint.warn{color:var(--warn);font-weight:600}
-input[type=text],input[type=date],input[type=tel],input[type=search],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 11px;min-height:40px;width:100%;min-width:0}
+input[type=text],input[type=date],input[type=tel],input[type=search],input[type=password],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 11px;min-height:40px;width:100%;min-width:0}
 textarea{min-height:76px;resize:vertical;line-height:1.45}
 input.money{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
@@ -461,12 +463,12 @@ tr.ref td .chip{font-style:normal}
   body[data-tab="cargar"] .toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:760px){
-  .erow{grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"d m $" "d c c"}
+  .erow{grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"d m mo" "d c c"}
   .erow .e-date{grid-area:d;align-self:start;padding-top:2px}
   .erow .e-main{grid-area:m}
   .erow .e-esp{display:none}
   .erow .e-chips{grid-area:c}
-  .erow .e-money{grid-area:$}
+  .erow .e-money{grid-area:mo}
   .g-row{grid-template-columns:1fr 1fr;}
   .g-row .g-nota{grid-column:1 / -1}
 }
@@ -480,6 +482,11 @@ tr.ref td .chip{font-style:normal}
   .ck-item{padding-inline:16px;margin-inline:-16px}
   .tbl-wrap{margin-inline:-16px;padding-inline:16px}
   .filters .field,.filters .field.grow{flex:1 1 140px;max-width:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .calc{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .calc>div{padding:9px 10px}
+  .calc b{font-size:14.5px;overflow-wrap:anywhere}
+  .kpi{padding:12px}
   .v-head h2{font-size:20px}
   main{padding-block:14px 48px}
 }
@@ -511,7 +518,7 @@ tr.ref td .chip{font-style:normal}
     <button class="ham" id="menuBtn" type="button" aria-label="Abrir el menú" aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
-    <div class="bar-t"><span class="bar-brand">Más Dueños · Onboarding</span><b id="barTitle">Checklist</b></div>
+    <div class="bar-t"><span class="bar-brand">Más Dueños · Onboarding</span><b id="barTitle">Checklist</b><span class="bar-usd" id="usdMini"></span></div>
     <div class="usd" id="usdChip" hidden title="Dólar Spazios ingreso (spazios.com.ar/indices2)"><span class="usd-l">Dólar Spazios</span><span class="usd-v"><b id="usdVal">—</b><small id="usdFecha"></small></span></div>
     <button class="who" id="whoBtn" type="button" aria-label="Cambiar de asesor OB">
       <span class="who-l">Asesor OB</span><b id="whoName">Elegir</b><span class="who-c">Cambiar</span>
@@ -1880,6 +1887,7 @@ function pintarDolar() {
   const u = S.dolar?.at(-1); const ch = $('#usdChip');
   if (!u) { ch.hidden = true; return; }
   ch.hidden = false; $('#usdVal').textContent = '$ ' + COT.format(u.ingreso);
+  $('#usdMini').textContent = `💵 Dólar Spazios $ ${COT.format(u.ingreso)}`;
   const dias = diffDays(u.fecha, hoy());
   $('#usdFecha').textContent = u.fecha === hoy() ? 'hoy' : 'del ' + fdc(u.fecha);
   ch.classList.toggle('viejo', dias > 4);
