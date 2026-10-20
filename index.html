@@ -766,7 +766,7 @@ function construirForm() {
           <div class="field"><label for="f_esp">Asesor OB</label><select id="f_esp"></select><span class="hint" id="h_esp"></span></div>
           <div class="field"><label for="f_suc">Sucursal</label><input type="text" id="f_suc" list="dl_suc" autocomplete="off"></div>
           <div class="field"><label for="f_asesor">Asesor de ventas que cerró</label><input type="text" id="f_asesor" list="dl_asesores" autocomplete="off"></div>
-          <div class="field"><label for="f_cli">Nombre del cliente</label><input type="text" id="f_cli" autocomplete="off"></div>
+          <div class="field"><label for="f_cli">Nombre y apellido del cliente</label><input type="text" id="f_cli" autocomplete="off" placeholder="Ej.: María Gómez"></div>
           <div class="field"><label for="f_dni">DNI</label><input type="text" id="f_dni" inputmode="numeric" autocomplete="off" class="mono"></div>
           <div class="field"><label for="f_tel">Teléfono</label><input type="tel" id="f_tel" autocomplete="off"></div>
           <div class="field"><label for="f_contrato">N.º de contrato o plan</label><input type="text" id="f_contrato" autocomplete="off" placeholder="Opcional"></div>
@@ -907,6 +907,7 @@ function cargarForm(d) {
   $('#f_obs').value = d.observaciones || '';
   mostrarErrores([]);
   renderGest(); actualizarForm();
+  S.formBase = firmaForm();
 }
 
 function vaciarForm() {
@@ -1004,14 +1005,16 @@ function actualizarForm() {
   if (sinEquipo) { he.innerHTML = esResp() ? 'No hay asesores OB cargados. <button class="linkbtn" type="button" data-tabgo="ajustes">Cargarlos en Ajustes</button>' : 'La responsable todavía no cargó los asesores OB en Ajustes.'; he.classList.add('warn'); }
   else { he.textContent = ''; he.classList.remove('warn'); }
   if (S.errs?.length) { const e2 = validar(d, S.errFinal); if (JSON.stringify(e2) !== JSON.stringify(S.errs)) mostrarErrores(e2); }
-  $('#roNote').innerHTML = sinEquipo ? `<div class="banner warn"><b>Falta cargar los asesores OB.</b> Sin esa lista no se puede elegir el asesor OB y la entrevista no se puede guardar. ${esResp() ? '<button class="linkbtn" type="button" data-tabgo="ajustes">Ir a Ajustes</button>' : 'Pedirle a la responsable que los cargue en Ajustes.'}</div>` : !S.canWrite ? `<div class="banner warn">Esta cuenta puede ver las entrevistas pero no guardarlas. La responsable tiene que darle permiso de Colaborador o Editor desde Compartir.</div>` : '';
+  const misBorr = S.E.filter(e => e.estado !== 'final' && (esResp() || (miNombre() && norm(e.especialista) === norm(miNombre())))).length;
+  $('#roNote').innerHTML = (!S.editId && misBorr ? `<div class="banner">${misBorr === 1 ? 'Hay 1 borrador sin enviar' : `Hay ${misBorr} borradores sin enviar`}. <button class="linkbtn" type="button" data-tabgo="entrevistas">Ver borradores</button></div>` : '') + (sinEquipo ? `<div class="banner warn"><b>Falta cargar los asesores OB.</b> Sin esa lista no se puede elegir el asesor OB y la entrevista no se puede guardar. ${esResp() ? '<button class="linkbtn" type="button" data-tabgo="ajustes">Ir a Ajustes</button>' : 'Pedirle a la responsable que los cargue en Ajustes.'}</div>` : !S.canWrite ? `<div class="banner warn">Esta cuenta puede ver las entrevistas pero no guardarlas. La responsable tiene que darle permiso de Colaborador o Editor desde Compartir.</div>` : '');
 }
 
 function validar(d, final) {
   const err = [];
   if (!d.fecha) err.push(['f_fecha', 'Falta la fecha.']);
   if (!d.especialista) err.push(['f_esp', 'Falta elegir el asesor OB.']);
-  if (!d.cliente) err.push(['f_cli', 'Falta el nombre del cliente.']);
+  if (!d.cliente) err.push(['f_cli', 'Falta el nombre y apellido del cliente.']);
+  else if (d.cliente.split(/\s+/).filter(w => w.replace(/[^\p{L}]/gu, '').length >= 2).length < 2) err.push(['f_cli', 'Escribir nombre y apellido del cliente (al menos dos palabras).']);
   if (final) {
     if (!d.dni) err.push(['f_dni', 'Falta el DNI del cliente.']);
     if (!d.asesor) err.push(['f_asesor', 'Falta el asesor de ventas.']);
@@ -1105,17 +1108,18 @@ async function guardar(final) {
       vaciarForm();
       abrirDetalle(ref.id, {...rec, id: ref.id});
     } else {
-      S.editId = ref.id; S.editOrig = {...rec, id: ref.id};
-      guardarBorradorLocal();
-      toast('Borrador guardado. Se puede retomar desde Entrevistas.');
+      S.saving = false;
+      vaciarForm();
+      toast('Borrador guardado. Está en Entrevistas → Borradores sin enviar.');
     }
   } catch (e) { errorEscritura(e); }
   finally { S.saving = false; actualizarForm(); }
 }
 
 let tDraft = 0;
-function guardarBorradorLocal() { lsSet('onb_draft', {editId: S.editId, editOrig: S.editOrig, data: leerForm(), t: Date.now()}); }
-function programarBorrador() { clearTimeout(tDraft); tDraft = setTimeout(guardarBorradorLocal, 500); }
+function guardarBorradorLocal() {}
+function programarBorrador() {}
+const firmaForm = () => { try { return JSON.stringify(leerForm()); } catch { return ''; } };
 
 function editar(e) {
   S.editId = e.id; S.editOrig = clone(e);
@@ -1157,6 +1161,10 @@ function bindForm() {
 const ADMIN_TABS = ['panel', 'ajustes'];
 function setTab(t, sinScroll) {
   if (ADMIN_TABS.includes(t) && !esResp()) t = 'cargar';
+  if (S.tab === 'cargar' && t !== 'cargar' && S.formBase !== undefined) {
+    const sucio = firmaForm() !== S.formBase;
+    if (sucio || S.editId) { vaciarForm(); if (sucio) toast('Se descartó lo que no estaba guardado en el checklist.'); }
+  }
   S.tab = t; document.body.dataset.tab = t;
   $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
   $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + t; });
@@ -1237,7 +1245,12 @@ function renderEntrevistas() {
   if (!S.E.length) { out.innerHTML = `<div class="empty"><h3>Todavía no hay entrevistas cargadas</h3><p>Cuando un asesor OB completa el checklist y lo finaliza, la entrevista aparece acá con su resultado, la cuota, el ahorro, la comisión y el estado de revisión.</p><button class="btn btn-primary" type="button" data-tabgo="cargar">Cargar la primera entrevista</button></div>`; return; }
   if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const f = {...S.f.ent, esp: esResp() ? S.f.ent.esp : miNombre()}, q = norm(f.q);
+  const borr = S.E.filter(e => e.estado !== 'final' && (!f.esp || norm(e.especialista) === norm(f.esp))).sort((a, b) => (b.actualizado || '').localeCompare(a.actualizado || ''));
+  const borrHtml = borr.length ? `<section class="card drafts"><div class="card-h"><h3>Borradores sin enviar · ${borr.length}</h3><p>Entrevistas guardadas a medias. Se pueden continuar para finalizarlas o eliminar si no van.</p></div>
+    <ul class="slist">${borr.map(e => { const r = resultado(e.checklist); return `<li><div class="s-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${fd(e.fecha)}${esResp() ? ' · ' + esc(e.especialista || '—') : ''} · ${r.resp} de ${ITEMS.length} pasos respondidos · guardado el ${fd((e.actualizado || '').slice(0, 10))}</small></div>
+      <div class="s-side" style="flex-direction:row;gap:6px;align-items:center" id="db_${esc(e.id)}">${S.canWrite && S.db ? `<button class="btn btn-primary btn-sm" type="button" data-cont="${esc(e.id)}">Continuar</button><button class="btn btn-sm btn-danger" type="button" data-delb="${esc(e.id)}">Eliminar</button>` : chip('borrador')}</div></li>`; }).join('')}</ul></section>` : '';
   const rows = S.E.filter(e => {
+    if (e.estado !== 'final' && f.est !== 'borrador') return false;
     if (f.esp && norm(e.especialista) !== norm(f.esp)) return false;
     if (f.per && !(e.fecha || '').startsWith(f.per)) return false;
     if (f.est) {
@@ -1247,9 +1260,9 @@ function renderEntrevistas() {
     if (q && !(norm(e.cliente).includes(q) || norm(e.dni).includes(q) || norm(e.asesor).includes(q))) return false;
     return true;
   }).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || (b.actualizado || '').localeCompare(a.actualizado || ''));
-  if (!rows.length) { out.innerHTML = `<div class="empty"><h3>Ninguna entrevista coincide con los filtros</h3><p>Probar con otro mes, otro asesor OB o borrar la búsqueda.</p></div>`; return; }
+  if (!rows.length) { out.innerHTML = borrHtml + (borr.length && !S.E.some(e => e.estado === 'final') ? '' : `<div class="empty"><h3>Ninguna entrevista finalizada coincide con los filtros</h3><p>Probar con otro mes, otro asesor OB o borrar la búsqueda.</p></div>`); return; }
   const tot = rows.reduce((a, e) => a + (e.estado === 'final' ? comision(e).total : 0), 0);
-  out.innerHTML = `<p class="list-meta" style="margin-bottom:8px">${rows.length} ${rows.length === 1 ? 'entrevista' : 'entrevistas'} · comisión estimada ${fm(tot)}</p>
+  out.innerHTML = borrHtml + `<p class="list-meta" style="margin:${borr.length ? '6px' : '0'} 0 8px">${rows.length} ${rows.length === 1 ? 'entrevista' : 'entrevistas'} · comisión estimada ${fm(tot)}</p>
   <div class="elist">${rows.map(e => {
     const c = comision(e); const st = estList(e);
     return `<button class="erow" type="button" data-id="${esc(e.id)}">
@@ -1336,7 +1349,7 @@ function renderDetalle() {
         <div class="row"><button class="btn btn-primary btn-sm" id="drRev" type="button">Guardar revisión</button>${e.revision?.fecha ? `<span class="note">Última revisión: ${fd(e.revision.fecha.slice(0, 10))}</span>` : ''}</div>`
       : `<div>${chip(rv)}</div>${e.revision?.nota ? `<p class="pre">${esc(e.revision.nota)}</p>` : `<p class="note">${rv === 'pendiente' ? 'La responsable todavía no la revisó.' : 'Sin nota.'}</p>`}`}
     </section>` : ''}
-    ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o sumar gestión' : 'Continuar borrador'}</button>${esResp() ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar</button>` : ''}</div>
+    ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o sumar gestión' : 'Continuar borrador'}</button>${esResp() || e.estado !== 'final' ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar${e.estado !== 'final' ? ' borrador' : ''}</button>` : ''}</div>
     <div class="confirm" id="drConfirm" hidden><span>¿Eliminar esta entrevista? No se puede deshacer.</span><button class="btn btn-sm btn-danger" id="drDelYes" type="button">Sí, eliminar</button><button class="btn btn-sm" id="drDelNo" type="button">Cancelar</button></div>` : ''}
     <p class="note">Cargada el ${fd((e.creado || '').slice(0, 10))}${e.actualizado && e.actualizado !== e.creado ? ` · última modificación ${fd(e.actualizado.slice(0, 10))}` : ''}.</p>
   </div>`;
@@ -1789,6 +1802,10 @@ function bindGeneral() {
   document.addEventListener('click', ev => {
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
     if (ev.target.closest('[data-pick]')) { cerrarMenu(); abrirPicker(true); return; }
+    const ct = ev.target.closest('[data-cont]'); if (ct) { const e = S.E.find(x => x.id === ct.dataset.cont); if (e) editar(e); return; }
+    const db = ev.target.closest('[data-delb]'); if (db) { const id = db.dataset.delb; $('#db_' + id).innerHTML = `<span class="note" style="white-space:nowrap">¿Eliminar?</span><button class="btn btn-sm btn-danger" type="button" data-delbok="${esc(id)}">Sí, eliminar</button><button class="btn btn-sm" type="button" data-delbno="1">No</button>`; return; }
+    const dbo = ev.target.closest('[data-delbok]'); if (dbo) { dbo.disabled = true; (async () => { try { await conReintento(() => S.db.collection('entrevistas').doc(dbo.dataset.delbok).delete()); toast('Borrador eliminado.'); } catch (err) { errorEscritura(err); } })(); return; }
+    if (ev.target.closest('[data-delbno]')) { renderEntrevistas(); return; }
     const cu = ev.target.closest('[data-cumplir]'); if (cu) { cumplirAviso(cu.dataset.cumplir); return; }
     const rs = ev.target.closest('[data-resolver]'); if (rs) { rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
     const vr = ev.target.closest('[data-ver]'); if (vr) { abrirDetalle(vr.dataset.ver); return; }
@@ -2008,7 +2025,8 @@ function start(hot) {
   const hints = lsGet('onb_hints', true);
   $('#optHints').checked = hints; document.body.classList.toggle('no-hints', !hints);
   $('#optHints').addEventListener('change', ev => { document.body.classList.toggle('no-hints', !ev.target.checked); lsSet('onb_hints', ev.target.checked); });
-  const draft = hot?.draft || lsGet('onb_draft', null);
+  lsDel('onb_draft');
+  const draft = hot?.draft || null;
   if (draft?.data) { S.editId = draft.editId || null; S.editOrig = draft.editOrig || null; cargarForm(draft.data); }
   else vaciarForm();
   const want = hot?.tab || (location.hash || '').slice(1);
