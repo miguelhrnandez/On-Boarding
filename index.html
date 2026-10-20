@@ -497,7 +497,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="cargar" id="t-cargar" type="button"><span>Checklist</span><small>Cargar una entrevista</small></button></li>
     <li><button class="tab" data-tab="entrevistas" id="t-entrevistas" type="button"><span>Entrevistas</span><small>Ver, editar y sumar gestiones</small></button></li>
     <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span>Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
-    <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span>Mis estadísticas</span><small>Tu desempeño y el promedio del equipo</small></button></li>
+    <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span>Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span>Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
@@ -1568,7 +1568,7 @@ function renderPanel() {
   const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? miNombre() : $('#fp_esp').value; const suc = $('#fp_suc').value;
   $('#fp_espWrap').hidden = personal;
   $('#pan-title').textContent = personal ? `Mis estadísticas · ${miNombre()}` : 'Panel de la responsable';
-  $('#pan-sub').textContent = personal ? 'Tus resultados del período comparados con el promedio del equipo.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
+  $('#pan-sub').textContent = personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
   if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const {desde, hasta} = rango(per);
   const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
@@ -1595,16 +1595,7 @@ function renderPanel() {
     prevLbl = esCur ? `mismos días de ${MESES[+pm.slice(5) - 1]}` : MESES[+pm.slice(5) - 1];
   }
   const dk0 = (k, pts) => curM ? `<span class="k-d">${delta(curM[k], prevM[k], pts)} vs ${prevLbl}</span>` : '';
-  let eqTxt = () => '';
-  if (personal) {
-    const eqBase = S.E.filter(e => !suc || norm(e.sucursal) === norm(suc));
-    const eqRango = per === '3m' ? [desde, hasta] : [per + '-01', lastDay(per)];
-    const eq = metricas(eqBase, eqRango[0], eqRango[1]);
-    const nAs = Math.max(1, new Set(eqBase.filter(e => e.estado === 'final' && e.fecha >= eqRango[0] && e.fecha <= eqRango[1]).map(e => norm(e.especialista))).size);
-    const prom = {n: eq.n / nAs, pctOk: eq.pctOk, inc: eq.inc / nAs, aho: eq.aho / nAs, com: eq.com / nAs};
-    eqTxt = (k) => { const v = prom[k]; if (v === null || v === undefined) return ''; const t = k === 'pctOk' ? Math.round(v) + '%' : k === 'n' ? (Math.round(v * 10) / 10).toString().replace('.', ',') : fm(v); return `<span class="k-d">Promedio del equipo: <b>${t}</b></span>`; };
-  }
-  const dk = (k, pts) => dk0(k, pts) + eqTxt(k);
+  const dk = (k, pts) => dk0(k, pts);
 
   let html = `<div class="kpis">
     <div class="kpi"><span class="k-l">Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
