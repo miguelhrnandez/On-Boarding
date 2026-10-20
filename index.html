@@ -23,28 +23,19 @@
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --r:10px;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#121315; --surface:#1B1C1F; --sunk:#232529; --ink:#ECEDEE; --muted:#A0A3A7; --line:#2E3034;
-    --accent:#F0463F; --accent-strong:#FF6A63; --on-accent:#1F0707; --accent-soft:#3A1918;
-    --data:#B4B8BD; --data-soft:#2A2C30; --brandgray:#9A9DA0;
-    --bar-bg:#1B1C1F; --bar-ink:#ECEDEE; --bar-muted:#A0A3A7; --bar-line:#3A3C40;
-    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#FF7A8A; --bad-soft:#3A1520;
-    --grid:rgba(255,255,255,.03); --scrim:rgba(0,0,0,.55);
-    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
-    color-scheme:dark;
-  }
+/* Tema oscuro: solo si se elige en el menú. Mantiene la barra roja y el rojo de marca. */
+:root{color-scheme:light}
+:root[data-tema="oscuro"]{
+  --paper:#16171A; --surface:#202226; --sunk:#2A2C31; --ink:#EDEEF0; --muted:#A5A8AD; --line:#34373C;
+  --accent:#E62D2A; --accent-strong:#FF4A46; --on-accent:#FFFFFF; --accent-soft:#3D1B1B;
+  --data:#B8BCC1; --data-soft:#2E3035; --brandgray:#878A8C;
+  --bar-bg:#E62D2A; --bar-ink:#FFFFFF; --bar-muted:rgba(255,255,255,.82); --bar-line:rgba(255,255,255,.5);
+  --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2E2412; --bad:#FF7F8E; --bad-soft:#3D1822;
+  --grid:rgba(255,255,255,.09); --scrim:rgba(0,0,0,.55);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
+  color-scheme:dark;
 }
-:root[data-theme="dark"]{
-    --paper:#121315; --surface:#1B1C1F; --sunk:#232529; --ink:#ECEDEE; --muted:#A0A3A7; --line:#2E3034;
-    --accent:#F0463F; --accent-strong:#FF6A63; --on-accent:#1F0707; --accent-soft:#3A1918;
-    --data:#B4B8BD; --data-soft:#2A2C30; --brandgray:#9A9DA0;
-    --bar-bg:#1B1C1F; --bar-ink:#ECEDEE; --bar-muted:#A0A3A7; --bar-line:#3A3C40;
-    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#FF7A8A; --bad-soft:#3A1520;
-    --grid:rgba(255,255,255,.03); --scrim:rgba(0,0,0,.55);
-    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
-    color-scheme:dark;
-}
+:root[data-tema="oscuro"] .secnum, :root[data-tema="oscuro"] .menu-foot, :root[data-tema="oscuro"] .tab[aria-selected="true"] span:first-child, :root[data-tema="oscuro"] .side-money b, :root[data-tema="oscuro"] .calc .hl b, :root[data-tema="oscuro"] .linkbtn{color:#FF6662}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--f-body);font-stretch:100%}
@@ -102,7 +93,8 @@ p{margin:0}
 .menu-who{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:10px 12px}
 .menu-who b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .menu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
-.menu-foot{margin-top:auto;font-family:var(--f-display);font-weight:800;color:var(--accent);font-size:15px;padding:8px 4px 0;border-top:1px solid var(--line)}
+.menu-tema{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding:10px 4px 0}
+.menu-foot{font-family:var(--f-display);font-weight:800;color:var(--accent);font-size:15px;padding:8px 4px 0;border-top:1px solid var(--line)}
 .menu-sep{padding:10px 4px 2px}
 .tab{appearance:none;width:100%;background:none;border:0;border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
 .tab span{font-weight:650;font-size:15px}
@@ -268,7 +260,8 @@ body.no-hints .ck-hint{display:none}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:inherit;min-width:0}
 .kpi .k-l{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650}
-.kpi .k-v{font-family:var(--f-display);font-stretch:100%;font-size:clamp(20px,1.9vw,25px);font-weight:780;font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi{container-type:inline-size}
+.kpi .k-v{font-family:var(--f-display);font-size:clamp(16px,17cqi,26px);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap;letter-spacing:-.02em}
 .kpi .k-s{font-size:13px;color:var(--muted)}
 button.kpi{cursor:pointer}
 button.kpi:hover{border-color:var(--accent)}
@@ -451,7 +444,6 @@ tr.ref td .chip{font-style:normal}
   .card{padding:16px}
   .ck-item{padding-inline:16px;margin-inline:-16px}
   .tbl-wrap{margin-inline:-16px;padding-inline:16px}
-  .kpi .k-v{font-size:20px}
   .filters .field,.filters .field.grow{flex:1 1 140px;max-width:none}
   .v-head h2{font-size:20px}
   main{padding-block:14px 48px}
@@ -477,6 +469,7 @@ tr.ref td .chip{font-style:normal}
 </head>
 <body>
 
+<script>try{if(localStorage.getItem('onb_tema')==='oscuro')document.documentElement.setAttribute('data-tema','oscuro')}catch(e){}</script>
 
 <header class="bar">
   <div class="wrap bar-in">
@@ -509,6 +502,8 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
     <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span>Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
   </ul>
+  <div class="menu-tema"><span class="eyebrow" id="lbl_tema">Tema</span>
+    <div class="seg seg-sm" role="radiogroup" aria-labelledby="lbl_tema"><input type="radio" name="tema" id="tema_claro" value="claro"><label class="ac" for="tema_claro">Claro</label><input type="radio" name="tema" id="tema_oscuro" value="oscuro"><label class="ac" for="tema_oscuro">Oscuro</label></div></div>
   <p class="menu-foot">Acá hacemos dueños.</p>
 </nav>
 
@@ -1187,7 +1182,16 @@ function renderTabs() {
   $('#t-avisos').innerHTML = `<span>Avisos</span><small>Seguimientos y ahorros pactados</small>${urg ? `<span class="badge bad" title="Atrasados o para hoy">${urg}</span>` : ''}`;
   $('#menuBtn').classList.toggle('has-badge', (esResp() && pend > 0) || urg > 0);
 }
+function ajustarKpis() {
+  for (const el of $$('.kpi .k-v')) {
+    el.style.fontSize = '';
+    let fs = parseFloat(getComputedStyle(el).fontSize), n = 0;
+    while (el.scrollWidth > el.clientWidth + 1 && fs > 13 && n++ < 20) { fs -= 1; el.style.fontSize = fs + 'px'; }
+  }
+}
+let tKpi = 0; window.addEventListener('resize', () => { clearTimeout(tKpi); tKpi = setTimeout(ajustarKpis, 120); });
 function renderVista() {
+  requestAnimationFrame(ajustarKpis);
   if (S.tab === 'entrevistas') renderEntrevistas();
   else if (S.tab === 'panel') renderPanel();
   else if (S.tab === 'comisiones') renderComisiones();
@@ -1777,6 +1781,8 @@ function renderAll() {
 function bindGeneral() {
   $$('.tab').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
   $('#menuBtn').addEventListener('click', abrirMenu);
+  { let t = 'claro'; try { t = localStorage.getItem('onb_tema') === 'oscuro' ? 'oscuro' : 'claro'; } catch {} $('#tema_' + t).checked = true;
+    $$('input[name="tema"]').forEach(r => r.addEventListener('change', () => { const v = r.value; if (v === 'oscuro') document.documentElement.setAttribute('data-tema', 'oscuro'); else document.documentElement.removeAttribute('data-tema'); try { localStorage.setItem('onb_tema', v); } catch {} requestAnimationFrame(ajustarKpis); })); }
   $('#menuClose').addEventListener('click', cerrarMenu);
   $('#menuScrim').addEventListener('click', cerrarMenu);
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMenu(); });
