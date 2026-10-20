@@ -7,44 +7,50 @@
 <title>Onboarding PAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: planilla de obra — cabecera con grilla de plano; checklist a la izquierda y resumen fijo a la derecha; panel de control en bloques */
+/* Layout: identidad Más Dueños — barra roja de marca, superficies blancas y grises neutros; checklist a la izquierda y resumen fijo a la derecha */
 :root{
-  --paper:#F2F4F7; --surface:#FFFFFF; --sunk:#E8ECF1; --ink:#13202C; --muted:#566576; --line:#D6DDE5;
-  --accent:#1D4ED8; --accent-strong:#163CA8; --on-accent:#FFFFFF; --accent-soft:#E6EDFC;
-  --ok:#1B7A4A; --ok-soft:#E0F2E7; --warn:#965800; --warn-soft:#FAEED6; --bad:#B42330; --bad-soft:#FBE3E5;
-  --grid:rgba(29,78,216,.075); --scrim:rgba(10,18,28,.42);
-  --shadow:0 1px 2px rgba(19,32,44,.06),0 10px 28px rgba(19,32,44,.08);
-  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --paper:#F5F5F6; --surface:#FFFFFF; --sunk:#EEEFF0; --ink:#1E2023; --muted:#65686C; --line:#E0E1E3;
+  --accent:#E62D2A; --accent-strong:#C41F1C; --on-accent:#FFFFFF; --accent-soft:#FDECEB;
+  --data:#55595E; --data-soft:#ECEDEE; --brandgray:#878A8C;
+  --bar-bg:#E62D2A; --bar-ink:#FFFFFF; --bar-muted:rgba(255,255,255,.82); --bar-line:rgba(255,255,255,.5);
+  --ok:#1B7A4A; --ok-soft:#E0F2E7; --warn:#9A5700; --warn-soft:#FBEFD8; --bad:#A3122B; --bad-soft:#FBE5E9;
+  --grid:rgba(255,255,255,.09); --scrim:rgba(20,20,22,.45);
+  --shadow:0 1px 2px rgba(30,32,35,.06),0 10px 28px rgba(30,32,35,.08);
+  --f-display:"Montserrat","Helvetica Neue",Arial,sans-serif;
   --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0D1217; --surface:#141B22; --sunk:#1B242E; --ink:#E3E9EF; --muted:#93A1AF; --line:#28333F;
-    --accent:#7FA1FF; --accent-strong:#A6BEFF; --on-accent:#0A1430; --accent-soft:#1A2746;
-    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#F27E87; --bad-soft:#341619;
-    --grid:rgba(127,161,255,.07); --scrim:rgba(0,0,0,.55);
+    --paper:#121315; --surface:#1B1C1F; --sunk:#232529; --ink:#ECEDEE; --muted:#A0A3A7; --line:#2E3034;
+    --accent:#F0463F; --accent-strong:#FF6A63; --on-accent:#1F0707; --accent-soft:#3A1918;
+    --data:#B4B8BD; --data-soft:#2A2C30; --brandgray:#9A9DA0;
+    --bar-bg:#1B1C1F; --bar-ink:#ECEDEE; --bar-muted:#A0A3A7; --bar-line:#3A3C40;
+    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#FF7A8A; --bad-soft:#3A1520;
+    --grid:rgba(255,255,255,.03); --scrim:rgba(0,0,0,.55);
     --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0D1217; --surface:#141B22; --sunk:#1B242E; --ink:#E3E9EF; --muted:#93A1AF; --line:#28333F;
-  --accent:#7FA1FF; --accent-strong:#A6BEFF; --on-accent:#0A1430; --accent-soft:#1A2746;
-  --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#F27E87; --bad-soft:#341619;
-  --grid:rgba(127,161,255,.07); --scrim:rgba(0,0,0,.55);
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
-  color-scheme:dark;
+    --paper:#121315; --surface:#1B1C1F; --sunk:#232529; --ink:#ECEDEE; --muted:#A0A3A7; --line:#2E3034;
+    --accent:#F0463F; --accent-strong:#FF6A63; --on-accent:#1F0707; --accent-soft:#3A1918;
+    --data:#B4B8BD; --data-soft:#2A2C30; --brandgray:#9A9DA0;
+    --bar-bg:#1B1C1F; --bar-ink:#ECEDEE; --bar-muted:#A0A3A7; --bar-line:#3A3C40;
+    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#FF7A8A; --bad-soft:#3A1520;
+    --grid:rgba(255,255,255,.03); --scrim:rgba(0,0,0,.55);
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
+    color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--f-body);font-stretch:100%}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:45;background:var(--surface)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:45;background:var(--bar-bg)}
 .wrap{max-width:1220px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--f-display);font-stretch:112%;line-height:1.2;text-wrap:balance;margin:0}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0;letter-spacing:-.01em}
 p{margin:0}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
@@ -74,13 +80,13 @@ p{margin:0}
 .pick-list button small{font-weight:500;color:var(--muted);font-size:12.5px}
 .pick-list .resp{border-style:dashed}
 #pickScrim{z-index:55}
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background-color:var(--surface);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;border-bottom:1px solid var(--line)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background-color:var(--bar-bg);color:var(--bar-ink);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;border-bottom:3px solid var(--accent)}
 .bar-in{display:flex;align-items:center;gap:12px;padding-block:10px;min-height:62px}
-.ham{appearance:none;position:relative;flex:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer}
-.ham:hover{border-color:var(--accent)}
+.ham{appearance:none;position:relative;flex:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--bar-line);background:transparent;color:var(--bar-ink);display:grid;place-items:center;cursor:pointer}
+.ham:hover{border-color:var(--bar-ink);background:rgba(255,255,255,.1)}
 .ham svg path{stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
 .ham.has-badge::after{content:"";position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px var(--surface)}
-.usd{flex:none;display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px 12px;min-height:44px;line-height:1.2}
+.usd{color:var(--ink);flex:none;display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px 12px;min-height:44px;line-height:1.2}
 .usd-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650;white-space:nowrap}
 .usd-v{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
 .usd-v b{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
@@ -88,14 +94,15 @@ p{margin:0}
 .usd.viejo .usd-v small{color:var(--warn);font-weight:700}
 @media (max-width:560px){.usd{padding:4px 8px}.usd-l{font-size:10px;letter-spacing:.04em}.usd-v small{display:none}.usd-v b{font-size:13.5px}}
 .bar-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.2}
-.bar-brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650}
-.bar-t b{font-family:var(--f-display);font-stretch:112%;font-size:18px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--bar-muted);font-weight:650}
+.bar-t b{font-family:var(--f-display);font-size:18px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .menu{position:fixed;top:0;left:0;bottom:0;z-index:52;width:min(320px,86vw);background:var(--surface);border-right:1px solid var(--line);box-shadow:var(--shadow);overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 #menuScrim{z-index:51}
 .menu-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .menu-who{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:10px 12px}
 .menu-who b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .menu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.menu-foot{margin-top:auto;font-family:var(--f-display);font-weight:800;color:var(--accent);font-size:15px;padding:8px 4px 0;border-top:1px solid var(--line)}
 .menu-sep{padding:10px 4px 2px}
 .tab{appearance:none;width:100%;background:none;border:0;border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
 .tab span{font-weight:650;font-size:15px}
@@ -123,7 +130,7 @@ button:focus-visible,.erow:focus-visible,[tabindex]:focus-visible{outline:2px so
 .grid-f{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
 .btn{appearance:none;font:600 14px var(--f-body);padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
 .btn:hover{border-color:var(--muted)}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);border-radius:999px;padding-inline:18px;font-weight:700}
 .btn-primary:hover{background:var(--accent-strong);border-color:var(--accent-strong)}
 .btn-danger{color:var(--bad)}
 .btn-danger:hover{border-color:var(--bad)}
@@ -284,14 +291,14 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 /* Medidores */
 .meter{display:flex;align-items:center;gap:8px;min-width:120px}
 .meter .m-bar{flex:1;height:8px;border-radius:4px;background:var(--sunk);overflow:hidden;min-width:50px}
-.meter .m-bar span{display:block;height:100%;background:var(--accent);border-radius:4px}
+.meter .m-bar span{display:block;height:100%;background:var(--data);border-radius:4px}
 .meter .m-v{font-family:var(--f-mono);font-size:13px;min-width:42px;text-align:right}
 .bars{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .bars li{display:flex;flex-direction:column;gap:5px}
 .bars .b-t{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
 .bars .b-t span:last-child{font-family:var(--f-mono);white-space:nowrap;color:var(--muted)}
 .bars .m-bar{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden}
-.bars .m-bar span{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bars .m-bar span{display:block;height:100%;background:var(--data);border-radius:4px}
 
 /* Gráfico semanal */
 .legend{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
@@ -415,7 +422,7 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .refnote{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:10px}
 tr.ref td{color:var(--muted);font-style:italic;background:repeating-linear-gradient(135deg,transparent 0 8px,var(--accent-soft) 8px 9px)}
 tr.ref td .chip{font-style:normal}
-.chip-acc{background:var(--accent-soft);color:var(--accent)}
+.chip-acc{background:var(--data-soft);color:var(--ink)}
 .av-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
 @media (max-width:960px){
   .form-grid{grid-template-columns:minmax(0,1fr)}
@@ -476,7 +483,7 @@ tr.ref td .chip{font-style:normal}
     <button class="ham" id="menuBtn" type="button" aria-label="Abrir el menú" aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
-    <div class="bar-t"><span class="bar-brand">Onboarding PAI</span><b id="barTitle">Checklist</b></div>
+    <div class="bar-t"><span class="bar-brand">Más Dueños · Onboarding</span><b id="barTitle">Checklist</b></div>
     <div class="usd" id="usdChip" hidden title="Dólar Spazios ingreso (spazios.com.ar/indices2)"><span class="usd-l">Dólar Spazios</span><span class="usd-v"><b id="usdVal">—</b><small id="usdFecha"></small></span></div>
     <button class="who" id="whoBtn" type="button" aria-label="Cambiar de asesor OB">
       <span class="who-l">Asesor OB</span><b id="whoName">Elegir</b><span class="who-c">Cambiar</span>
@@ -488,7 +495,7 @@ tr.ref td .chip{font-style:normal}
   <div class="menu-h">
     <div class="brand">
       <svg viewBox="0 0 34 34" width="36" height="36" aria-hidden="true"><rect class="b-bg" x="1" y="1" width="32" height="32" rx="8"/><path class="b-ln" d="M8.5 16 17 9l8.5 7v9.5h-17z"/><path class="b-ln" d="m13 19.2 2.8 2.8 5-5.2"/></svg>
-      <div><h1>Onboarding PAI</h1><small>Bienvenida al plan</small></div>
+      <div><h1>Onboarding PAI</h1><small>Más Dueños · Bienvenida al plan</small></div>
     </div>
     <button class="btn btn-sm" id="menuClose" type="button" aria-label="Cerrar el menú">Cerrar</button>
   </div>
@@ -502,6 +509,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
     <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span>Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
   </ul>
+  <p class="menu-foot">Acá hacemos dueños.</p>
 </nav>
 
 <main class="wrap">
