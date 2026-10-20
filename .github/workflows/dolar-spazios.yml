@@ -1,0 +1,21 @@
+name: Dólar Spazios
+
+on:
+  schedule:
+    # 11:47 y 17:47 hora de Buenos Aires (GitHub usa hora UTC: 14:47 y 20:47)
+    - cron: '47 14,20 * * *'
+  workflow_dispatch:
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Leer el dólar de Spazios y guardarlo en Supabase
+        run: node dolar-spazios.mjs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
