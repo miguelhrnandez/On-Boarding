@@ -432,6 +432,21 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .didac .wc-stack{animation:subir .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes subir{from{height:0}}
 .didac .card{transition:transform .15s}
+.subtabs{display:inline-flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px;align-self:flex-start}
+.subtabs button{appearance:none;border:0;background:none;font:700 14px var(--f-body);color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer}
+.subtabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cmp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.cmp li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.cmp li:first-child{border-top:0}
+.cmp-l{font-weight:600}
+.cmp-v{display:flex;flex-direction:column}
+.cmp-v b{font-family:var(--f-mono);font-size:15px}
+.cmp-v small{color:var(--muted);font-size:12px}
+.cmp-i{font-size:20px;text-align:center}
+.cmp.cmp5 li{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr) 70px 30px}
+.cmp-c{font-family:var(--f-mono);font-size:13.5px;text-align:right}
+@media (max-width:560px){.cmp.cmp5 li{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 62px 26px;grid-template-areas:"l l l l" "a b c i"}.cmp5 .cmp-c{grid-area:c}
+.cmp li{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;grid-template-areas:"l l l" "a b i"}.cmp-l{grid-area:l}.cmp-i{grid-area:i}}
 .refnote{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:10px}
 tr.ref td{color:var(--muted);font-style:italic;background:repeating-linear-gradient(135deg,transparent 0 8px,var(--accent-soft) 8px 9px)}
 tr.ref td .chip{font-style:normal}
@@ -1585,10 +1600,11 @@ function renderPanel() {
   if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
   if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
   const personal = S.tab === 'mias';
-  const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? miNombre() : $('#fp_esp').value; const suc = $('#fp_suc').value;
+  const vistaEq = personal && S.f.pan.vista === 'eq';
+  const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? (vistaEq ? '' : miNombre()) : $('#fp_esp').value; const suc = $('#fp_suc').value;
   $('#fp_espWrap').hidden = personal;
   $('#pan-title').innerHTML = personal ? `<span class="emo" aria-hidden="true">📊</span> Mis estadísticas · ${esc(miNombre())}` : '<span class="emo" aria-hidden="true">📈</span> Panel de la responsable';
-  $('#pan-sub').textContent = personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
+  $('#pan-sub').textContent = vistaEq ? 'Estadísticas de todo el equipo junto, comparadas con el mes anterior.' : personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
   if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const E = em => `<span class="emo" aria-hidden="true">${em}</span> `;
   out.classList.toggle('didac', personal);
@@ -1624,11 +1640,11 @@ function renderPanel() {
     <div class="kpi"><span class="k-l">${E('✅')}Sin errores</span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
     <div class="kpi"><span class="k-l">${E('📈')}Incremento de cuotas</span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
     <div class="kpi"><span class="k-l">${E('🐷')}Ahorros</span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
-    <div class="kpi"><span class="k-l">${E('💰')}Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
-    <button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>
+    ${vistaEq ? `<div class="kpi"><span class="k-l">${E('👥')}Asesores OB activos</span><span class="k-v">${new Set(fin.map(e => norm(e.especialista))).size}</span><span class="k-s">Con entrevistas en el período</span></div>` : ''}${vistaEq ? '' : `<div class="kpi"><span class="k-l">${E('💰')}Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
+`}${vistaEq ? '' : `<button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>`}
   </div>`;
 
-  if (personal) {
+  if (personal && !vistaEq) {
     const ins = [];
     const nombre = miNombre().split(' ')[0];
     const g = grupos.get(norm(miNombre())) || {ent: 0, inc: 0, aho: 0};
@@ -1651,6 +1667,35 @@ function renderPanel() {
     html = `<section class="hero-me"><div class="hm-h"><span class="hm-wave" aria-hidden="true">👋</span><div><h3>¡Hola, ${esc(nombre)}!</h3><p>Así viene tu ${per === '3m' ? 'trimestre' : 'mes de ' + MESES[+per.slice(5) - 1]}.</p></div></div>
       <ul class="hm-list">${ins.map(([em, t], i) => `<li style="animation-delay:${i * 70}ms"><span class="hm-e" aria-hidden="true">${em}</span><span>${t}</span></li>`).join('')}</ul></section>` + html;
   }
+  if (vistaEq) {
+    if (per === '3m') html += `<section class="card"><div class="card-h"><h3>${E('🗓️')}Este mes vs el anterior</h3><p>Elegir un mes en «Período» para ver la comparación con el mes anterior.</p></div></section>`;
+    else {
+      const pm = addMonths(per + '-01', -1).slice(0, 7); const esCur = per === hoy().slice(0, 7);
+      const dd = esCur ? Math.min(+hoy().slice(8, 10), +lastDay(pm).slice(8, 10)) : +lastDay(pm).slice(8, 10);
+      const rA = [per + '-01', esCur ? hoy() : lastDay(per)], rB = [pm + '-01', `${pm}-${pad(dd)}`];
+      const st = ([d0, d1]) => {
+        const l = base.filter(e => e.estado === 'final' && e.fecha >= d0 && e.fecha <= d1);
+        const v = l.map(e => { const c = comision(e); const ca = e.cuotaAsesor || 0; return {ok: resultado(e.checklist).est === 'ok', inc: Math.max(0, c.cuotaActual - ca), aho: (e.ahorro || 0) + (e.gestiones || []).filter(g => g.tipo === 'ahorro').reduce((a, g) => a + (g.monto || 0), 0), res: e.checklist?.k4 === 'si', falla: e.fallaAsesor === 'si', pacto: !!pactoDe(e, c)}; });
+        const ci = v.filter(x => x.inc > 0), n = v.length, pc = k => n ? v.filter(x => x[k]).length / n * 100 : null;
+        const m = metricas(base, d0, d1);
+        return {n, ok: pc('ok'), inc: m.inc, aho: m.aho, conInc: n ? ci.length / n * 100 : null, incProm: ci.length ? ci.reduce((a, x) => a + x.inc, 0) / ci.length : null, conAho: n ? v.filter(x => x.aho > 0).length / n * 100 : null, res: pc('res'), pactos: v.filter(x => x.pacto).length, fallas: v.filter(x => x.falla).length, asesores: new Set(l.map(e => norm(e.especialista))).size};
+      };
+      const A = st(rA), B = st(rB);
+      const nomA = MESES[+per.slice(5) - 1], nomB = MESES[+pm.slice(5) - 1];
+      const fila = (em, lab, k, fmt, tipo = 'rel', mejorMas = true) => {
+        const a = A[k], b = B[k]; let cam = '<span class="dl">—</span>', icon = '';
+        if (a != null && b != null) {
+          const d = tipo === 'pts' ? Math.round(a - b) : b ? Math.round((a - b) / b * 100) : (a ? null : 0);
+          if (d === null) { cam = '<span class="dl up">nuevo</span>'; icon = '🆕'; }
+          else { const bueno = d === 0 ? null : (d > 0) === mejorMas; cam = `<span class="dl ${bueno === null ? '' : bueno ? 'up' : 'down'}">${d > 0 ? '+' : d < 0 ? '−' : ''}${Math.abs(d)}${tipo === 'pts' ? ' pts' : '%'}</span>`; icon = bueno === null ? '🟰' : bueno ? '🟢' : '🔴'; }
+        }
+        return `<li><span class="cmp-l">${E(em)}${lab}</span><span class="cmp-v"><b>${b == null ? '—' : fmt(b)}</b><small>${nomB}${esCur ? ' (mismos días)' : ''}</small></span><span class="cmp-v"><b>${a == null ? '—' : fmt(a)}</b><small>${nomA}${esCur ? ' (hasta hoy)' : ''}</small></span><span class="cmp-c">${cam}</span><span class="cmp-i" aria-hidden="true">${icon}</span></li>`;
+      };
+      const pcF = v => Math.round(v) + '%', nF = v => String(v);
+      html += `<section class="card"><div class="card-h"><h3>${E('🗓️')}Este mes vs el anterior</h3><p>Todo el equipo junto.${esCur ? ` Como ${nomA} todavía no terminó, se compara con los mismos días de ${nomB} (del 1 al ${dd}).` : ''} 🟢 mejoró, 🔴 empeoró.</p></div>
+        <ul class="cmp cmp5">${fila('📋', 'Entrevistas finalizadas', 'n', nF)}${fila('✅', 'Sin errores', 'ok', pcF, 'pts')}${fila('📈', 'Incremento de cuotas', 'inc', fm)}${fila('🐷', 'Ahorros', 'aho', fm)}${fila('🚀', 'Clientes con incremento', 'conInc', pcF, 'pts')}${fila('💵', 'Incremento promedio por cliente', 'incProm', fm)}${fila('💰', 'Clientes con ahorro', 'conAho', pcF, 'pts')}${fila('🤝', 'Pactos acordados', 'pactos', nF)}${fila('⭐', 'Reseña de Google pedida', 'res', pcF, 'pts')}${fila('⚠️', 'Fallas de asesores detectadas', 'fallas', nF, 'rel', false)}${fila('👥', 'Asesores OB con entrevistas', 'asesores', nF)}</ul></section>`;
+    }
+  }
   if (!fin.length && !nBorr) {
     html += `<div class="empty"><h3>Sin entrevistas en este período</h3><p>Cuando el equipo finalice entrevistas, este panel muestra el cumplimiento de cada paso del checklist, los pasos que más quedan en «No», las fallas de los asesores, los plazos abiertos para sumar incremento o ahorro y la comisión de cada asesor OB.</p></div>`;
   }
@@ -1661,7 +1706,7 @@ function renderPanel() {
     </tbody></table></div></section>`;
 
   // Metas del mes
-  if (per !== '3m' && (S.aj.metaEnt || S.aj.metaMonto)) {
+  if (!vistaEq && per !== '3m' && (S.aj.metaEnt || S.aj.metaMonto)) {
     for (const n of equipo()) if (!esp || norm(n) === norm(esp)) G(n);
     const esCur = per === hoy().slice(0, 7);
     const dHoy = +hoy().slice(8, 10), dMes = +lastDay(per).slice(8, 10);
@@ -1743,7 +1788,7 @@ function renderPanel() {
     html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('💡')}Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>
       <section class="card"><div class="card-h"><h3>${E('🧩')}Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section></div>
       <div class="two"><section class="card"><div class="card-h"><h3>${E('📅')}Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>
-      <section class="card"><div class="card-h"><h3>${E('⏰')}Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section></div>`;
+      ${vistaEq ? '' : `<section class="card"><div class="card-h"><h3>${E('⏰')}Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section>`}</div>`;
     // Fallas de asesores
     const ga = new Map();
     for (const e of fin) { const k = norm(e.asesor) || '—'; if (!ga.has(k)) ga.set(k, {n: e.asesor || '—', ent: 0, f: 0, tipos: {}}); const x = ga.get(k); x.ent++; if (e.fallaAsesor === 'si') { x.f++; for (const t of e.fallaTipos || []) x.tipos[t] = (x.tipos[t] || 0) + 1; } }
@@ -1755,11 +1800,12 @@ function renderPanel() {
     const abiertos = base.filter(e => e.estado === 'final').map(e => ({e, c: comision(e)})).filter(x => x.c.limite && x.c.limite >= t0 && x.e.fecha <= t0).sort((a, b) => a.c.limite.localeCompare(b.c.limite));
     const abHtml = abiertos.length ? `<ul class="slist scroll">${abiertos.map(({e, c}) => { const q = diffDays(t0, c.limite); return `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · cuota actual ${fm(c.cuotaActual)}</small></div><div class="s-side">${q <= 5 ? chip('pendiente', `Vence en ${q} ${q === 1 ? 'día' : 'días'}`) : `<span class="mono" style="font-size:13px">${q} días</span>`}<small class="muted">hasta ${fdc(c.limite)}</small></div></li>`; }).join('')}</ul>` : `<p class="note">No hay clientes con plazo abierto.</p>`;
     html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('🧑‍💼')}Fallas detectadas en asesores</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>
-      <section class="card"><div class="card-h"><h3>${E('⏳')}Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section></div>`;
+      ${vistaEq ? '' : `<section class="card"><div class="card-h"><h3>${E('⏳')}Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section>`}</div>`;
   }
   // Seguimientos
   const segs = base.filter(e => e.seguimiento === 'si' && !e.seguimientoResuelto).sort((a, b) => (a.seguimientoFecha || '9').localeCompare(b.seguimientoFecha || '9'));
-  if (segs.length) html += `<section class="card"><div class="card-h"><h3>${E('📌')}Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'cliente' : 'clientes'} con algo por resolver.</p></div><ul class="slist">${segs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${esc((e.seguimientoDetalle || '').slice(0, 140))}</small></div><div class="s-side">${e.seguimientoFecha ? `<span class="mono" style="font-size:13px">${fdc(e.seguimientoFecha)}</span>` : ''}${e.seguimientoFecha && e.seguimientoFecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
+  if (segs.length && !vistaEq) html += `<section class="card"><div class="card-h"><h3>${E('📌')}Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'cliente' : 'clientes'} con algo por resolver.</p></div><ul class="slist">${segs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${esc((e.seguimientoDetalle || '').slice(0, 140))}</small></div><div class="s-side">${e.seguimientoFecha ? `<span class="mono" style="font-size:13px">${fdc(e.seguimientoFecha)}</span>` : ''}${e.seguimientoFecha && e.seguimientoFecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
+  if (personal) html = `<div class="subtabs" role="tablist" aria-label="Vista de estadísticas"><button type="button" role="tab" data-sub="ind" aria-selected="${!vistaEq}">👤 Individual</button><button type="button" role="tab" data-sub="eq" aria-selected="${vistaEq}">👥 Equipo</button></div>` + html;
   out.innerHTML = html; etiquetar(out);
 }
 
@@ -1855,6 +1901,7 @@ function bindGeneral() {
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMenu(); });
   document.addEventListener('click', ev => {
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
+    const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     if (ev.target.closest('[data-pick]')) { cerrarMenu(); abrirPicker(true); return; }
     const ct = ev.target.closest('[data-cont]'); if (ct) { const e = S.E.find(x => x.id === ct.dataset.cont); if (e) editar(e); return; }
     const db = ev.target.closest('[data-delb]'); if (db) { const id = db.dataset.delb; $('#db_' + id).innerHTML = `<span class="note" style="white-space:nowrap">¿Eliminar?</span><button class="btn btn-sm btn-danger" type="button" data-delbok="${esc(id)}">Sí, eliminar</button><button class="btn btn-sm" type="button" data-delbno="1">No</button>`; return; }
