@@ -422,7 +422,9 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .hm-list li{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.45;animation:aparece .45s ease-out both}
 .hm-e{font-size:20px;line-height:1.1;flex:none}
 @keyframes aparece{from{opacity:0;transform:translateY(6px)}}
-.emo{font-size:1.05em;margin-right:2px}
+.emo{font-size:1.05em;margin-right:2px;font-style:normal}
+.tab .emo{font-size:16px;margin-right:4px}
+.card-h .emo,.v-head .emo,.dcard h3 .emo{font-size:.95em}
 .kpi .k-l .emo{font-size:15px;letter-spacing:0}
 .meta-msg{display:block;font-weight:600;font-size:13px;color:var(--muted);margin-top:2px}
 .didac .m-bar span,.didac .g-bar span{animation:crecer 1s cubic-bezier(.2,.8,.2,1) both}
@@ -512,14 +514,14 @@ tr.ref td .chip{font-style:normal}
   </div>
   <div class="menu-who"><div style="min-width:0"><span class="eyebrow">Usando como</span><b id="menuWho">Sin elegir</b></div><button class="btn btn-sm" type="button" data-pick="1">Cambiar</button></div>
   <ul class="menu-list">
-    <li><button class="tab" data-tab="cargar" id="t-cargar" type="button"><span>Checklist</span><small>Cargar una entrevista</small></button></li>
-    <li><button class="tab" data-tab="entrevistas" id="t-entrevistas" type="button"><span>Entrevistas</span><small>Ver, editar y sumar gestiones</small></button></li>
-    <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span>Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
-    <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span>Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
-    <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span>Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
+    <li><button class="tab" data-tab="cargar" id="t-cargar" type="button"><span><span class="emo" aria-hidden="true">📝</span> Checklist</span><small>Cargar una entrevista</small></button></li>
+    <li><button class="tab" data-tab="entrevistas" id="t-entrevistas" type="button"><span><span class="emo" aria-hidden="true">🗂️</span> Entrevistas</span><small>Ver, editar y sumar gestiones</small></button></li>
+    <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span><span class="emo" aria-hidden="true">💰</span> Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
+    <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
+    <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
-    <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span>Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
+    <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span><span class="emo" aria-hidden="true">⚙️</span> Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
   </ul>
   <div class="menu-tema"><span class="eyebrow" id="lbl_tema">Tema</span>
     <div class="seg seg-sm" role="radiogroup" aria-labelledby="lbl_tema"><input type="radio" name="tema" id="tema_claro" value="claro"><label class="ac" for="tema_claro">Claro</label><input type="radio" name="tema" id="tema_oscuro" value="oscuro"><label class="ac" for="tema_oscuro">Oscuro</label></div></div>
@@ -532,7 +534,7 @@ tr.ref td .chip{font-style:normal}
   <section class="view" id="v-cargar" aria-labelledby="t-cargar"></section>
 
   <section class="view" id="v-entrevistas" hidden>
-    <div class="v-head"><div><h2>Entrevistas</h2><p>Cada entrevista con su checklist, montos, comisión y revisión.</p></div></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🗂️</span> Entrevistas</h2><p>Cada entrevista con su checklist, montos, comisión y revisión.</p></div></div>
     <div class="filters">
       <div class="field grow"><label for="fe_q">Buscar</label><input type="search" id="fe_q" placeholder="Cliente, DNI o asesor"></div>
       <div class="field"><label for="fe_esp">Asesor OB</label><select id="fe_esp"></select></div>
@@ -545,7 +547,7 @@ tr.ref td .chip{font-style:normal}
   </section>
 
   <section class="view" id="v-comisiones" hidden>
-    <div class="v-head"><div><h2>Comisiones</h2><p id="com-sub">Incrementos de cuota y ahorros logrados dentro del plazo, por mes de la gestión.</p></div><button class="btn" id="btnCsv" hidden>Descargar CSV</button></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">💰</span> Comisiones</h2><p id="com-sub">Incrementos de cuota y ahorros logrados dentro del plazo, por mes de la gestión.</p></div><button class="btn" id="btnCsv" hidden>Descargar CSV</button></div>
     <div class="filters">
       <div class="field"><label for="fc_mes">Mes</label><select id="fc_mes"></select></div>
       <div class="field"><label for="fc_esp">Asesor OB</label><select id="fc_esp"></select></div>
@@ -555,7 +557,7 @@ tr.ref td .chip{font-style:normal}
   </section>
 
   <section class="view" id="v-avisos" hidden>
-    <div class="v-head"><div><h2>Avisos</h2><p id="av-sub">Seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.</p></div></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🔔</span> Avisos</h2><p id="av-sub">Seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.</p></div></div>
     <div class="filters">
       <div class="field" id="fa_espWrap"><label for="fa_esp">Asesor OB</label><select id="fa_esp"></select></div>
       <div class="field"><label for="fa_tipo">Tipo</label><select id="fa_tipo"><option value="">Todos</option><option value="ahorro">Ahorro pactado</option><option value="incremento">Incremento pactado</option><option value="otro">Otros pendientes</option></select></div>
@@ -585,7 +587,7 @@ tr.ref td .chip{font-style:normal}
 <div class="scrim" id="scrim" hidden></div>
 <div class="scrim" id="pickScrim" hidden></div>
 <div class="picker" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pickTitle">
-  <div><h2 id="pickTitle">¿Qué asesor OB eres?</h2><p>Se cargan tus entrevistas, tus datos y tus comisiones.</p></div>
+  <div><h2 id="pickTitle">👋 ¿Qué asesor OB eres?</h2><p>Se cargan tus entrevistas, tus datos y tus comisiones.</p></div>
   <div class="pick-list" id="pickList"></div>
   <button class="btn" type="button" id="pickClose" hidden>Cancelar</button>
 </div>
@@ -779,7 +781,7 @@ function construirForm() {
       </div>
       <div id="roNote"></div>
       <section class="card" id="sec-datos">
-        <div class="card-h"><h2>Datos de la entrevista</h2><p>Completar durante la entrevista y antes de que el cliente se retire.</p></div>
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">🧾</span> Datos de la entrevista</h2><p>Completar durante la entrevista y antes de que el cliente se retire.</p></div>
         <div class="grid-f">
           <div class="field"><label for="f_fecha">Fecha</label><input type="date" id="f_fecha"></div>
           <div class="field"><label for="f_esp">Asesor OB</label><select id="f_esp"></select><span class="hint" id="h_esp"></span></div>
@@ -792,7 +794,7 @@ function construirForm() {
         </div>
       </section>
       <section class="card" id="sec-montos">
-        <div class="card-h"><h2>Cuota, ahorro y comisión</h2><p id="montosSub"></p></div>
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">💵</span> Cuota, ahorro y comisión</h2><p id="montosSub"></p></div>
         <div class="grid-f">
           <div class="field"><label for="f_cuotaA">Cuota pactada por el asesor</label><div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda de la cuota"><input type="radio" name="f_cuMonA" id="f_cuMonA_ARS" value="ARS" checked><label class="ac" for="f_cuMonA_ARS">$</label><input type="radio" name="f_cuMonA" id="f_cuMonA_USD" value="USD"><label class="ac" for="f_cuMonA_USD">US$</label></div><input type="text" id="f_cuotaA" class="money" inputmode="numeric" placeholder="150.000"></div><span class="hint" id="h_cuotaA"></span></div>
           <div class="field"><label for="f_cuotaF">Cuota final con la que sale el cliente</label><div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda de la cuota final"><input type="radio" name="f_cuMonF" id="f_cuMonF_ARS" value="ARS" checked><label class="ac" for="f_cuMonF_ARS">$</label><input type="radio" name="f_cuMonF" id="f_cuMonF_USD" value="USD"><label class="ac" for="f_cuMonF_USD">US$</label></div><input type="text" id="f_cuotaF" class="money" inputmode="numeric" placeholder="250.000"></div><span class="hint" id="h_cuotaF">Si no hubo incremento, dejar igual a la del asesor.</span></div>
@@ -803,12 +805,12 @@ function construirForm() {
         <div class="calc" id="calcBox"></div>
         <p class="plazo" id="plazoTxt"></p>
         <div class="gest">
-          <div class="q-row"><div><b>Incrementos o ahorros posteriores</b><p class="note">Lo que el cliente sume después de la entrevista. Comisiona solo si ocurre dentro del plazo. En un incremento, cargar cuánto aumentó la cuota.</p></div><button class="btn btn-sm" type="button" id="btnAddGest">Agregar gestión</button></div>
+          <div class="q-row"><div><b><span class="emo" aria-hidden="true">➕</span> Incrementos o ahorros posteriores</b><p class="note">Lo que el cliente sume después de la entrevista. Comisiona solo si ocurre dentro del plazo. En un incremento, cargar cuánto aumentó la cuota.</p></div><button class="btn btn-sm" type="button" id="btnAddGest">Agregar gestión</button></div>
           <div id="gestList" class="view" style="gap:8px"></div>
         </div>
       </section>
       <section class="card" id="sec-guia">
-        <div class="card-h"><h2>Cómo responder el checklist</h2><p>Marcar cada paso durante la entrevista, antes de que el cliente se vaya.</p></div>
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">🧭</span> Cómo responder el checklist</h2><p>Marcar cada paso durante la entrevista, antes de que el cliente se vaya.</p></div>
         <div class="keys">
           <div class="key"><span class="ans si">Sí</span><span>Lo hice.</span></div>
           <div class="key"><span class="ans no">No</span><span>No lo hice. La entrevista queda «con falla».</span></div>
@@ -819,7 +821,7 @@ function construirForm() {
       </section>
       ${secs}
       <section class="card" id="sec-asesor">
-        <div class="card-h"><h2>Falla del asesor</h2><p>Datos incompletos, condiciones mal informadas o promesas que no corresponden.</p></div>
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">⚠️</span> Falla del asesor</h2><p>Datos incompletos, condiciones mal informadas o promesas que no corresponden.</p></div>
         <div class="q-row"><span id="lbl_falla">¿Se detectó una falla del asesor en el cierre?</span>
           <div class="seg" role="radiogroup" aria-labelledby="lbl_falla">
             <input type="radio" name="f_falla" id="f_falla_si" value="si"><label class="no" for="f_falla_si">Sí</label>
@@ -832,7 +834,7 @@ function construirForm() {
         </div>
       </section>
       <section class="card" id="sec-seg">
-        <div class="card-h"><h2>Seguimiento y observaciones</h2></div>
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">📌</span> Seguimiento y observaciones</h2></div>
         <div class="q-row"><span id="lbl_seg">¿Queda algo pendiente para seguimiento?</span>
           <div class="seg" role="radiogroup" aria-labelledby="lbl_seg">
             <input type="radio" name="f_seg" id="f_seg_si" value="si"><label class="pe" for="f_seg_si">Sí</label>
@@ -1122,7 +1124,7 @@ async function guardar(final) {
     await conReintento(() => ref.set(clone(rec)));
     S.resolverAlGuardar = null;
     if (rec.estado === 'final') {
-      toast(yaFinal ? 'Cambios guardados.' : `Entrevista finalizada. Comisión estimada ${fm(comision(rec).total)}.`);
+      toast(yaFinal ? '✅ Cambios guardados.' : `🎉 Entrevista finalizada. Comisión estimada ${fm(comision(rec).total)}.`);
       S.saving = false;
       vaciarForm();
       abrirDetalle(ref.id, {...rec, id: ref.id});
@@ -1205,9 +1207,9 @@ function renderTabs() {
   $('#t-mias').hidden = esResp() || !miNombre(); if (S.tab === 'mias' && (esResp() || !miNombre())) setTab(esResp() ? 'panel' : 'cargar', true);
   $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp();
   const pend = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length;
-  $('#t-panel').innerHTML = `<span>Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
+  $('#t-panel').innerHTML = `<span><span class="emo" aria-hidden="true">📈</span> Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
   const urg = (esResp() || miNombre()) ? avisosDe(esResp() ? '' : miNombre()).filter(a => a.est === 'atrasado' || a.est === 'hoy').length : 0;
-  $('#t-avisos').innerHTML = `<span>Avisos</span><small>Seguimientos y ahorros pactados</small>${urg ? `<span class="badge bad" title="Atrasados o para hoy">${urg}</span>` : ''}`;
+  $('#t-avisos').innerHTML = `<span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small>${urg ? `<span class="badge bad" title="Atrasados o para hoy">${urg}</span>` : ''}`;
   $('#menuBtn').classList.toggle('has-badge', (esResp() && pend > 0) || urg > 0);
 }
 function ajustarKpis() {
@@ -1266,7 +1268,7 @@ function renderEntrevistas() {
   if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const f = {...S.f.ent, esp: esResp() ? S.f.ent.esp : miNombre()}, q = norm(f.q);
   const borr = S.E.filter(e => e.estado !== 'final' && (!f.esp || norm(e.especialista) === norm(f.esp))).sort((a, b) => (b.actualizado || '').localeCompare(a.actualizado || ''));
-  const borrHtml = borr.length ? `<section class="card drafts"><div class="card-h"><h3>Borradores sin enviar · ${borr.length}</h3><p>Entrevistas guardadas a medias. Se pueden continuar para finalizarlas o eliminar si no van.</p></div>
+  const borrHtml = borr.length ? `<section class="card drafts"><div class="card-h"><h3><span class="emo" aria-hidden="true">📝</span> Borradores sin enviar · ${borr.length}</h3><p>Entrevistas guardadas a medias. Se pueden continuar para finalizarlas o eliminar si no van.</p></div>
     <ul class="slist">${borr.map(e => { const r = resultado(e.checklist); return `<li><div class="s-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${fd(e.fecha)}${esResp() ? ' · ' + esc(e.especialista || '—') : ''} · ${r.resp} de ${ITEMS.length} pasos respondidos · guardado el ${fd((e.actualizado || '').slice(0, 10))}</small></div>
       <div class="s-side" style="flex-direction:row;gap:6px;align-items:center" id="db_${esc(e.id)}">${S.canWrite && S.db ? `<button class="btn btn-primary btn-sm" type="button" data-cont="${esc(e.id)}">Continuar</button><button class="btn btn-sm btn-danger" type="button" data-delb="${esc(e.id)}">Eliminar</button>` : chip('borrador')}</div></li>`; }).join('')}</ul></section>` : '';
   const rows = S.E.filter(e => {
@@ -1337,7 +1339,7 @@ function renderDetalle() {
       <div><dt>Teléfono</dt><dd>${esc(e.telefono || '—')}</dd></div>
       <div><dt>Contrato o plan</dt><dd>${esc(e.contrato || '—')}</dd></div>
     </dl></section>
-    <section class="dcard"><h3>Cuota, ahorro y comisión</h3>
+    <section class="dcard"><h3><span class="emo" aria-hidden="true">💵</span> Cuota, ahorro y comisión</h3>
       <dl class="kv">
         <div><dt>Cuota del asesor</dt><dd class="mono">${e.cuotaMoneda === 'USD' ? `${fu(e.cuotaAsesorUsd)}<br><small class="muted">${fm(e.cuotaAsesor)}</small>` : fm(e.cuotaAsesor)}</dd></div>
         <div><dt>Cuota al salir</dt><dd class="mono">${e.cuotaMoneda === 'USD' ? `${fu(e.cuotaFinalUsd || e.cuotaAsesorUsd)}<br><small class="muted">${fm(e.cuotaFinal || e.cuotaAsesor)} · dólar ${COT.format(e.cuotaCot || 0)}</small>` : fm(e.cuotaFinal || e.cuotaAsesor)}</dd></div>
@@ -1350,16 +1352,16 @@ function renderDetalle() {
       ${c.topeAlcanzado ? `<p class="note"><b>Se aplicó el tope de ${fm(c.tope)} por cliente.</b> Lo que supera ese monto no comisiona.</p>` : ''}
       <p class="note">${q === null ? '' : q >= 0 ? `Plazo abierto hasta el ${fd(c.limite)} · quedan ${q} ${q === 1 ? 'día' : 'días'} para sumar incremento o ahorro.` : `Plazo vencido el ${fd(c.limite)}.`}</p>
     </section>
-    <section class="dcard"><h3>Checklist · ${r.si} Sí · ${r.nos} No · ${r.na} N/A${r.pend ? ` · ${r.pend} sin responder` : ''}</h3>${secs}</section>
-    <section class="dcard"><h3>Falla del asesor</h3>
+    <section class="dcard"><h3><span class="emo" aria-hidden="true">✅</span> Checklist · ${r.si} Sí · ${r.nos} No · ${r.na} N/A${r.pend ? ` · ${r.pend} sin responder` : ''}</h3>${secs}</section>
+    <section class="dcard"><h3><span class="emo" aria-hidden="true">⚠️</span> Falla del asesor</h3>
       ${e.fallaAsesor === 'si' ? `<div class="chips">${(e.fallaTipos || []).map(t => chip('falla', t)).join('') || chip('falla', 'Sí')}</div><p class="pre">${esc(e.fallaDetalle || '')}</p>` : `<p class="note">${e.fallaAsesor === 'no' ? 'No se detectaron fallas del asesor.' : 'Sin responder.'}</p>`}
     </section>
-    <section class="dcard"><h3>Seguimiento</h3>
+    <section class="dcard"><h3><span class="emo" aria-hidden="true">📌</span> Seguimiento</h3>
       ${e.seguimiento === 'si' ? `${e.seguimientoTipo && e.seguimientoTipo !== 'otro' ? `<div class="av-m"><span class="chip chip-acc"><i></i>${e.seguimientoTipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado'}</span><b>${e.seguimientoMoneda === 'USD' && e.seguimientoMontoUsd ? fu(e.seguimientoMontoUsd) : fm(e.seguimientoMonto)}</b></div>` : ''}<p class="pre">${esc(e.seguimientoDetalle || '')}</p><p class="note">${e.seguimientoFecha ? 'Retomar el ' + fd(e.seguimientoFecha) + '. ' : ''}${e.seguimientoResuelto ? 'Resuelto' + (e.seguimientoResueltoFecha ? ' el ' + fd(e.seguimientoResueltoFecha) : '') + '.' : ''}</p>
         ${puedeEsc && S.E.some(x => x.id === e.id) ? (e.seguimientoResuelto ? `<div class="row">${chip('aprobada', 'Resuelto')}<button class="btn btn-sm" id="drReabrir" type="button">Volver a pendiente</button></div>` : `<div><button class="btn btn-sm" id="drResolver" type="button">Marcar seguimiento como resuelto</button></div>`) : ''}` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
-    ${e.observaciones ? `<section class="dcard"><h3>Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
-    ${e.estado === 'final' ? `<section class="dcard"><h3>Revisión de la responsable</h3>
+    ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
+    ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la responsable</h3>
       ${esResp() && puedeEsc ? `<div class="seg" role="radiogroup" aria-label="Estado de la revisión" style="align-self:flex-start">
           <input type="radio" name="rv" id="rv_p" value="pendiente"${rv === 'pendiente' ? ' checked' : ''}><label class="pe" for="rv_p">Por revisar</label>
           <input type="radio" name="rv" id="rv_a" value="aprobada"${rv === 'aprobada' ? ' checked' : ''}><label class="si" for="rv_a">Aprobar</label>
@@ -1394,7 +1396,7 @@ function bindDetalle() {
       if (id === 'drRev') {
         const estado = $('input[name="rv"]:checked')?.value || 'pendiente';
         await conReintento(() => ref.update({revision: {estado, nota: $('#rv_nota').value.trim(), fecha: new Date().toISOString(), por: S.uid ?? null}}));
-        toast(estado === 'aprobada' ? 'Comisión aprobada.' : estado === 'observada' ? 'Entrevista observada.' : 'Revisión guardada.');
+        toast(estado === 'aprobada' ? '✅ Comisión aprobada.' : estado === 'observada' ? 'Entrevista observada.' : 'Revisión guardada.');
       }
     } catch (err) { errorEscritura(err); }
   });
@@ -1427,12 +1429,12 @@ function renderComisiones() {
   const borr = rows.filter(r => r.st === 'borrador');
   const pact = rows.filter(r => r.st === 'pago_pendiente').reduce((a, r) => a + r.it.comision, 0);
   let html = `<div class="kpis">
-    <div class="kpi"><span class="k-l">Comisión del mes</span><span class="k-v">${fm(total)}</span><span class="k-s">${esc(mesLabel(mes))}${esp ? ' · ' + esc(esp) : ' · todo el equipo'}</span></div>
-    <div class="kpi"><span class="k-l">Aprobada</span><span class="k-v">${fm(ap)}</span><span class="k-s">Revisada por la responsable</span></div>
-    <div class="kpi${pe ? ' attn' : ''}"><span class="k-l">Por revisar</span><span class="k-v">${fm(pe)}</span><span class="k-s">Pendiente de aprobación</span></div>
-    <div class="kpi"><span class="k-l">Observada</span><span class="k-v">${fm(ob)}</span><span class="k-s">Con algo para corregir</span></div>
-    <div class="kpi"><span class="k-l">Pactado sin pagar · referencia</span><span class="k-v" style="color:var(--accent)">${fm(pact)}</span><span class="k-s">Si todos pagan a tiempo, el mes llegaría a ${fm(total + pact)}</span></div>
-    <div class="kpi"><span class="k-l">Fuera de plazo</span><span class="k-v">${fm(fuera)}</span><span class="k-s">Monto que no comisiona</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión del mes</span><span class="k-v">${fm(total)}</span><span class="k-s">${esc(mesLabel(mes))}${esp ? ' · ' + esc(esp) : ' · todo el equipo'}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">✅</span> Aprobada</span><span class="k-v">${fm(ap)}</span><span class="k-s">Revisada por la responsable</span></div>
+    <div class="kpi${pe ? ' attn' : ''}"><span class="k-l"><span class="emo" aria-hidden="true">🔍</span> Por revisar</span><span class="k-v">${fm(pe)}</span><span class="k-s">Pendiente de aprobación</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">📝</span> Observada</span><span class="k-v">${fm(ob)}</span><span class="k-s">Con algo para corregir</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🤝</span> Pactado sin pagar · referencia</span><span class="k-v" style="color:var(--accent)">${fm(pact)}</span><span class="k-s">Si todos pagan a tiempo, el mes llegaría a ${fm(total + pact)}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">⌛</span> Fuera de plazo</span><span class="k-v">${fm(fuera)}</span><span class="k-s">Monto que no comisiona</span></div>
   </div>`;
   if (esp && (S.aj.metaEnt || S.aj.metaMonto)) {
     const entM = S.E.filter(e => e.estado === 'final' && norm(e.especialista) === norm(esp) && (e.fecha || '').startsWith(mes)).length;
@@ -1445,7 +1447,7 @@ function renderComisiones() {
     const g = new Map();
     for (const r of rows) { const k = norm(r.e.especialista); if (!g.has(k)) g.set(k, {n: r.e.especialista || '—', inc: 0, aho: 0, tot: 0, ap: 0, pe: 0}); const x = g.get(k); if (!valid(r)) continue; if (r.it.tipo === 'ahorro') x.aho += r.it.monto; else x.inc += r.it.monto; x.tot += r.it.comision; if (r.st === 'aprobada') x.ap += r.it.comision; if (r.st === 'pendiente') x.pe += r.it.comision; }
     const arr = [...g.values()].sort((a, b) => b.tot - a.tot);
-    if (arr.length) html += `<section class="card"><div class="card-h"><h3>Liquidación por asesor OB</h3></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th><th class="n">Aprobada</th><th class="n">Por revisar</th></tr></thead><tbody>
+    if (arr.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🧮</span> Liquidación por asesor OB</h3></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th><th class="n">Aprobada</th><th class="n">Por revisar</th></tr></thead><tbody>
       ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.tot)}</b></td><td class="n">${fm(x.ap)}</td><td class="n">${fm(x.pe)}</td></tr>`).join('')}
       </tbody><tfoot><tr><td>Total</td><td class="n">${fm(arr.reduce((a, x) => a + x.inc, 0))}</td><td class="n">${fm(arr.reduce((a, x) => a + x.aho, 0))}</td><td class="n">${fm(total)}</td><td class="n">${fm(ap)}</td><td class="n">${fm(pe)}</td></tr></tfoot></table></div></section>`;
   }
@@ -1454,7 +1456,7 @@ function renderComisiones() {
   const hayRef = vis.some(r => r.it.pendiente);
   if (rows.length && !vis.length) html += `<div class="empty"><h3>${filtro === 'pactados' ? 'No hay pactados sin pagar' : 'No hay gestiones pagadas'} en ${esc(mesLabel(mes))}</h3><p>Cambiar el filtro «Pago» para ver el resto.</p></div>`;
   if (!rows.length) html += `<div class="empty"><h3>Sin incrementos ni ahorros en ${esc(mesLabel(mes))}</h3><p>Acá se listan los incrementos de cuota y los ahorros del mes, con la comisión que generan. Cuentan las gestiones hechas dentro del plazo de ${S.aj.plazoMeses === 1 ? 'un mes' : S.aj.plazoMeses + ' meses'} desde la entrevista.</p></div>`;
-  else if (vis.length) html += `<section class="card"><div class="card-h"><h3>Detalle de gestiones</h3><p>Cada gestión cuenta en el mes en que el cliente pagó, si es dentro del plazo de un mes. Lo pactado aparece en el mes de la fecha pactada hasta que se pague. Los borradores no suman hasta que se finaliza la entrevista.${borr.length ? ` Hay ${borr.length} en borrador.` : ''}</p></div>
+  else if (vis.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">📋</span> Detalle de gestiones</h3><p>Cada gestión cuenta en el mes en que el cliente pagó, si es dentro del plazo de un mes. Lo pactado aparece en el mes de la fecha pactada hasta que se pague. Los borradores no suman hasta que se finaliza la entrevista.${borr.length ? ` Hay ${borr.length} en borrador.` : ''}</p></div>
     ${hayRef ? `<div class="refnote"><b>Los pactados sin pagar son solo de referencia.</b> Muestran lo que se podría cobrar si el cliente paga dentro del plazo. No forman parte de la comisión del mes hasta que se carga el pago.</div>` : ''}<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th>${esp ? '' : '<th>Asesor OB</th>'}<th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
     ${vis.map(r => `<tr class="clk${r.it.pendiente ? ' ref' : ''}" data-id="${esc(r.e.id)}" tabindex="0"><td class="mono">${fdc(r.it.mesCom || r.it.fecha)}</td><td>${esc(r.e.cliente || '—')}</td>${esp ? '' : `<td>${esc(r.e.especialista || '—')}</td>`}<td><span>${esc(r.it.concepto)}${r.it.pendiente ? `<br><small class="muted">Pago pactado para el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : r.it.acuerdo && r.it.acuerdo !== r.it.fecha ? `<br><small class="muted">Pagado el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : ''}</span></td><td class="n">${montoHtml(r.it)}</td><td class="n"><span>${r.it.pendiente ? `(${fm(r.it.comision)})<br><small class="muted">referencia</small>` : fm(r.it.comision)}${r.it.recorte ? `<br><small class="muted">tope</small>` : ''}</span></td><td>${chip(r.st)}</td></tr>`).join('')}
     </tbody></table></div></section>`;
@@ -1502,11 +1504,11 @@ function renderAvisos() {
   const pactado = av.filter(a => a.conMonto).reduce((t, a) => t + a.e.seguimientoMonto, 0);
   const posible = av.reduce((t, a) => t + a.posible, 0);
   let html = `<div class="kpis">
-    <div class="kpi${n('atrasado') ? ' attn' : ''}"><span class="k-l">Atrasados</span><span class="k-v"${n('atrasado') ? ' style="color:var(--bad)"' : ''}>${n('atrasado')}</span><span class="k-s">Pasó la fecha pactada</span></div>
-    <div class="kpi${n('hoy') ? ' attn' : ''}"><span class="k-l">Para hoy</span><span class="k-v">${n('hoy')}</span><span class="k-s">${fd(hoy())}</span></div>
-    <div class="kpi"><span class="k-l">Próximos</span><span class="k-v">${n('proximo') + n('sinfecha')}</span><span class="k-s">${n('sinfecha') ? `${n('sinfecha')} sin fecha` : 'Con fecha más adelante'}</span></div>
-    <div class="kpi"><span class="k-l">Monto pactado</span><span class="k-v">${fm(pactado)}</span><span class="k-s">Ahorros e incrementos por cobrar</span></div>
-    <div class="kpi"><span class="k-l">Comisión posible</span><span class="k-v">${fm(posible)}</span><span class="k-s">Si se cumplen dentro del plazo</span></div>
+    <div class="kpi${n('atrasado') ? ' attn' : ''}"><span class="k-l"><span class="emo" aria-hidden="true">⏰</span> Atrasados</span><span class="k-v"${n('atrasado') ? ' style="color:var(--bad)"' : ''}>${n('atrasado')}</span><span class="k-s">Pasó la fecha pactada</span></div>
+    <div class="kpi${n('hoy') ? ' attn' : ''}"><span class="k-l"><span class="emo" aria-hidden="true">📅</span> Para hoy</span><span class="k-v">${n('hoy')}</span><span class="k-s">${fd(hoy())}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🔜</span> Próximos</span><span class="k-v">${n('proximo') + n('sinfecha')}</span><span class="k-s">${n('sinfecha') ? `${n('sinfecha')} sin fecha` : 'Con fecha más adelante'}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🤝</span> Monto pactado</span><span class="k-v">${fm(pactado)}</span><span class="k-s">Ahorros e incrementos por cobrar</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión posible</span><span class="k-v">${fm(posible)}</span><span class="k-s">Si se cumplen dentro del plazo</span></div>
   </div>`;
   if (!av.length) html += `<div class="empty"><h3>Sin seguimientos pendientes</h3><p>Cuando en una entrevista se marca que queda algo pendiente (un ahorro o un incremento que el cliente pactó, o cualquier otra cosa por resolver), aparece acá con la fecha acordada y el plazo para comisionar.</p></div>`;
   else html += `<div class="avrows" role="table" aria-label="Seguimientos pendientes">
@@ -1525,7 +1527,7 @@ function renderAvisos() {
       <div class="ar-act">${S.canWrite && S.db ? `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(e.id)}">Resuelto</button>` : ''}<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button></div>
     </div>`; }).join('')}</div>`;
   const obs = S.E.filter(e => e.estado === 'final' && revEst(e) === 'observada' && (!esp || norm(e.especialista) === norm(esp)));
-  if (obs.length) html += `<section class="card"><div class="card-h"><h3>Entrevistas observadas por la responsable</h3><p>Tienen algo para corregir antes de aprobar la comisión.</p></div><ul class="slist">${obs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(e.revision?.nota || 'Sin nota')}</small></div><div class="s-side">${chip('observada')}</div></li>`).join('')}</ul></section>`;
+  if (obs.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">📝</span> Entrevistas observadas por la responsable</h3><p>Tienen algo para corregir antes de aprobar la comisión.</p></div><ul class="slist">${obs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(e.revision?.nota || 'Sin nota')}</small></div><div class="s-side">${chip('observada')}</div></li>`).join('')}</ul></section>`;
   out.innerHTML = html;
 }
 function cumplirAviso(id) {
@@ -1585,10 +1587,10 @@ function renderPanel() {
   const personal = S.tab === 'mias';
   const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? miNombre() : $('#fp_esp').value; const suc = $('#fp_suc').value;
   $('#fp_espWrap').hidden = personal;
-  $('#pan-title').textContent = personal ? `Mis estadísticas · ${miNombre()}` : 'Panel de la responsable';
+  $('#pan-title').innerHTML = personal ? `<span class="emo" aria-hidden="true">📊</span> Mis estadísticas · ${esc(miNombre())}` : '<span class="emo" aria-hidden="true">📈</span> Panel de la responsable';
   $('#pan-sub').textContent = personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
   if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
-  const E = em => personal ? `<span class="emo" aria-hidden="true">${em}</span> ` : '';
+  const E = em => `<span class="emo" aria-hidden="true">${em}</span> `;
   out.classList.toggle('didac', personal);
   const {desde, hasta} = rango(per);
   const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
@@ -1654,7 +1656,7 @@ function renderPanel() {
   }
   // Por especialista
   const arr = [...grupos.values()].sort((a, b) => b.ent - a.ent || b.com - a.com);
-  if (arr.length && !personal) html += `<section class="card"><div class="card-h"><h3>Por asesor OB</h3><p>«Sin errores» cuenta las entrevistas con todos los pasos en Sí o N/A.</p></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th>Sin errores</th><th class="n">Ítems en No</th><th class="n">Reseña pedida</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th></tr></thead><tbody>
+  if (arr.length && !personal) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Por asesor OB</h3><p>«Sin errores» cuenta las entrevistas con todos los pasos en Sí o N/A.</p></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th>Sin errores</th><th class="n">Ítems en No</th><th class="n">Reseña pedida</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th></tr></thead><tbody>
     ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td><div class="meter"><div class="m-bar"><span style="width:${x.ent ? Math.round(x.ok / x.ent * 100) : 0}%"></span></div><span class="m-v">${pctTxt(x.ok, x.ent)}</span></div></td><td class="n">${x.nos}</td><td class="n">${pctTxt(x.res, x.ent)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.com)}</b></td></tr>`).join('')}
     </tbody></table></div></section>`;
 
@@ -1767,8 +1769,8 @@ function renderAjustes() {
   if (v.innerHTML && (S.ajDirty || v.contains(document.activeElement))) return;
   const a = S.aj;
   v.innerHTML = `
-    <div class="v-head"><div><h2>Ajustes</h2><p>Parámetros de comisión y listas que usa el equipo. Solo la responsable los modifica.</p></div></div>
-    <section class="card"><div class="card-h"><h3>Comisión</h3></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">⚙️</span> Ajustes</h2><p>Parámetros de comisión y listas que usa el equipo. Solo la responsable los modifica.</p></div></div>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💰</span> Comisión</h3></div>
       <div class="grid-f">
         <div class="field"><label for="a_pct">Porcentaje de comisión</label><input type="text" id="a_pct" inputmode="numeric" class="money" value="${esc(a.pct)}"><span class="hint">Sobre el incremento de cuota y el ahorro.</span></div>
         <div class="field"><label for="a_min">Cuota mínima de ingreso</label><input type="text" id="a_min" inputmode="numeric" class="money" value="${esc(fmtIn(a.minimo))}"><span class="hint">Aviso cuando la cuota del asesor es menor.</span></div>
@@ -1777,30 +1779,30 @@ function renderAjustes() {
       </div>
       <div class="rule" style="margin-top:14px"><b>Cómo se calcula</b><span>Comisión = ${esc(a.pct)}% × (cuota final − cuota pactada por el asesor) + ${esc(a.pct)}% × ahorro. Cada gestión posterior suma si su fecha cae dentro del plazo. Por cliente, la comisión no supera ${fm(a.tope ?? DEF_AJ.tope)}.</span><span class="muted">Ejemplo: el asesor de ventas cierra en ${fm(a.minimo)}, el asesor OB lo lleva a ${fm(a.minimo + 100000)} → comisiona ${esc(a.pct)}% de ${fm(100000)} = ${fm(100000 * a.pct / 100)}.</span><span class="muted">Cada entrevista guarda el porcentaje y el plazo vigentes al cargarla; un cambio acá aplica a las entrevistas nuevas.</span></div>
     </section>
-    <section class="card"><div class="card-h"><h3>Dólar Spazios</h3><p>Se usa el <b>dólar Spazios ingreso</b> de spazios.com.ar/indices2 para pasar a pesos los ahorros en dólares, con la cotización del día del pago. Se actualiza solo todos los días.</p></div>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💵</span> Dólar Spazios</h3><p>Se usa el <b>dólar Spazios ingreso</b> de spazios.com.ar/indices2 para pasar a pesos los ahorros en dólares, con la cotización del día del pago. Se actualiza solo todos los días.</p></div>
       ${(() => { const u = S.dolar.at(-1); const ult = S.dolar.slice(-8).reverse(); return `<div class="calc" style="margin:0 0 12px"><div class="hl"><small>Última cotización</small><b>${u ? '$ ' + COT.format(u.ingreso) : '—'}</b><small>${u ? 'del ' + fd(u.fecha) : 'Sin datos'}</small></div>${ult.slice(1, 5).map(x => `<div><small>${fd(x.fecha)}</small><b>$ ${COT.format(x.ingreso)}</b></div>`).join('')}</div>`; })()}
       <div class="grid-f"><div class="field"><label for="a_dFecha">Cargar o corregir una fecha</label><input type="date" id="a_dFecha" max="${hoy()}" value="${hoy()}"></div>
         <div class="field"><label for="a_dValor">Dólar Spazios ingreso</label><input type="text" id="a_dValor" inputmode="decimal" class="money" placeholder="1.503,50"></div></div>
       <div class="row" style="margin-top:12px"><button class="btn" type="button" id="btnDolar">Guardar cotización</button><span class="note" id="a_dMsg" role="alert"></span></div>
     </section>
-    <section class="card"><div class="card-h"><h3>Metas del mes</h3><p>Por asesor OB. Dejar en 0 para no usar meta. Se ven en el Panel y en Comisiones.</p></div>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🎯</span> Metas del mes</h3><p>Por asesor OB. Dejar en 0 para no usar meta. Se ven en el Panel y en Comisiones.</p></div>
       <div class="grid-f">
         <div class="field"><label for="a_metaEnt">Entrevistas por mes</label><input type="text" id="a_metaEnt" inputmode="numeric" class="money" value="${esc(a.metaEnt || '')}" placeholder="0"></div>
         <div class="field"><label for="a_metaMonto">Incremento + ahorro por mes</label><input type="text" id="a_metaMonto" inputmode="numeric" class="money" value="${esc(fmtIn(a.metaMonto))}" placeholder="0"><span class="hint">Suma de incrementos de cuota y ahorros cobrados en el mes.</span></div>
       </div>
     </section>
     <div class="aj-grid">
-      <section class="card"><div class="card-h"><h3>Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea></section>
-      <section class="card"><div class="card-h"><h3>Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
-      <section class="card"><div class="card-h"><h3>Sucursales</h3><p>Una por línea. La primera es la predeterminada.</p></div><textarea id="a_suc" aria-label="Sucursales">${esc((a.sucursales || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🧑‍💼</span> Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🏢</span> Sucursales</h3><p>Una por línea. La primera es la predeterminada.</p></div><textarea id="a_suc" aria-label="Sucursales">${esc((a.sucursales || []).join('\n'))}</textarea></section>
     </div>
-    <section class="card"><div class="card-h"><h3>PIN de la responsable</h3><p>Se pide al elegir «Soy la responsable». Queda recordado 12 horas en cada navegador.</p></div>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🔒</span> PIN de la responsable</h3><p>Se pide al elegir «Soy la responsable». Queda recordado 12 horas en cada navegador.</p></div>
       <div class="grid-f"><div class="field"><label for="a_pin0">PIN actual</label><input type="password" id="a_pin0" inputmode="numeric" maxlength="6" autocomplete="current-password" class="mono"></div><div class="field"><label for="a_pin1">PIN nuevo</label><input type="password" id="a_pin1" inputmode="numeric" maxlength="6" autocomplete="new-password" class="mono"></div>
       <div class="field"><label for="a_pin2">Repetir el PIN</label><input type="password" id="a_pin2" inputmode="numeric" maxlength="6" autocomplete="new-password" class="mono"></div></div>
       <div class="row" style="margin-top:12px"><button class="btn" type="button" id="btnPin">Cambiar PIN</button><span class="note" id="a_pinMsg" role="alert"></span></div>
     </section>
     <div class="row"><button class="btn btn-primary" id="btnAj" type="button"${S.db && S.canWrite ? '' : ' disabled'}>Guardar ajustes</button><span class="note" id="ajMsg"></span></div>
-    <section class="card"><div class="card-h"><h3>Acceso del equipo</h3></div>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🔑</span> Acceso del equipo</h3></div>
       <div class="view" style="gap:8px;font-size:14px"><p>Cada asesor OB entra con el link de la página y elige su nombre. La responsable entra con «Soy la responsable» y su PIN.</p>
       <p class="muted">El dólar Spazios se actualiza solo con la acción programada de GitHub, dos veces por día.</p></div>
     </section>`;
@@ -1911,7 +1913,7 @@ function fillEsp(v) {
   sel.disabled = !esResp() && !!miNombre();
 }
 function abrirPicker(cancelable) {
-  $('#pickTitle').textContent = '¿Qué asesor OB eres?'; $('#pickTitle').nextElementSibling.textContent = 'Se cargan tus entrevistas, tus datos y tus comisiones.';
+  $('#pickTitle').textContent = '👋 ¿Qué asesor OB eres?'; $('#pickTitle').nextElementSibling.textContent = 'Se cargan tus entrevistas, tus datos y tus comisiones.';
   const lista = equipo();
   let html = lista.map(n => `<button type="button" data-n="${esc(n)}"${norm(n) === norm(S.yo) ? ' aria-current="true"' : ''}><span>${esc(n)}</span>${norm(n) === norm(S.yo) ? '<small>Actual</small>' : ''}</button>`).join('');
   if (!lista.length) html = `<div class="banner warn">Todavía no hay asesores OB cargados. ${S.admin ? 'Entrar como responsable y cargarlos en Ajustes, uno por línea.' : 'La responsable tiene que cargarlos en Ajustes.'}</div>`;
