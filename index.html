@@ -497,6 +497,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="cargar" id="t-cargar" type="button"><span>Checklist</span><small>Cargar una entrevista</small></button></li>
     <li><button class="tab" data-tab="entrevistas" id="t-entrevistas" type="button"><span>Entrevistas</span><small>Ver, editar y sumar gestiones</small></button></li>
     <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span>Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
+    <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span>Mis estadísticas</span><small>Tu desempeño y el promedio del equipo</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span>Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
@@ -545,10 +546,10 @@ tr.ref td .chip{font-style:normal}
   </section>
 
   <section class="view" id="v-panel" hidden>
-    <div class="v-head"><div><h2>Panel de la responsable</h2><p>Cumplimiento del checklist, resultados y comisiones del equipo.</p></div></div>
+    <div class="v-head"><div><h2 id="pan-title">Panel de la responsable</h2><p id="pan-sub">Cumplimiento del checklist, resultados y comisiones del equipo.</p></div></div>
     <div class="filters">
       <div class="field"><label for="fp_per">Período</label><select id="fp_per"></select></div>
-      <div class="field"><label for="fp_esp">Asesor OB</label><select id="fp_esp"></select></div>
+      <div class="field" id="fp_espWrap"><label for="fp_esp">Asesor OB</label><select id="fp_esp"></select></div>
       <div class="field"><label for="fp_suc">Sucursal</label><select id="fp_suc"></select></div>
     </div>
     <div id="pan-out" class="view"></div>
@@ -1119,7 +1120,7 @@ async function guardar(final) {
 let tDraft = 0;
 function guardarBorradorLocal() {}
 function programarBorrador() {}
-const firmaForm = () => { try { return JSON.stringify(leerForm()); } catch { return ''; } };
+const firmaForm = () => { try { const d = leerForm(); return JSON.stringify([d.cliente, d.dni, d.telefono, d.contrato, d.asesor, d.cuotaAsesorUsd || d.cuotaAsesor, d.cuotaFinalUsd || d.cuotaFinal, d.ahorroUsd || d.ahorro, d.checklist, d.fallaAsesor, d.fallaTipos, d.fallaDetalle, d.seguimiento, d.seguimientoTipo, d.seguimientoMontoUsd || d.seguimientoMonto, d.seguimientoFecha, d.seguimientoDetalle, d.observaciones, (d.gestiones || []).map(g => [g.tipo, g.fecha, g.monto, g.montoUsd, g.nota])]); } catch { return ''; } };
 
 function editar(e) {
   S.editId = e.id; S.editOrig = clone(e);
@@ -1167,8 +1168,8 @@ function setTab(t, sinScroll) {
   }
   S.tab = t; document.body.dataset.tab = t;
   $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
-  $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + t; });
-  $('#barTitle').textContent = {cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel de la responsable', ajustes: 'Ajustes'}[t];
+  { const vid = t === 'mias' ? 'panel' : t; $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + vid; }); }
+  $('#barTitle').textContent = {cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel de la responsable', ajustes: 'Ajustes', mias: 'Mis estadísticas'}[t];
   cerrarMenu();
   renderVista();
   if (!sinScroll) window.scrollTo({top: 0});
@@ -1183,6 +1184,7 @@ function etiquetar(root) {
   }
 }
 function renderTabs() {
+  $('#t-mias').hidden = esResp() || !miNombre(); if (S.tab === 'mias' && (esResp() || !miNombre())) setTab(esResp() ? 'panel' : 'cargar', true);
   $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp();
   const pend = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length;
   $('#t-panel').innerHTML = `<span>Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
@@ -1201,7 +1203,7 @@ let tKpi = 0; window.addEventListener('resize', () => { clearTimeout(tKpi); tKpi
 function renderVista() {
   requestAnimationFrame(ajustarKpis);
   if (S.tab === 'entrevistas') renderEntrevistas();
-  else if (S.tab === 'panel') renderPanel();
+  else if (S.tab === 'panel' || S.tab === 'mias') renderPanel();
   else if (S.tab === 'comisiones') renderComisiones();
   else if (S.tab === 'ajustes') renderAjustes();
   else if (S.tab === 'avisos') renderAvisos();
@@ -1562,7 +1564,12 @@ function renderPanel() {
   const out = $('#pan-out');
   if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
   if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
-  const per = $('#fp_per').value || monthsBack(1)[0]; const esp = $('#fp_esp').value; const suc = $('#fp_suc').value;
+  const personal = S.tab === 'mias';
+  const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? miNombre() : $('#fp_esp').value; const suc = $('#fp_suc').value;
+  $('#fp_espWrap').hidden = personal;
+  $('#pan-title').textContent = personal ? `Mis estadísticas · ${miNombre()}` : 'Panel de la responsable';
+  $('#pan-sub').textContent = personal ? 'Tus resultados del período comparados con el promedio del equipo.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
+  if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const {desde, hasta} = rango(per);
   const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
   const base = S.E.filter(e => (!suc || norm(e.sucursal) === norm(suc)) && (!esp || norm(e.especialista) === norm(esp)));
@@ -1587,7 +1594,17 @@ function renderPanel() {
     prevM = metricas(base, pm + '-01', `${pm}-${pad(dd)}`);
     prevLbl = esCur ? `mismos días de ${MESES[+pm.slice(5) - 1]}` : MESES[+pm.slice(5) - 1];
   }
-  const dk = (k, pts) => curM ? `<span class="k-d">${delta(curM[k], prevM[k], pts)} vs ${prevLbl}</span>` : '';
+  const dk0 = (k, pts) => curM ? `<span class="k-d">${delta(curM[k], prevM[k], pts)} vs ${prevLbl}</span>` : '';
+  let eqTxt = () => '';
+  if (personal) {
+    const eqBase = S.E.filter(e => !suc || norm(e.sucursal) === norm(suc));
+    const eqRango = per === '3m' ? [desde, hasta] : [per + '-01', lastDay(per)];
+    const eq = metricas(eqBase, eqRango[0], eqRango[1]);
+    const nAs = Math.max(1, new Set(eqBase.filter(e => e.estado === 'final' && e.fecha >= eqRango[0] && e.fecha <= eqRango[1]).map(e => norm(e.especialista))).size);
+    const prom = {n: eq.n / nAs, pctOk: eq.pctOk, inc: eq.inc / nAs, aho: eq.aho / nAs, com: eq.com / nAs};
+    eqTxt = (k) => { const v = prom[k]; if (v === null || v === undefined) return ''; const t = k === 'pctOk' ? Math.round(v) + '%' : k === 'n' ? (Math.round(v * 10) / 10).toString().replace('.', ',') : fm(v); return `<span class="k-d">Promedio del equipo: <b>${t}</b></span>`; };
+  }
+  const dk = (k, pts) => dk0(k, pts) + eqTxt(k);
 
   let html = `<div class="kpis">
     <div class="kpi"><span class="k-l">Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
@@ -1603,7 +1620,7 @@ function renderPanel() {
   }
   // Por especialista
   const arr = [...grupos.values()].sort((a, b) => b.ent - a.ent || b.com - a.com);
-  if (arr.length) html += `<section class="card"><div class="card-h"><h3>Por asesor OB</h3><p>«Sin errores» cuenta las entrevistas con todos los pasos en Sí o N/A.</p></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th>Sin errores</th><th class="n">Ítems en No</th><th class="n">Reseña pedida</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th></tr></thead><tbody>
+  if (arr.length && !personal) html += `<section class="card"><div class="card-h"><h3>Por asesor OB</h3><p>«Sin errores» cuenta las entrevistas con todos los pasos en Sí o N/A.</p></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th>Sin errores</th><th class="n">Ítems en No</th><th class="n">Reseña pedida</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th></tr></thead><tbody>
     ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td><div class="meter"><div class="m-bar"><span style="width:${x.ent ? Math.round(x.ok / x.ent * 100) : 0}%"></span></div><span class="m-v">${pctTxt(x.ok, x.ent)}</span></div></td><td class="n">${x.nos}</td><td class="n">${pctTxt(x.res, x.ent)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.com)}</b></td></tr>`).join('')}
     </tbody></table></div></section>`;
 
@@ -1633,9 +1650,9 @@ function renderPanel() {
         <div><small>Con ahorro</small><b>${pctTxt(tq.ch, tq.n)}</b><small>${tq.ch} de ${tq.n} clientes</small></div>
         <div><small>Ahorro promedio</small><b>${fm(tq.ahoProm)}</b><small>Por cliente que ahorró</small></div>
       </div>
-      <div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th class="n">Con incremento</th><th class="n">Incremento prom.</th><th class="n">Suba prom.</th><th class="n">Con ahorro</th><th class="n">Ahorro prom.</th></tr></thead><tbody>
+      ${personal ? '' : `<div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th class="n">Con incremento</th><th class="n">Incremento prom.</th><th class="n">Suba prom.</th><th class="n">Con ahorro</th><th class="n">Ahorro prom.</th></tr></thead><tbody>
       ${filasC.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${pctTxt(x.ci, x.n)}</td><td class="n">${fm(x.incProm)}</td><td class="n">${x.ci ? '+' + Math.round(x.subaProm) + '%' : '—'}</td><td class="n">${pctTxt(x.ch, x.n)}</td><td class="n">${fm(x.ahoProm)}</td></tr>`).join('')}
-      </tbody></table></div></section>`;
+      </tbody></table></div>`}</section>`;
 
     // Efectividad de los pactos (por fecha de acuerdo en el período)
     const pactos = base.filter(e => e.estado === 'final').map(e => ({e, p: pactoDe(e, comision(e))})).filter(x => x.p && enPer(x.p.acuerdo));
@@ -1652,9 +1669,9 @@ function renderPanel() {
           <div><small>Monto cobrado</small><b>${fm(tp.mc)}</b><small>${pctTxt(tp.mc, tp.mp)} de lo pactado</small></div>
           <div><small>No se concretaron</small><b${tp.perd ? ' style="color:var(--bad)"' : ''}>${tp.perd}</b><small>Vencidos o sin pago</small></div>
         </div>
-        <div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pactos</th><th class="n">Cobrados</th><th class="n">En plazo</th><th class="n">No concretados</th><th class="n">Efectividad</th><th class="n">Pactado</th><th class="n">Cobrado</th></tr></thead><tbody>
+        ${personal ? '' : `<div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pactos</th><th class="n">Cobrados</th><th class="n">En plazo</th><th class="n">No concretados</th><th class="n">Efectividad</th><th class="n">Pactado</th><th class="n">Cobrado</th></tr></thead><tbody>
         ${filasP.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${x.cob}</td><td class="n">${x.pend}</td><td class="n">${x.perd}</td><td class="n">${pctTxt(x.cob, x.cob + x.perd)}</td><td class="n">${fm(x.mp)}</td><td class="n">${fm(x.mc)}</td></tr>`).join('')}
-        </tbody></table></div></section>`;
+        </tbody></table></div>`}</section>`;
     }
 
     // Pasos en No
@@ -2031,7 +2048,7 @@ function start(hot) {
   else vaciarForm();
   const want = hot?.tab || (location.hash || '').slice(1);
   if (ADMIN_TABS.includes(want)) S.wantTab = want;
-  setTab(['cargar', 'entrevistas', 'comisiones', 'avisos'].includes(want) ? want : 'cargar', true);
+  setTab(['cargar', 'entrevistas', 'comisiones', 'avisos', 'mias'].includes(want) ? want : 'cargar', true);
   renderAll();
   try { window.claude?.hot?.snapshot?.(() => ({draft: {editId: S.editId, editOrig: S.editOrig, data: leerForm()}, tab: S.tab})); } catch {}
   conectar();
