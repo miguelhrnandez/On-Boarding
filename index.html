@@ -1,0 +1,2002 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Onboarding PAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: planilla de obra — cabecera con grilla de plano; checklist a la izquierda y resumen fijo a la derecha; panel de control en bloques */
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --sunk:#E8ECF1; --ink:#13202C; --muted:#566576; --line:#D6DDE5;
+  --accent:#1D4ED8; --accent-strong:#163CA8; --on-accent:#FFFFFF; --accent-soft:#E6EDFC;
+  --ok:#1B7A4A; --ok-soft:#E0F2E7; --warn:#965800; --warn-soft:#FAEED6; --bad:#B42330; --bad-soft:#FBE3E5;
+  --grid:rgba(29,78,216,.075); --scrim:rgba(10,18,28,.42);
+  --shadow:0 1px 2px rgba(19,32,44,.06),0 10px 28px rgba(19,32,44,.08);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1217; --surface:#141B22; --sunk:#1B242E; --ink:#E3E9EF; --muted:#93A1AF; --line:#28333F;
+    --accent:#7FA1FF; --accent-strong:#A6BEFF; --on-accent:#0A1430; --accent-soft:#1A2746;
+    --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#F27E87; --bad-soft:#341619;
+    --grid:rgba(127,161,255,.07); --scrim:rgba(0,0,0,.55);
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1217; --surface:#141B22; --sunk:#1B242E; --ink:#E3E9EF; --muted:#93A1AF; --line:#28333F;
+  --accent:#7FA1FF; --accent-strong:#A6BEFF; --on-accent:#0A1430; --accent-soft:#1A2746;
+  --ok:#5CC48E; --ok-soft:#12291D; --warn:#E4AA4E; --warn-soft:#2C2211; --bad:#F27E87; --bad-soft:#341619;
+  --grid:rgba(127,161,255,.07); --scrim:rgba(0,0,0,.55);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--f-body);font-stretch:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:45;background:var(--surface)}
+.wrap{max-width:1220px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-stretch:112%;line-height:1.2;text-wrap:balance;margin:0}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650}
+
+/* Cabecera */
+.top{background-color:var(--surface);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;background-position:-1px -1px}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;padding-block:18px 16px}
+.brand{display:flex;gap:12px;align-items:center;min-width:0}
+.brand svg{flex:none}
+.brand .b-bg{fill:var(--accent)}
+.brand .b-ln{fill:none;stroke:var(--on-accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.brand h1{font-size:21px;font-weight:800;letter-spacing:-.01em;font-stretch:118%}
+.brand small{display:block;color:var(--muted);font-size:13px}
+.who{appearance:none;font:inherit;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 8px 8px 12px;min-height:44px;max-width:100%}
+.who:hover{border-color:var(--accent)}
+.who-l{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650;white-space:nowrap}
+.who b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.who-c{font-size:12.5px;font-weight:650;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 8px}
+.picker{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:56;width:min(460px,calc(100% - 32px));max-height:min(80vh,640px);overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:22px;display:flex;flex-direction:column;gap:14px}
+.picker h2{font-size:21px;font-weight:780}
+.picker p{color:var(--muted);font-size:14px}
+.pick-list{display:flex;flex-direction:column;gap:8px}
+.pick-list button{appearance:none;font:600 15px var(--f-body);color:var(--ink);text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pick-list button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.pick-list button[aria-current="true"]{border-color:var(--accent)}
+.pick-list button small{font-weight:500;color:var(--muted);font-size:12.5px}
+.pick-list .resp{border-style:dashed}
+#pickScrim{z-index:55}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background-color:var(--surface);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;border-bottom:1px solid var(--line)}
+.bar-in{display:flex;align-items:center;gap:12px;padding-block:10px;min-height:62px}
+.ham{appearance:none;position:relative;flex:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.ham:hover{border-color:var(--accent)}
+.ham svg path{stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.ham.has-badge::after{content:"";position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px var(--surface)}
+.usd{flex:none;display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px 12px;min-height:44px;line-height:1.2}
+.usd-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650;white-space:nowrap}
+.usd-v{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.usd-v b{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
+.usd-v small{font-size:11.5px;color:var(--muted)}
+.usd.viejo .usd-v small{color:var(--warn);font-weight:700}
+@media (max-width:560px){.usd{padding:4px 8px}.usd-l{font-size:10px;letter-spacing:.04em}.usd-v small{display:none}.usd-v b{font-size:13.5px}}
+.bar-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.2}
+.bar-brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:650}
+.bar-t b{font-family:var(--f-display);font-stretch:112%;font-size:18px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu{position:fixed;top:0;left:0;bottom:0;z-index:52;width:min(320px,86vw);background:var(--surface);border-right:1px solid var(--line);box-shadow:var(--shadow);overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+#menuScrim{z-index:51}
+.menu-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.menu-who{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.menu-who b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.menu-sep{padding:10px 4px 2px}
+.tab{appearance:none;width:100%;background:none;border:0;border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px}
+.tab span{font-weight:650;font-size:15px}
+.tab small{grid-column:1;color:var(--muted);font-size:12.5px}
+.tab .badge{grid-column:2;grid-row:1 / span 2}
+.tab:hover{background:var(--sunk)}
+.tab[aria-selected="true"]{background:var(--accent-soft)}
+.tab[aria-selected="true"] span:first-child{color:var(--accent)}
+.badge.bad{background:var(--bad-soft);color:var(--bad)}
+.badge{display:inline-block;min-width:22px;padding:0 6px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-size:12px;font-weight:700;text-align:center;line-height:1.7}
+main{padding-block:20px 56px}
+.view{display:flex;flex-direction:column;gap:16px}
+
+/* Controles */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.lbl{font-size:12.5px;font-weight:650;color:var(--muted);letter-spacing:.02em}
+.field .hint{font-size:12.5px;color:var(--muted)}
+.field .hint.warn{color:var(--warn);font-weight:600}
+input[type=text],input[type=date],input[type=tel],input[type=search],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 11px;min-height:40px;width:100%;min-width:0}
+textarea{min-height:76px;resize:vertical;line-height:1.45}
+input.money{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+button:focus-visible,.erow:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.has-err{border-color:var(--bad)!important}
+.grid-f{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.btn{appearance:none;font:600 14px var(--f-body);padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-strong);border-color:var(--accent-strong)}
+.btn-danger{color:var(--bad)}
+.btn-danger:hover{border-color:var(--bad)}
+.btn-sm{min-height:32px;padding:4px 10px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Segmentado Sí / No / N/A */
+.seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:minmax(52px,auto);border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none;background:var(--surface);position:relative}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.seg label{padding:6px 12px;font-weight:650;font-size:13.5px;text-align:center;cursor:pointer;color:var(--muted);border-left:1px solid var(--line);user-select:none;line-height:1.5}
+.seg label:first-of-type{border-left:0}
+.seg label:hover{color:var(--ink);background:var(--sunk)}
+.seg input:checked+label.si{background:var(--ok-soft);color:var(--ok)}
+.seg input:checked+label.no{background:var(--bad-soft);color:var(--bad)}
+.seg input:checked+label.na{background:var(--sunk);color:var(--ink)}
+.seg input:checked+label.pe{background:var(--warn-soft);color:var(--warn)}
+.seg input:checked+label.ac{background:var(--accent-soft);color:var(--accent)}
+.ck-lock .ck-list .seg label,.ck-lock #sec-asesor .seg label,.ck-lock #sec-asesor .choice label{cursor:not-allowed;opacity:.75}
+.ck-lock .ck-list .seg label:hover{background:none;color:var(--muted)}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* Tarjetas */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0}
+.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px 12px;margin-bottom:12px;flex-wrap:wrap}
+.card-h h2,.card-h h3{font-size:17px;font-weight:740}
+.card-h p{font-size:13.5px;color:var(--muted);flex-basis:100%}
+.secnum{font-family:var(--f-mono);color:var(--accent);font-size:13px;font-weight:600;margin-right:8px;font-stretch:100%}
+.count{font-family:var(--f-mono);font-size:13px;color:var(--muted);white-space:nowrap}
+.count.done{color:var(--ok)}
+.count .nob{color:var(--bad);font-weight:600}
+
+/* Checklist */
+.form-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
+.form-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.form-side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);display:flex;flex-direction:column;gap:12px}
+.ck-item{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;padding:10px 20px;margin-inline:-20px;border-top:1px solid var(--line)}
+.ck-list .ck-item:first-child{border-top:0}
+.ck-item .ck-txt{min-width:0;flex:1}
+.ck-hint{display:block;color:var(--muted);font-size:13px;line-height:1.4;margin-top:2px}
+body.no-hints .ck-hint{display:none}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 16px}
+.key{display:flex;gap:10px;align-items:baseline;font-size:14px}
+.key .ans{flex:none;width:42px;font-family:var(--f-mono);font-size:12.5px;font-weight:600;text-align:center;border-radius:4px;padding:1px 4px}
+.toggle{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:var(--muted);cursor:pointer}
+.toggle input{accent-color:var(--accent);width:16px;height:16px}
+.ck-item.is-no{background:linear-gradient(90deg,var(--bad-soft),transparent 75%)}
+.ck-item.is-no p{color:var(--bad)}
+.edit-banner{display:flex;gap:10px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);color:var(--ink);border-radius:var(--r);padding:12px 16px}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:14px}
+.calc>div{background:var(--sunk);padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.calc b{font-family:var(--f-mono);font-size:16px;font-variant-numeric:tabular-nums}
+.calc small{color:var(--muted);font-size:12px}
+.calc .hl{background:var(--accent-soft)}
+.calc .hl b{color:var(--accent)}
+.plazo{font-size:13.5px;color:var(--muted);margin-top:10px}
+.plazo b{color:var(--ink)}
+.gest{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.g-row{display:grid;grid-template-columns:150px 140px 72px 120px minmax(0,1fr) auto;gap:8px;align-items:center}
+.g-st{font-size:12px;font-weight:650;white-space:nowrap}
+.g-st.in{color:var(--ok)} .g-st.out{color:var(--bad)}
+.choice{display:flex;flex-wrap:wrap;gap:8px}
+.choice label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13.5px;cursor:pointer;background:var(--surface)}
+.choice input{accent-color:var(--accent)}
+.choice label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.q-row{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
+.extra{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+
+/* Resumen lateral */
+.side-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.prog{display:flex;flex-direction:column;gap:6px}
+.prog-bar{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.prog-bar span{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .2s}
+.prog-t{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.prog-t b{color:var(--ink);font-family:var(--f-mono)}
+.side-secs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.side-secs button{width:100%;display:flex;justify-content:space-between;gap:10px;background:none;border:0;border-top:1px solid var(--line);padding:7px 0;font:inherit;font-size:13.5px;color:var(--ink);cursor:pointer;text-align:left}
+.side-secs li:first-child button{border-top:0}
+.side-secs button:hover span:first-child{color:var(--accent)}
+.side-money{display:flex;justify-content:space-between;align-items:baseline;gap:8px;background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.side-money b{font-family:var(--f-mono);font-size:19px;color:var(--accent)}
+.side-money small{display:block;color:var(--muted);font-size:12px}
+.side-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.side-actions .btn{width:100%;white-space:normal;text-align:center;line-height:1.25}
+.errs{list-style:none;margin:0;padding:10px 12px;background:var(--bad-soft);border-radius:8px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--bad)}
+.errs button{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.bbar{position:fixed;left:0;right:0;bottom:0;z-index:35;background:var(--surface);border-top:1px solid var(--line);box-shadow:var(--shadow);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));align-items:center;justify-content:space-between;gap:10px}
+.bbar{display:none}
+.bbar{flex-wrap:wrap}
+.bb-err{flex-basis:100%;display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--bad-soft);color:var(--bad);border-radius:8px;padding:7px 10px;font-size:13.5px;font-weight:600}
+.bb-err .linkbtn{color:var(--bad);white-space:nowrap}
+.bb-info{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:13px}
+.bb-info b{font-family:var(--f-mono)}
+.bb-actions{display:flex;gap:8px}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:1px 9px 1px 7px;border-radius:999px;font-size:12.5px;font-weight:650;white-space:nowrap;line-height:1.65}
+.chip i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block;flex:none}
+.chip-ok{background:var(--ok-soft);color:var(--ok)}
+.chip-bad{background:var(--bad-soft);color:var(--bad)}
+.chip-warn{background:var(--warn-soft);color:var(--warn)}
+.chip-muted{background:var(--sunk);color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Avisos */
+.banner{border-radius:var(--r);padding:12px 16px;font-size:14px;border:1px solid var(--line);background:var(--surface)}
+.banner.warn{background:var(--warn-soft);border-color:transparent;color:var(--ink)}
+.banner.bad{background:var(--bad-soft);border-color:transparent}
+.empty{text-align:left;padding:28px 24px;border:1px dashed var(--line);border-radius:var(--r);background:var(--surface);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.empty h3{font-size:17px}
+.empty p{color:var(--muted);max-width:62ch}
+
+/* Filtros */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.filters .field{flex:1 1 170px;max-width:260px}
+.filters .field.grow{flex:2 1 220px;max-width:none}
+.v-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.v-head h2{font-size:22px;font-weight:780}
+.v-head p{color:var(--muted);font-size:14px;margin-top:2px}
+
+/* Lista de entrevistas */
+.elist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.erow{appearance:none;background:none;border:0;border-top:1px solid var(--line);font:inherit;color:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:58px minmax(0,2.2fr) minmax(0,1.2fr) minmax(0,1.6fr) 120px;gap:6px 14px;align-items:center;padding:12px 16px;width:100%}
+.erow:first-child{border-top:0}
+.erow:hover{background:var(--accent-soft)}
+.erow small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.erow b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.e-date{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.e-money{text-align:right;font-variant-numeric:tabular-nums}
+.e-money b{font-family:var(--f-mono)}
+.list-meta{font-size:13px;color:var(--muted)}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:inherit;min-width:0}
+.kpi .k-l{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650}
+.kpi .k-v{font-family:var(--f-display);font-stretch:100%;font-size:clamp(20px,1.9vw,25px);font-weight:780;font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .k-s{font-size:13px;color:var(--muted)}
+button.kpi{cursor:pointer}
+button.kpi:hover{border-color:var(--accent)}
+.kpi.attn .k-v{color:var(--warn)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:16px}
+
+/* Tablas */
+.tbl-wrap{overflow-x:auto;margin-inline:-20px;padding-inline:20px}
+.dcard .tbl-wrap{margin-inline:-18px;padding-inline:18px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:650;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n{font-family:var(--f-mono);font-size:13.5px}
+tr.clk{cursor:pointer}
+tr.clk:hover td{background:var(--accent-soft)}
+tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
+
+/* Medidores */
+.meter{display:flex;align-items:center;gap:8px;min-width:120px}
+.meter .m-bar{flex:1;height:8px;border-radius:4px;background:var(--sunk);overflow:hidden;min-width:50px}
+.meter .m-bar span{display:block;height:100%;background:var(--accent);border-radius:4px}
+.meter .m-v{font-family:var(--f-mono);font-size:13px;min-width:42px;text-align:right}
+.bars{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.bars li{display:flex;flex-direction:column;gap:5px}
+.bars .b-t{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
+.bars .b-t span:last-child{font-family:var(--f-mono);white-space:nowrap;color:var(--muted)}
+.bars .m-bar{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.bars .m-bar span{display:block;height:100%;background:var(--accent);border-radius:4px}
+
+/* Gráfico semanal */
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.sw-ok{background:var(--ok)} .sw-bad{background:var(--bad)}
+.wc{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 8px;margin-top:12px}
+.wc-y{position:relative;height:170px;width:22px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wc-y span{position:absolute;right:0;transform:translateY(50%)}
+.wc-plot{position:relative;height:170px;display:flex;align-items:flex-end;gap:8px;padding:0 4px;border-bottom:1px solid var(--muted)}
+.wc-grid{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--line)}
+.wc-col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative;min-width:0}
+.wc-stack{width:min(34px,100%);display:flex;flex-direction:column-reverse;gap:2px}
+.wc-seg.ok{background:var(--ok)} .wc-seg.bad{background:var(--bad)}
+.wc-stack .wc-seg:last-child{border-radius:4px 4px 0 0}
+.wc-tip{display:none;position:absolute;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-size:12px;padding:6px 9px;border-radius:6px;white-space:nowrap;z-index:2;pointer-events:none;line-height:1.4}
+.wc-col:hover .wc-tip,.wc-col:focus-visible .wc-tip{display:block}
+.wc-col.first .wc-tip{left:0;transform:none}
+.wc-col.last .wc-tip{left:auto;right:0;transform:none}
+.wc-col:hover .wc-stack{filter:brightness(1.08)}
+.wc-x{grid-column:2;display:flex;gap:8px;padding:6px 4px 0;font-size:11.5px;color:var(--muted)}
+.wc-x span{flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:clip;white-space:nowrap}
+
+/* Listas simples */
+.slist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.slist li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.slist li:first-child{border-top:0}
+.slist .s-main{min-width:0}
+.slist .s-main b{display:block}
+.slist .s-main small{display:block;color:var(--muted);font-size:12.5px}
+.slist .s-side{text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.scroll{max-height:360px;overflow-y:auto}
+
+/* Panel lateral de detalle */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:50}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100%);background:var(--paper);z-index:51;overflow-y:auto;box-shadow:var(--shadow);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.dr-head{position:sticky;top:0;z-index:1;background:var(--surface);border-bottom:1px solid var(--line);padding:16px 20px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.dr-head h2{font-size:21px;font-weight:780;margin:2px 0 8px}
+.dr-body{padding:16px 20px 36px;display:flex;flex-direction:column;gap:14px}
+.dcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.dcard h3{font-size:15.5px;font-weight:740}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 16px;margin:0}
+.kv div{min-width:0}
+.kv dt{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650}
+.kv dd{margin:2px 0 0;overflow-wrap:anywhere}
+.dsec{display:flex;flex-direction:column;gap:4px}
+.dsec+.dsec{margin-top:8px}
+.dsec-h{display:flex;justify-content:space-between;gap:10px;font-weight:650;font-size:14px}
+.dlist{list-style:none;margin:0;padding:0}
+.dlist li{display:flex;gap:10px;align-items:baseline;padding:4px 0;font-size:13.5px}
+.dlist .ans{flex:none;width:38px;font-family:var(--f-mono);font-size:12px;font-weight:600;text-align:center;border-radius:4px;padding:0 4px}
+.ans.si{color:var(--ok);background:var(--ok-soft)}
+.ans.no{color:var(--bad);background:var(--bad-soft)}
+.ans.na{color:var(--muted);background:var(--sunk)}
+.ans.pe{color:var(--warn);background:var(--warn-soft)}
+.dlist li.is-no{color:var(--bad);font-weight:600}
+.dr-actions{display:flex;gap:10px;flex-wrap:wrap}
+.confirm{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--bad-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+.note{font-size:13.5px;color:var(--muted)}
+.pre{white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Ajustes */
+.aj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.aj-grid textarea{min-height:150px}
+.rule{background:var(--sunk);border-radius:8px;padding:12px 14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.rule code{font-family:var(--f-mono);font-size:13px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-weight:600;box-shadow:var(--shadow);max-width:calc(100% - 32px);font-size:14px}
+.toast.bad{background:var(--bad);color:#fff}
+
+.avrows{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.avrow{display:grid;grid-template-columns:112px minmax(0,1.3fr) minmax(0,1.2fr) 150px minmax(0,1.5fr) 206px;gap:4px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.avrow:first-child{border-top:0}
+.av-head{background:var(--sunk);padding-block:7px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:650}
+.avrow.atrasado{background:linear-gradient(90deg,var(--bad-soft),transparent 40%)}
+.avrow.hoy{background:linear-gradient(90deg,var(--warn-soft),transparent 40%)}
+.avrow b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avrow small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar-main,.ar-what,.ar-date,.ar-det{min-width:0}
+.ar-what{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}
+.ar-what b{font-size:14.5px}
+.ar-what small{flex-basis:100%}
+.ar-date b{font-size:13.5px;font-weight:500}
+.ar-det{font-size:13.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ar-act{display:flex;gap:6px;justify-content:flex-end}
+@media (max-width:860px){
+  .av-head{display:none}
+  .avrow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"main st" "what date" "det det" "act act";padding:12px 14px;gap:6px 12px}
+  .ar-st{grid-area:st;justify-self:end}
+  .ar-main{grid-area:main}
+  .ar-what{grid-area:what}
+  .ar-date{grid-area:date;text-align:right}
+  .ar-det{grid-area:det;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .ar-act{grid-area:act;justify-content:flex-start}
+  .ar-act .btn{flex:1}
+}
+.aviso{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.aviso.atrasado{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.aviso.hoy{border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}
+.av-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.av-h b{display:block;font-size:15.5px}
+.av-h small{display:block;color:var(--muted);font-size:12.5px}
+.av-m{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.av-m b{font-family:var(--f-mono);font-size:18px}
+.k-d{font-size:12.5px;color:var(--muted);margin-top:2px}
+.dl{font-weight:700;color:var(--muted)}
+.dl.up{color:var(--ok)} .dl.down{color:var(--bad)}
+.metas{display:flex;flex-direction:column}
+.meta-row{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) minmax(0,1fr);gap:8px 20px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.meta-row:first-child{border-top:0}
+.meta-row .lbl{display:block;margin-bottom:4px}
+.goal .g-bar{position:relative;height:10px;border-radius:5px;background:var(--sunk);overflow:visible}
+.goal .g-bar span{display:block;height:100%;border-radius:5px;background:var(--accent)}
+.goal .g-bar i{position:absolute;top:-3px;width:2px;height:16px;background:var(--ink);opacity:.55;transform:translateX(-1px)}
+.goal .g-t{font-size:13px;margin-top:4px;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.meta-row{grid-template-columns:1fr}}
+.money-in{display:flex;gap:6px;align-items:stretch}
+.money-in input{flex:1;min-width:0}
+.seg-sm{grid-auto-columns:minmax(40px,auto)}
+.seg-sm label{padding:6px 9px}
+.refnote{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:10px}
+tr.ref td{color:var(--muted);font-style:italic;background:repeating-linear-gradient(135deg,transparent 0 8px,var(--accent-soft) 8px 9px)}
+tr.ref td .chip{font-style:normal}
+.chip-acc{background:var(--accent-soft);color:var(--accent)}
+.av-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+@media (max-width:960px){
+  .form-grid{grid-template-columns:minmax(0,1fr)}
+  .form-side{position:static}
+  .form-side .side-actions{display:none}
+  body[data-tab="cargar"] .bbar{display:flex}
+  body[data-tab="cargar"] main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+  body[data-tab="cargar"] .toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:760px){
+  .erow{grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"d m $" "d c c"}
+  .erow .e-date{grid-area:d;align-self:start;padding-top:2px}
+  .erow .e-main{grid-area:m}
+  .erow .e-esp{display:none}
+  .erow .e-chips{grid-area:c}
+  .erow .e-money{grid-area:$}
+  .g-row{grid-template-columns:1fr 1fr;}
+  .g-row .g-nota{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  .ck-item{flex-direction:column;align-items:stretch}
+  .ck-item .seg{grid-auto-columns:1fr}
+  .who{padding:6px 8px;gap:6px;max-width:44vw;min-height:44px}
+  .who-l,.who-c{display:none}
+  .bar-t b{font-size:16px}
+  .card{padding:16px}
+  .ck-item{padding-inline:16px;margin-inline:-16px}
+  .tbl-wrap{margin-inline:-16px;padding-inline:16px}
+  .kpi .k-v{font-size:20px}
+  .filters .field,.filters .field.grow{flex:1 1 140px;max-width:none}
+  .v-head h2{font-size:20px}
+  main{padding-block:14px 48px}
+}
+@media (max-width:640px){
+  .tbl-wrap.stack{margin-inline:0;padding-inline:0;overflow:visible}
+  .stack table,.stack tbody,.stack tfoot,.stack tr,.stack td{display:block;width:100%}
+  .stack thead{display:none}
+  .stack tr{border-bottom:1px solid var(--line);padding:10px 0}
+  .stack tbody tr:last-child{border-bottom:0}
+  .stack tfoot tr{border-top:2px solid var(--line);border-bottom:0}
+  .stack td{border:0!important;padding:3px 0;display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:right;min-width:0}
+  .stack td::before{content:attr(data-l);flex:none;color:var(--muted);font:650 11.5px var(--f-body);text-transform:uppercase;letter-spacing:.06em;text-align:left}
+  .stack td[data-l=""]::before{display:none}
+  .stack td:first-child{justify-content:flex-start;text-align:left;font-weight:700;font-size:15px;font-family:var(--f-body)}
+  .stack td:first-child::before{display:none}
+  .stack td:empty{display:none}
+  .stack td .meter{flex:1;max-width:60%}
+  .stack tr.clk:hover td{background:none}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <button class="ham" id="menuBtn" type="button" aria-label="Abrir el menú" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="bar-t"><span class="bar-brand">Onboarding PAI</span><b id="barTitle">Checklist</b></div>
+    <div class="usd" id="usdChip" hidden title="Dólar Spazios ingreso (spazios.com.ar/indices2)"><span class="usd-l">Dólar Spazios</span><span class="usd-v"><b id="usdVal">—</b><small id="usdFecha"></small></span></div>
+    <button class="who" id="whoBtn" type="button" aria-label="Cambiar de asesor OB">
+      <span class="who-l">Asesor OB</span><b id="whoName">Elegir</b><span class="who-c">Cambiar</span>
+    </button>
+  </div>
+</header>
+<div class="scrim" id="menuScrim" hidden></div>
+<nav class="menu" id="menu" hidden aria-label="Secciones">
+  <div class="menu-h">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" width="36" height="36" aria-hidden="true"><rect class="b-bg" x="1" y="1" width="32" height="32" rx="8"/><path class="b-ln" d="M8.5 16 17 9l8.5 7v9.5h-17z"/><path class="b-ln" d="m13 19.2 2.8 2.8 5-5.2"/></svg>
+      <div><h1>Onboarding PAI</h1><small>Bienvenida al plan</small></div>
+    </div>
+    <button class="btn btn-sm" id="menuClose" type="button" aria-label="Cerrar el menú">Cerrar</button>
+  </div>
+  <div class="menu-who"><div style="min-width:0"><span class="eyebrow">Usando como</span><b id="menuWho">Sin elegir</b></div><button class="btn btn-sm" type="button" data-pick="1">Cambiar</button></div>
+  <ul class="menu-list">
+    <li><button class="tab" data-tab="cargar" id="t-cargar" type="button"><span>Checklist</span><small>Cargar una entrevista</small></button></li>
+    <li><button class="tab" data-tab="entrevistas" id="t-entrevistas" type="button"><span>Entrevistas</span><small>Ver, editar y sumar gestiones</small></button></li>
+    <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span>Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
+    <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span>Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
+    <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
+    <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
+    <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span>Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+  <div id="banner"></div>
+
+  <section class="view" id="v-cargar" aria-labelledby="t-cargar"></section>
+
+  <section class="view" id="v-entrevistas" hidden>
+    <div class="v-head"><div><h2>Entrevistas</h2><p>Cada entrevista con su checklist, montos, comisión y revisión.</p></div></div>
+    <div class="filters">
+      <div class="field grow"><label for="fe_q">Buscar</label><input type="search" id="fe_q" placeholder="Cliente, DNI o asesor"></div>
+      <div class="field"><label for="fe_esp">Asesor OB</label><select id="fe_esp"></select></div>
+      <div class="field"><label for="fe_per">Mes</label><select id="fe_per"></select></div>
+      <div class="field"><label for="fe_est">Estado</label><select id="fe_est">
+        <option value="">Todos</option><option value="ok">Sin errores</option><option value="falla">Con falla</option><option value="borrador">Borradores</option><option value="pendiente">Por revisar</option><option value="aprobada">Aprobadas</option><option value="observada">Observadas</option>
+      </select></div>
+    </div>
+    <div id="ent-out"></div>
+  </section>
+
+  <section class="view" id="v-comisiones" hidden>
+    <div class="v-head"><div><h2>Comisiones</h2><p id="com-sub">Incrementos de cuota y ahorros logrados dentro del plazo, por mes de la gestión.</p></div><button class="btn" id="btnCsv" hidden>Descargar CSV</button></div>
+    <div class="filters">
+      <div class="field"><label for="fc_mes">Mes</label><select id="fc_mes"></select></div>
+      <div class="field"><label for="fc_esp">Asesor OB</label><select id="fc_esp"></select></div>
+      <div class="field"><label for="fc_pago">Pago</label><select id="fc_pago"><option value="">Pagados y pactados</option><option value="pagados">Solo pagados</option><option value="pactados">Solo pactados sin pagar</option></select></div>
+    </div>
+    <div id="com-out" class="view"></div>
+  </section>
+
+  <section class="view" id="v-avisos" hidden>
+    <div class="v-head"><div><h2>Avisos</h2><p id="av-sub">Seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.</p></div></div>
+    <div class="filters">
+      <div class="field" id="fa_espWrap"><label for="fa_esp">Asesor OB</label><select id="fa_esp"></select></div>
+      <div class="field"><label for="fa_tipo">Tipo</label><select id="fa_tipo"><option value="">Todos</option><option value="ahorro">Ahorro pactado</option><option value="incremento">Incremento pactado</option><option value="otro">Otros pendientes</option></select></div>
+    </div>
+    <div id="av-out" class="view"></div>
+  </section>
+
+  <section class="view" id="v-panel" hidden>
+    <div class="v-head"><div><h2>Panel de la responsable</h2><p>Cumplimiento del checklist, resultados y comisiones del equipo.</p></div></div>
+    <div class="filters">
+      <div class="field"><label for="fp_per">Período</label><select id="fp_per"></select></div>
+      <div class="field"><label for="fp_esp">Asesor OB</label><select id="fp_esp"></select></div>
+      <div class="field"><label for="fp_suc">Sucursal</label><select id="fp_suc"></select></div>
+    </div>
+    <div id="pan-out" class="view"></div>
+  </section>
+
+  <section class="view" id="v-ajustes" hidden></section>
+</main>
+
+<div class="bbar" id="bbar">
+  <div class="bb-err" id="bbErr" hidden><span id="bbErrTxt"></span><button class="linkbtn" type="button" id="bbErrGo">Ver qué falta</button></div>
+  <div class="bb-info"><span><b id="bbCount">0/38</b> ítems · <span id="bbChip"></span></span><span class="muted">Comisión estimada <b id="bbMoney">$ 0</b></span></div>
+  <div class="bb-actions"><button class="btn" id="btnDraft2" type="button">Borrador</button><button class="btn btn-primary" id="btnFinal2" type="button">Finalizar</button></div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="scrim" id="pickScrim" hidden></div>
+<div class="picker" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+  <div><h2 id="pickTitle">¿Qué asesor OB eres?</h2><p>Se cargan tus entrevistas, tus datos y tus comisiones.</p></div>
+  <div class="pick-list" id="pickList"></div>
+  <button class="btn" type="button" id="pickClose" hidden>Cancelar</button>
+</div>
+<aside class="drawer" id="drawer" hidden aria-label="Detalle de la entrevista" role="dialog" aria-modal="true"></aside>
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<datalist id="dl_equipo"></datalist>
+<datalist id="dl_asesores"></datalist>
+<datalist id="dl_suc"></datalist>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+/* ---------- Contenido del checklist (Checklist de Onboarding, una hoja) ---------- */
+const SECCIONES = [
+  {id:'s1', titulo:'Recibir el cierre del asesor', items:[
+    ['r1','Recibí del asesor todos los datos del cliente.','Nombre, DNI, contacto, plan y cuota acordada.'],
+    ['r2','Verifiqué el DNI y los datos de contacto.','Comparar el DNI con lo cargado y confirmar teléfono y mail.'],
+    ['r3','Confirmé la cuota acordada y las condiciones.','Que coincidan con lo que informó el asesor.'],
+    ['r4','Confirmé la reserva o el primer pago.','Ver el comprobante o el registro del pago.'],
+    ['r5','Revisé si hay datos incompletos, errores o promesas incorrectas.','«Sí» significa que lo revisé. Si apareció algo, cargarlo abajo en «Falla del asesor».']]},
+  {id:'s2', titulo:'Hablar con el cliente', items:[
+    ['v1','Le pregunté al cliente qué entendió del plan.','Que lo cuente con sus palabras; un «sí, entendí» no alcanza.'],
+    ['v2','Lo que entendió coincide con las condiciones reales.','Cuota, ajuste, plazos y beneficios.'],
+    ['v3','Le aclaré las dudas sobre el plan, el contrato y los pasos a seguir.'],
+    ['v4','Revisé que no espere algo que no corresponde.','Ej.: fechas de entrega, montos o beneficios que nadie puede garantizar.'],
+    ['v5','Si encontré un error, lo corregí en la misma entrevista.','Si no hubo ningún error, marcar N/A.'],
+    ['v6','Avisé del error a la responsable de onboarding o a la gerente.','Para que corrijan al asesor. Si no hubo ningún error, marcar N/A.'],
+    ['v7','El cliente sigue adelante y se va con todo claro.']]},
+  {id:'s3', titulo:'Contrato y documentación', items:[
+    ['d1','Revisé que los datos del contrato estén bien.'],
+    ['d2','Le expliqué qué está firmando.'],
+    ['d3','Confirmé que entendió las condiciones principales.'],
+    ['d4','Firmó el contrato de adhesión al Fideicomiso Metroterra.'],
+    ['d5','Guardé el contrato y la documentación en el legajo.']]},
+  {id:'s4', titulo:'Cargar el plan', items:[
+    ['c1','Cargué el plan correctamente en Dolibarr.'],
+    ['c2','Revisé el monto y la fecha de vencimiento de las cuotas.'],
+    ['c3','Las cuotas generadas coinciden con lo acordado.'],
+    ['c4','Intenté subir el aporte según lo que el cliente realmente puede pagar.','Sin forzar: una cuota que no puede pagar termina en atraso o baja.'],
+    ['c5','Registré cualquier aporte extra que se acordó.']]},
+  {id:'s5', titulo:'Portal Más Dueños', items:[
+    ['p1','Activé su cuenta en el Portal Más Dueños.'],
+    ['p2','El cliente pudo entrar al portal.','Probarlo juntos, desde su celular.'],
+    ['p3','Le mostré dónde ver sus cuotas, pagos y documentos.'],
+    ['p4','Sabe usar lo básico del portal por su cuenta.']]},
+  {id:'s6', titulo:'Lo que el cliente tiene que saber', items:[
+    ['i1','Le expliqué cómo y cuándo pagar.'],
+    ['i2','Le expliqué el ajuste por CAC.','La cuota se actualiza con el índice CAC, que sigue el costo de la construcción.'],
+    ['i3','Le expliqué los beneficios vigentes y sus condiciones.'],
+    ['i4','Le expliqué qué pasa si se atrasa o deja de pagar.'],
+    ['i5','Le expliqué por qué es clave pagar las tres primeras cuotas.'],
+    ['i6','Le dije por dónde hacer consultas.','Los canales oficiales de atención.']]},
+  {id:'s7', titulo:'Cerrar y registrar', items:[
+    ['k1','Actualicé el estado del cliente en Zoho CRM.'],
+    ['k2','Completé el legajo en papel y en digital.'],
+    ['k3','Adjunté los comprobantes.'],
+    ['k4','Le pedí una reseña en Google.'],
+    ['k5','Anoté lo que queda pendiente para seguimiento.','Si no queda nada pendiente, marcar N/A.'],
+    ['k6','Antes de despedirlo, confirmé que no quedó nada sin resolver.']]},
+];
+const ITEMS = SECCIONES.flatMap((s,si) => s.items.map(([id,t]) => ({id, t, s:s.id, sn:si+1})));
+const ITEM = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+const FALLA_TIPOS = ['Promesa incorrecta','Datos incompletos','Condiciones mal informadas','Error en monto o cuota','Otro'];
+const DEF_AJ = {pct:20, minimo:150000, plazoMeses:1, tope:1000000, metaEnt:0, metaMonto:0, equipo:[], asesores:[], sucursales:['Liniers']};
+
+/* ---------- Utilidades ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MONEY = new Intl.NumberFormat('es-AR', {style:'currency', currency:'ARS', maximumFractionDigits:0, minimumFractionDigits:0});
+const NUM = new Intl.NumberFormat('es-AR', {maximumFractionDigits:0});
+const fm = n => MONEY.format(Math.round(n || 0));
+const COT = new Intl.NumberFormat('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fu = n => 'US$ ' + NUM.format(Math.round(n || 0));
+function cotDe(f) { if (!f || !S.dolar?.length) return null; let r = null; for (const x of S.dolar) { if (x.fecha <= f) r = x; else break; } return r; }
+function montoHtml(it) { return it.moneda === 'USD' && it.usd ? `<span>${fm(it.monto)}<br><small class="muted">${fu(it.usd)} × ${COT.format(it.cot || 0)}</small></span>` : fm(it.monto); }
+const num = v => { const d = String(v ?? '').replace(/[^\d]/g, ''); return d ? parseInt(d, 10) : 0; };
+const fmtIn = n => n ? NUM.format(n) : '';
+const pad = n => String(n).padStart(2, '0');
+const hoy = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const fd = s => { if (!s) return '—'; const [y,m,d] = s.split('-'); return `${d}/${m}/${y}`; };
+const fdc = s => { if (!s) return '—'; const [,m,d] = s.split('-'); return `${d}/${m}`; };
+function addMonths(s, n) { const [y,m,d] = s.split('-').map(Number); const t = new Date(y, m-1+n, 1); const dim = new Date(t.getFullYear(), t.getMonth()+1, 0).getDate(); return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(Math.min(d, dim))}`; }
+function addDays(s, n) { const [y,m,d] = s.split('-').map(Number); const t = new Date(Date.UTC(y, m-1, d+n)); return `${t.getUTCFullYear()}-${pad(t.getUTCMonth()+1)}-${pad(t.getUTCDate())}`; }
+function diffDays(a, b) { const pa = a.split('-').map(Number), pb = b.split('-').map(Number); return Math.round((Date.UTC(pb[0],pb[1]-1,pb[2]) - Date.UTC(pa[0],pa[1]-1,pa[2])) / 86400000); }
+function lunes(s) { const [y,m,d] = s.split('-').map(Number); const wd = new Date(Date.UTC(y,m-1,d)).getUTCDay(); return addDays(s, -((wd + 6) % 7)); }
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const mesLabel = ym => { const [y,m] = ym.split('-'); const t = MESES[+m-1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
+function monthsBack(n) { const out = []; const d = new Date(); let y = d.getFullYear(), m = d.getMonth(); for (let i = 0; i < n; i++) { out.push(`${y}-${pad(m+1)}`); m--; if (m < 0) { m = 11; y--; } } return out; }
+function lastDay(ym) { const [y,m] = ym.split('-').map(Number); return `${ym}-${pad(new Date(y, m, 0).getDate())}`; }
+const norm = s => String(s || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('es');
+const gid = () => Math.random().toString(36).slice(2, 10);
+const clone = o => JSON.parse(JSON.stringify(o));
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const lsDel = k => { try { localStorage.removeItem(k); } catch {} };
+const pctTxt = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+
+/* ---------- Estado ---------- */
+const S = {
+  db:null, user:null, dl:null, uid:null, admin:false, canWrite:true, conectado:false, cargado:false, sinDb:false, errorDb:'',
+  aj:{...DEF_AJ}, E:[], dolar:[],
+  yo: lsGet('onb_yo', ''),
+  tab:'cargar', wantTab:null,
+  editId:null, editOrig:null, gest:[],
+  f:{ av:{esp:'', tipo:''}, ent:{q:'', esp:null, per:'', est:''}, pan:{per:'', esp:'', suc:''}, com:{mes:'', esp:'', pago:''} },
+  detalle:null, detalleFallback:null, saving:false, ajDirty:false,
+};
+
+/* ---------- Cálculos ---------- */
+function resultado(ck) {
+  let pend = 0, nos = 0, si = 0, na = 0;
+  for (const it of ITEMS) { const v = ck?.[it.id]; if (!v) pend++; else if (v === 'no') nos++; else if (v === 'si') si++; else na++; }
+  return {pend, nos, si, na, resp: ITEMS.length - pend, est: pend ? 'incompleto' : nos ? 'falla' : 'ok'};
+}
+const estList = e => e.estado !== 'final' ? 'borrador' : resultado(e.checklist).est;
+const revEst = e => e.revision?.estado || 'pendiente';
+function comision(e) {
+  const pct = e.pct ?? S.aj.pct; const pm = e.plazoMeses ?? S.aj.plazoMeses;
+  const limite = e.fecha ? addMonths(e.fecha, pm) : '';
+  const items = [];
+  const inc = Math.max(0, (e.cuotaFinal || 0) - (e.cuotaAsesor || 0));
+  if (inc > 0) items.push({concepto:'Incremento de cuota en la entrevista', tipo:'incremento', fecha:e.fecha, mesCom:e.fecha, monto:inc});
+  if ((e.ahorro || 0) > 0) items.push({concepto:'Ahorro en la entrevista', tipo:'ahorro', fecha:e.fecha, mesCom:e.fecha, monto:e.ahorro, moneda: e.ahorroMoneda || 'ARS', usd: e.ahorroUsd || 0, cot: e.ahorroCot || 0});
+  for (const g of e.gestiones || []) if ((g.monto || 0) > 0) items.push({concepto: g.pacto ? (g.tipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado') : (g.tipo === 'ahorro' ? 'Ahorro posterior' : 'Incremento posterior'), tipo:g.tipo, fecha:g.fecha, mesCom: g.fecha, acuerdo: g.fechaAcuerdo || '', pacto: !!g.pacto, monto:g.monto, nota:g.nota || '', moneda: g.moneda || 'ARS', usd: g.montoUsd || 0, cot: g.cot || 0});
+  const tope = e.tope ?? S.aj.tope ?? 0;
+  items.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+  let acum = 0;
+  for (const it of items) {
+    it.dentro = !!(it.fecha && limite && it.fecha >= e.fecha && it.fecha <= limite);
+    it.bruto = it.dentro ? Math.round(it.monto * pct / 100) : 0;
+    it.comision = tope ? Math.max(0, Math.min(it.bruto, tope - acum)) : it.bruto;
+    it.recorte = it.comision < it.bruto; acum += it.comision;
+  }
+  const cuotaBase = e.cuotaFinal || e.cuotaAsesor || 0;
+  const cuotaActual = cuotaBase + (e.gestiones || []).filter(g => g.tipo === 'incremento').reduce((a, g) => a + (g.monto || 0), 0);
+  const total = items.reduce((a, b) => a + b.comision, 0);
+  const restante = tope ? Math.max(0, tope - total) : Infinity;
+  const pactados = [];
+  if (e.seguimiento === 'si' && !e.seguimientoResuelto && ['ahorro', 'incremento'].includes(e.seguimientoTipo) && (e.seguimientoMonto || 0) > 0) {
+    const pf = e.seguimientoFecha || '';
+    const it = {pendiente: true, concepto: e.seguimientoTipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado', tipo: e.seguimientoTipo, fecha: pf, mesCom: pf || e.fecha, acuerdo: e.seguimientoAcuerdo || e.fecha, monto: e.seguimientoMonto, moneda: e.seguimientoMoneda || 'ARS', usd: e.seguimientoMontoUsd || 0, cot: e.seguimientoCot || 0};
+    if (it.moneda === 'USD' && it.usd) { const ch = cotDe(hoy()); if (ch) { it.cot = ch.ingreso; it.monto = Math.round(it.usd * ch.ingreso); } }
+    it.dentro = !!(limite && (!pf || pf <= limite) && hoy() <= limite);
+    it.bruto = it.dentro ? Math.round(it.monto * pct / 100) : 0;
+    it.comision = Math.min(it.bruto, restante); it.recorte = it.comision < it.bruto;
+    pactados.push(it);
+  }
+  return {items, pactados, total, limite, pct, cuotaActual, tope, topeAlcanzado: !!tope && items.some(i => i.recorte), restante};
+}
+function estadoComision(e, it) { if (it.pendiente) return it.dentro ? 'pago_pendiente' : 'fuera'; if (!it.dentro) return 'fuera'; if (e.estado !== 'final') return 'borrador'; return revEst(e); }
+const firmaSeg = e => JSON.stringify([e.seguimiento || '', e.seguimientoTipo || '', e.seguimientoMonto || 0, e.seguimientoFecha || '', e.seguimientoDetalle || '', e.seguimientoAcuerdo || '']);
+const firmaMontos = e => JSON.stringify([e.cuotaAsesor||0, e.cuotaFinal||0, e.ahorro||0, (e.gestiones||[]).map(g => [g.tipo, g.monto||0, g.fecha||''])]);
+
+const CHIP = {ok:['ok','Sin errores'], falla:['bad','Con falla'], incompleto:['warn','Incompleto'], borrador:['muted','Borrador'], pendiente:['warn','Por revisar'], aprobada:['ok','Comisión aprobada'], observada:['bad','Observada'], fuera:['muted','Fuera de plazo'], pago_pendiente:['acc','Referencia · falta el pago']};
+const chip = (k, txt) => { const [c, l] = CHIP[k] || ['muted', k]; return `<span class="chip chip-${c}"><i></i>${esc(txt || l)}</span>`; };
+
+function listaNombres(base, campo) {
+  const m = new Map();
+  for (const n of [...(base || []), ...S.E.map(e => e[campo])]) { const k = norm(n); if (k && !m.has(k)) m.set(k, String(n).trim()); }
+  return [...m.values()].sort((a, b) => a.localeCompare(b, 'es'));
+}
+const especialistas = () => listaNombres(S.aj.equipo, 'especialista');
+const asesores = () => listaNombres(S.aj.asesores, 'asesor');
+const sucursales = () => listaNombres(S.aj.sucursales, 'sucursal');
+
+/* ---------- Formulario ---------- */
+function construirForm() {
+  const secs = SECCIONES.map((s, si) => `
+    <section class="card" id="sec-${s.id}">
+      <div class="card-h"><h2><span class="secnum">${si+1}</span>${esc(s.titulo)}</h2><span class="count" id="cnt_${s.id}">0/${s.items.length}</span></div>
+      <div class="ck-list">${s.items.map(([id, t, h]) => `
+        <div class="ck-item" id="row_${id}">
+          <div class="ck-txt"><p id="lbl_${id}">${esc(t)}</p>${h ? `<small class="ck-hint">${esc(h)}</small>` : ''}</div>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_${id}">
+            <input type="radio" name="ck_${id}" id="ck_${id}_si" value="si"><label class="si" for="ck_${id}_si">Sí</label>
+            <input type="radio" name="ck_${id}" id="ck_${id}_no" value="no"><label class="no" for="ck_${id}_no">No</label>
+            <input type="radio" name="ck_${id}" id="ck_${id}_na" value="na"><label class="na" for="ck_${id}_na">N/A</label>
+          </div>
+        </div>`).join('')}
+      </div>
+    </section>`).join('');
+
+  $('#v-cargar').innerHTML = `
+  <div class="form-grid">
+    <div class="form-main" id="formMain">
+      <div class="edit-banner" id="editBanner" hidden>
+        <span id="editTxt"></span>
+        <button class="btn btn-sm" id="btnCancelEdit" type="button">Cancelar edición</button>
+      </div>
+      <div id="roNote"></div>
+      <section class="card" id="sec-datos">
+        <div class="card-h"><h2>Datos de la entrevista</h2><p>Completar durante la entrevista y antes de que el cliente se retire.</p></div>
+        <div class="grid-f">
+          <div class="field"><label for="f_fecha">Fecha</label><input type="date" id="f_fecha"></div>
+          <div class="field"><label for="f_esp">Asesor OB</label><select id="f_esp"></select><span class="hint" id="h_esp"></span></div>
+          <div class="field"><label for="f_suc">Sucursal</label><input type="text" id="f_suc" list="dl_suc" autocomplete="off"></div>
+          <div class="field"><label for="f_asesor">Asesor de ventas que cerró</label><input type="text" id="f_asesor" list="dl_asesores" autocomplete="off"></div>
+          <div class="field"><label for="f_cli">Nombre del cliente</label><input type="text" id="f_cli" autocomplete="off"></div>
+          <div class="field"><label for="f_dni">DNI</label><input type="text" id="f_dni" inputmode="numeric" autocomplete="off" class="mono"></div>
+          <div class="field"><label for="f_tel">Teléfono</label><input type="tel" id="f_tel" autocomplete="off"></div>
+          <div class="field"><label for="f_contrato">N.º de contrato o plan</label><input type="text" id="f_contrato" autocomplete="off" placeholder="Opcional"></div>
+        </div>
+      </section>
+      <section class="card" id="sec-montos">
+        <div class="card-h"><h2>Cuota, ahorro y comisión</h2><p id="montosSub"></p></div>
+        <div class="grid-f">
+          <div class="field"><label for="f_cuotaA">Cuota pactada por el asesor</label><input type="text" id="f_cuotaA" class="money" inputmode="numeric" placeholder="150.000"><span class="hint" id="h_cuotaA"></span></div>
+          <div class="field"><label for="f_cuotaF">Cuota final con la que sale el cliente</label><input type="text" id="f_cuotaF" class="money" inputmode="numeric" placeholder="250.000"><span class="hint" id="h_cuotaF">Si no hubo incremento, dejar igual a la del asesor.</span></div>
+          <div class="field"><label for="f_ahorro">Ahorro que dejó en la entrevista</label>
+            <div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda del ahorro"><input type="radio" name="f_ahMon" id="f_ahMon_ARS" value="ARS" checked><label class="ac" for="f_ahMon_ARS">$</label><input type="radio" name="f_ahMon" id="f_ahMon_USD" value="USD"><label class="ac" for="f_ahMon_USD">US$</label></div><input type="text" id="f_ahorro" class="money" inputmode="numeric" placeholder="0"></div>
+            <span class="hint" id="h_ahorro">Aporte adicional, por única vez.</span></div>
+        </div>
+        <div class="calc" id="calcBox"></div>
+        <p class="plazo" id="plazoTxt"></p>
+        <div class="gest">
+          <div class="q-row"><div><b>Incrementos o ahorros posteriores</b><p class="note">Lo que el cliente sume después de la entrevista. Comisiona solo si ocurre dentro del plazo. En un incremento, cargar cuánto aumentó la cuota.</p></div><button class="btn btn-sm" type="button" id="btnAddGest">Agregar gestión</button></div>
+          <div id="gestList" class="view" style="gap:8px"></div>
+        </div>
+      </section>
+      <section class="card" id="sec-guia">
+        <div class="card-h"><h2>Cómo responder el checklist</h2><p>Marcar cada paso durante la entrevista, antes de que el cliente se vaya.</p></div>
+        <div class="keys">
+          <div class="key"><span class="ans si">Sí</span><span>Lo hice.</span></div>
+          <div class="key"><span class="ans no">No</span><span>No lo hice. La entrevista queda «con falla».</span></div>
+          <div class="key"><span class="ans na">N/A</span><span>No corresponde en esta entrevista.</span></div>
+        </div>
+        <div class="banner warn" id="ckLock" hidden style="margin-top:12px">Esta entrevista ya está finalizada: las respuestas del checklist y la falla del asesor solo las puede cambiar la responsable. Se pueden editar los datos del cliente, los montos, las gestiones y el seguimiento.</div>
+        <label class="toggle" for="optHints"><input type="checkbox" id="optHints"> Mostrar la explicación debajo de cada paso</label>
+      </section>
+      ${secs}
+      <section class="card" id="sec-asesor">
+        <div class="card-h"><h2>Falla del asesor</h2><p>Datos incompletos, condiciones mal informadas o promesas que no corresponden.</p></div>
+        <div class="q-row"><span id="lbl_falla">¿Se detectó una falla del asesor en el cierre?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_falla">
+            <input type="radio" name="f_falla" id="f_falla_si" value="si"><label class="no" for="f_falla_si">Sí</label>
+            <input type="radio" name="f_falla" id="f_falla_no" value="no"><label class="si" for="f_falla_no">No</label>
+          </div>
+        </div>
+        <div class="extra" id="fallaExtra" hidden>
+          <div class="choice" role="group" aria-label="Tipo de falla">${FALLA_TIPOS.map((t, i) => `<label for="ft_${i}"><input type="checkbox" id="ft_${i}" name="f_ft" value="${esc(t)}">${esc(t)}</label>`).join('')}</div>
+          <div class="field"><label for="f_fallaDet">Qué pasó y cómo se corrigió</label><textarea id="f_fallaDet" placeholder="Ej.: el asesor informó una cuota distinta a la del contrato; se corrigió con el cliente y se informó a la gerente."></textarea></div>
+        </div>
+      </section>
+      <section class="card" id="sec-seg">
+        <div class="card-h"><h2>Seguimiento y observaciones</h2></div>
+        <div class="q-row"><span id="lbl_seg">¿Queda algo pendiente para seguimiento?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_seg">
+            <input type="radio" name="f_seg" id="f_seg_si" value="si"><label class="pe" for="f_seg_si">Sí</label>
+            <input type="radio" name="f_seg" id="f_seg_no" value="no"><label class="na" for="f_seg_no">No</label>
+          </div>
+        </div>
+        <div class="extra" id="segExtra" hidden>
+          <div class="grid-f">
+            <div class="field" style="grid-column:1 / -1"><label for="f_segDet">Qué queda pendiente</label><textarea id="f_segDet" placeholder="Ej.: enviar el comprobante del primer pago; volver a llamar para sumar ahorro."></textarea></div>
+            <div class="field" style="grid-column:1 / -1"><span class="lbl" id="lbl_segTipo">Qué se pactó</span>
+              <div class="seg" role="radiogroup" aria-labelledby="lbl_segTipo" style="margin-top:6px">
+                <input type="radio" name="f_segTipo" id="f_segTipo_ahorro" value="ahorro"><label class="ac" for="f_segTipo_ahorro">Ahorro</label>
+                <input type="radio" name="f_segTipo" id="f_segTipo_incremento" value="incremento"><label class="ac" for="f_segTipo_incremento">Incremento</label>
+                <input type="radio" name="f_segTipo" id="f_segTipo_otro" value="otro"><label class="na" for="f_segTipo_otro">Otro</label>
+              </div></div>
+            <div class="field" id="segMontoWrap"><label for="f_segMonto">Monto pactado</label><div class="money-in"><div class="seg seg-sm" role="radiogroup" aria-label="Moneda del monto pactado" id="segMonWrap"><input type="radio" name="f_segMon" id="f_segMon_ARS" value="ARS" checked><label class="ac" for="f_segMon_ARS">$</label><input type="radio" name="f_segMon" id="f_segMon_USD" value="USD"><label class="ac" for="f_segMon_USD">US$</label></div><input type="text" id="f_segMonto" class="money" inputmode="numeric" placeholder="0"></div><span class="hint" id="h_segMonto"></span></div>
+            <div class="field"><label for="f_segAcuerdo">Fecha del acuerdo</label><input type="date" id="f_segAcuerdo"><span class="hint">Día en que el cliente se comprometió.</span></div>
+            <div class="field"><label for="f_segFecha">Fecha pactada para el pago</label><input type="date" id="f_segFecha"><span class="hint" id="h_segFecha"></span></div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px"><label for="f_obs">Observaciones</label><textarea id="f_obs"></textarea></div>
+      </section>
+    </div>
+    <aside class="form-side">
+      <div class="side-card">
+        <div class="q-row" style="gap:8px"><span class="eyebrow">Resultado del checklist</span><span id="sideChip"></span></div>
+        <div class="prog"><div class="prog-bar"><span id="progBar" style="width:0%"></span></div><div class="prog-t"><span><b id="progN">0</b> de ${ITEMS.length} ítems respondidos</span><span id="progNo"></span></div></div>
+        <ul class="side-secs" id="sideSecs"></ul>
+        <div class="side-money"><div><span class="eyebrow">Comisión estimada</span><small id="sideMoneySub"></small></div><b id="sideMoney">$ 0</b></div>
+        <div id="formErrors"></div>
+        <div class="side-actions"><button class="btn" id="btnDraft" type="button">Guardar borrador</button><button class="btn btn-primary" id="btnFinal" type="button">Finalizar entrevista</button></div>
+        <p class="note" id="sideNote">Al finalizar, la entrevista queda registrada para la responsable con todos los datos.</p>
+      </div>
+    </aside>
+  </div>`;
+  $('#sideSecs').innerHTML = SECCIONES.map((s, si) => `<li><button type="button" data-go="sec-${s.id}"><span>${si+1}. ${esc(s.titulo)}</span><span class="count" id="sc_${s.id}">0/${s.items.length}</span></button></li>`).join('');
+}
+
+function ahorroDeForm() {
+  const mon = $('input[name="f_ahMon"]:checked')?.value || 'ARS'; const v = num($('#f_ahorro').value);
+  if (mon !== 'USD') return {ahorro: v, ahorroMoneda: 'ARS', ahorroUsd: 0, ahorroCot: 0};
+  const c = cotDe($('#f_fecha').value || hoy());
+  return {ahorro: c ? Math.round(v * c.ingreso) : 0, ahorroMoneda: 'USD', ahorroUsd: v, ahorroCot: c ? c.ingreso : 0, ahorroCotFecha: c ? c.fecha : ''};
+}
+function segMontoDeForm() {
+  const mon = $('input[name="f_segMon"]:checked')?.value || 'ARS'; const v = num($('#f_segMonto').value);
+  const tipo = $('input[name="f_segTipo"]:checked')?.value || '';
+  if (mon !== 'USD' || tipo !== 'ahorro') return {seguimientoMonto: v, seguimientoMoneda: 'ARS', seguimientoMontoUsd: 0, seguimientoCot: 0};
+  const c = cotDe($('#f_segAcuerdo').value || $('#f_fecha').value || hoy());
+  return {seguimientoMonto: c ? Math.round(v * c.ingreso) : 0, seguimientoMoneda: 'USD', seguimientoMontoUsd: v, seguimientoCot: c ? c.ingreso : 0};
+}
+function leerForm() {
+  const ck = {};
+  for (const it of ITEMS) { const r = $(`input[name="ck_${it.id}"]:checked`); if (r) ck[it.id] = r.value; }
+  return {
+    fecha: $('#f_fecha').value, especialista: ($('#f_esp').value || '').trim(), sucursal: $('#f_suc').value.trim(), asesor: $('#f_asesor').value.trim(),
+    cliente: $('#f_cli').value.trim(), dni: $('#f_dni').value.trim(), telefono: $('#f_tel').value.trim(), contrato: $('#f_contrato').value.trim(),
+    cuotaAsesor: num($('#f_cuotaA').value), cuotaFinal: num($('#f_cuotaF').value), ...ahorroDeForm(),
+    gestiones: S.gest.map(g => ({id:g.id, tipo:g.tipo, fecha:g.fecha, monto:g.monto || 0, nota:g.nota || '', moneda: g.moneda || 'ARS', ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), ...(g.pacto ? {pacto: true, fechaAcuerdo: g.fechaAcuerdo || ''} : {})})),
+    checklist: ck,
+    fallaAsesor: $('input[name="f_falla"]:checked')?.value || '',
+    fallaTipos: $$('input[name="f_ft"]:checked').map(i => i.value),
+    fallaDetalle: $('#f_fallaDet').value.trim(),
+    seguimiento: $('input[name="f_seg"]:checked')?.value || '',
+    seguimientoDetalle: $('#f_segDet').value.trim(), seguimientoFecha: $('#f_segFecha').value,
+    seguimientoAcuerdo: $('#f_segAcuerdo').value,
+    seguimientoTipo: $('input[name="f_segTipo"]:checked')?.value || '', ...segMontoDeForm(),
+    observaciones: $('#f_obs').value.trim(),
+  };
+}
+
+function cargarForm(d) {
+  $('#f_fecha').value = d.fecha || hoy();
+  fillEsp(d.especialista || ''); $('#f_suc').value = d.sucursal || ''; $('#f_asesor').value = d.asesor || '';
+  $('#f_cli').value = d.cliente || ''; $('#f_dni').value = d.dni || ''; $('#f_tel').value = d.telefono || ''; $('#f_contrato').value = d.contrato || '';
+  $('#f_cuotaA').value = fmtIn(d.cuotaAsesor); $('#f_cuotaF').value = fmtIn(d.cuotaFinal); $$('input[name="f_ahMon"]').forEach(r => { r.checked = r.value === (d.ahorroMoneda || 'ARS'); }); $('#f_ahorro').value = fmtIn(d.ahorroMoneda === 'USD' ? d.ahorroUsd : d.ahorro);
+  S.gest = (d.gestiones || []).map(g => ({...g}));
+  for (const it of ITEMS) $$(`input[name="ck_${it.id}"]`).forEach(r => { r.checked = d.checklist?.[it.id] === r.value; });
+  $$('input[name="f_falla"]').forEach(r => { r.checked = d.fallaAsesor === r.value; });
+  $$('input[name="f_ft"]').forEach(c => { c.checked = (d.fallaTipos || []).includes(c.value); });
+  $('#f_fallaDet').value = d.fallaDetalle || '';
+  $$('input[name="f_seg"]').forEach(r => { r.checked = d.seguimiento === r.value; });
+  $('#f_segDet').value = d.seguimientoDetalle || ''; $('#f_segFecha').value = d.seguimientoFecha || '';
+  $$('input[name="f_segTipo"]').forEach(r => { r.checked = d.seguimientoTipo === r.value; }); $$('input[name="f_segMon"]').forEach(r => { r.checked = r.value === (d.seguimientoMoneda || 'ARS'); }); $('#f_segMonto').value = fmtIn(d.seguimientoMoneda === 'USD' ? d.seguimientoMontoUsd : d.seguimientoMonto); $('#f_segAcuerdo').value = d.seguimientoAcuerdo || '';
+  $('#f_obs').value = d.observaciones || '';
+  mostrarErrores([]);
+  renderGest(); actualizarForm();
+}
+
+function vaciarForm() {
+  S.editId = null; S.editOrig = null; S.resolverAlGuardar = null;
+  cargarForm({fecha: hoy(), especialista: miNombre(), sucursal: sucursales()[0] || ''});
+  lsDel('onb_draft');
+}
+
+function recalcG(g) {
+  if (g.tipo !== 'ahorro') g.moneda = 'ARS';
+  if (g.moneda === 'USD') { const c = cotDe(g.fecha || hoy()); g.cot = c ? c.ingreso : 0; g.monto = c && g.montoUsd ? Math.round(g.montoUsd * c.ingreso) : 0; }
+  else { g.montoUsd = 0; g.cot = 0; }
+}
+function convTxt(g) { return g.moneda === 'USD' ? (g.cot ? `= ${fm(g.monto)}` : '<span style="color:var(--bad)">Sin cotización</span>') : ''; }
+function renderGest() {
+  const lim = $('#f_fecha').value ? addMonths($('#f_fecha').value, S.editOrig?.plazoMeses ?? S.aj.plazoMeses) : '';
+  const base = $('#f_fecha').value;
+  $('#gestList').innerHTML = S.gest.length ? S.gest.map(g => {
+    const dentro = g.fecha && lim && g.fecha >= base && g.fecha <= lim;
+    return `<div class="g-row" data-gid="${esc(g.id)}">
+      <select id="g_${esc(g.id)}_tipo" aria-label="Tipo de gestión" data-k="tipo"><option value="incremento"${g.tipo !== 'ahorro' ? ' selected' : ''}>Incremento de cuota</option><option value="ahorro"${g.tipo === 'ahorro' ? ' selected' : ''}>Ahorro</option></select>
+      <input type="date" id="g_${esc(g.id)}_fecha" aria-label="Fecha de la gestión" data-k="fecha" max="${hoy()}" value="${esc(g.fecha || '')}">
+      <select id="g_${esc(g.id)}_moneda" aria-label="Moneda" data-k="moneda"${g.tipo !== 'ahorro' ? ' disabled' : ''}><option value="ARS"${g.moneda !== 'USD' ? ' selected' : ''}>$</option><option value="USD"${g.moneda === 'USD' ? ' selected' : ''}>US$</option></select>
+      <input type="text" class="money" inputmode="numeric" id="g_${esc(g.id)}_monto" aria-label="Monto" placeholder="Monto" data-k="monto" value="${esc(fmtIn(g.moneda === 'USD' ? g.montoUsd : g.monto))}">
+      <input type="text" class="g-nota" id="g_${esc(g.id)}_nota" aria-label="Nota" placeholder="Nota (opcional)" data-k="nota" value="${esc(g.nota || '')}">
+      <div class="row" style="gap:8px;flex-wrap:nowrap">${g.pacto ? `<span class="g-st" style="color:var(--accent)">Acordado ${fdc(g.fechaAcuerdo)}</span>` : ''}<span class="g-st" id="g_${esc(g.id)}_conv">${convTxt(g)}</span><span class="g-st ${g.fecha ? (dentro ? 'in' : 'out') : ''}" id="g_${esc(g.id)}_st">${g.fecha ? (dentro ? 'En plazo' : 'Fuera de plazo') : ''}</span><button class="btn btn-sm" type="button" data-del="${esc(g.id)}">Quitar</button></div>
+    </div>`; }).join('') : `<p class="note">Sin gestiones posteriores.</p>`;
+}
+
+function actualizarForm() {
+  const d = leerForm();
+  const r = resultado(d.checklist);
+  const est = r.est;
+  // Secciones
+  for (const s of SECCIONES) {
+    let n = 0, no = 0; for (const [id] of s.items) { const v = d.checklist[id]; if (v) n++; if (v === 'no') no++; $('#row_' + id).classList.toggle('is-no', v === 'no'); }
+    const txt = `${n}/${s.items.length}`; const html = no ? `<span class="nob">${no} No</span> · ${txt}` : txt;
+    for (const el of [$('#cnt_' + s.id), $('#sc_' + s.id)]) { el.innerHTML = html; el.classList.toggle('done', n === s.items.length && !no); }
+  }
+  const p = Math.round(r.resp / ITEMS.length * 100);
+  $('#progBar').style.width = p + '%'; $('#progN').textContent = r.resp;
+  $('#progNo').innerHTML = r.nos ? `<span style="color:var(--bad);font-weight:650">${r.nos} en No</span>` : '';
+  const chipHtml = chip(est, est === 'falla' ? `Con falla (${r.nos})` : est === 'incompleto' ? `Faltan ${r.pend}` : null);
+  $('#sideChip').innerHTML = chipHtml; $('#bbChip').innerHTML = chipHtml; $('#bbCount').textContent = `${r.resp}/${ITEMS.length}`;
+  // Montos
+  const ref = {...d, pct: S.editOrig?.pct, plazoMeses: S.editOrig?.plazoMeses, tope: S.editOrig?.tope};
+  const c = comision(ref);
+  const inc = Math.max(0, (d.cuotaFinal || 0) - (d.cuotaAsesor || 0));
+  const post = c.items.filter(i => !i.concepto.includes('entrevista'));
+  const postOk = post.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0);
+  $('#calcBox').innerHTML = `
+    <div><small>Incremento de cuota</small><b>${fm(inc)}</b><small>${d.cuotaAsesor ? `${fm(d.cuotaAsesor)} → ${fm(d.cuotaFinal || d.cuotaAsesor)}` : 'Cargar las cuotas'}</small></div>
+    <div><small>Ahorro en la entrevista</small><b>${fm(d.ahorro)}</b><small>Aporte por única vez</small></div>
+    <div><small>Gestiones posteriores</small><b>${fm(postOk)}</b><small>${post.length ? `${post.filter(i => i.dentro).length} de ${post.length} en plazo` : 'Ninguna'}</small></div>
+    <div class="hl"><small>Comisión estimada (${c.pct}%)</small><b>${fm(c.total)}</b><small>${c.topeAlcanzado ? `Llegó al tope de ${fm(c.tope)}` : c.tope ? `Tope por cliente: ${fm(c.tope)}` : 'Sujeta a revisión'}</small></div>`;
+  $('#montosSub').textContent = `El asesor OB comisiona el ${c.pct}% de lo que aumenta la cuota pactada por el asesor y del ahorro que deja el cliente, dentro de ${(S.editOrig?.plazoMeses ?? S.aj.plazoMeses) === 1 ? 'un mes' : (S.editOrig?.plazoMeses ?? S.aj.plazoMeses) + ' meses'} desde la entrevista${c.tope ? `, con un máximo de ${fm(c.tope)} por cliente` : ''}.`;
+  if (c.limite) { const q = diffDays(hoy(), c.limite); $('#plazoTxt').innerHTML = q >= 0 ? `Plazo para sumar incremento o ahorro: hasta el <b>${fd(c.limite)}</b> · quedan ${q} ${q === 1 ? 'día' : 'días'}.` : `El plazo para sumar incremento o ahorro venció el <b>${fd(c.limite)}</b>.`; } else $('#plazoTxt').textContent = '';
+  const h = $('#h_cuotaA');
+  if (d.cuotaAsesor && d.cuotaAsesor < S.aj.minimo) { h.textContent = `Por debajo del mínimo de ingreso (${fm(S.aj.minimo)}).`; h.classList.add('warn'); }
+  else { h.textContent = `Mínimo de ingreso: ${fm(S.aj.minimo)}.`; h.classList.remove('warn'); }
+  const hf = $('#h_cuotaF');
+  if (d.cuotaFinal && d.cuotaAsesor && d.cuotaFinal < d.cuotaAsesor) { hf.textContent = 'Es menor que la cuota del asesor.'; hf.classList.add('warn'); }
+  else { hf.textContent = 'Si no hubo incremento, dejar igual a la del asesor.'; hf.classList.remove('warn'); }
+  $('#sideMoney').textContent = fm(c.total); $('#bbMoney').textContent = fm(c.total);
+  $('#sideMoneySub').textContent = c.total ? `${c.pct}% sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'Sin incremento ni ahorro';
+  $('#fallaExtra').hidden = d.fallaAsesor !== 'si';
+  $('#segExtra').hidden = d.seguimiento !== 'si';
+  $('#segMonWrap').hidden = d.seguimientoTipo !== 'ahorro';
+  { const ha = $('#h_ahorro');
+    if (d.ahorroMoneda === 'USD') { if (!d.ahorroCot) { ha.textContent = 'No hay cotización del dólar Spazios para esa fecha. La responsable la puede cargar en Ajustes.'; ha.classList.add('warn'); } else { ha.textContent = `${fu(d.ahorroUsd)} × ${COT.format(d.ahorroCot)} (dólar Spazios ingreso del ${fd(d.ahorroCotFecha)}) = ${fm(d.ahorro)}. La comisión se paga en pesos.`; ha.classList.remove('warn'); } }
+    else { ha.textContent = 'Aporte adicional, por única vez.'; ha.classList.remove('warn'); } }
+  $('#segMontoWrap').hidden = !['ahorro', 'incremento'].includes(d.seguimientoTipo);
+  $('#f_segFecha').min = d.fecha || ''; $('#f_segFecha').max = c.limite || '';
+  $('#f_segAcuerdo').min = d.fecha || ''; $('#f_segAcuerdo').max = hoy();
+  if (d.seguimiento === 'si' && !d.seguimientoAcuerdo && d.fecha && document.activeElement?.id !== 'f_segAcuerdo') $('#f_segAcuerdo').value = S.editOrig?.estado === 'final' ? hoy() : d.fecha;
+  $('#h_segFecha').textContent = c.limite ? `Hasta el ${fd(c.limite)}: solo se puede pactar dentro del mes desde la entrevista.` : '';
+  $('#h_segFecha').classList.toggle('warn', !!(d.seguimientoFecha && c.limite && (d.seguimientoFecha > c.limite || d.seguimientoFecha < d.fecha)));
+  if (d.seguimientoMonto && ['ahorro', 'incremento'].includes(d.seguimientoTipo)) { $('#h_segMonto').classList.remove('warn'); const pos = Math.min(Math.round(d.seguimientoMonto * c.pct / 100), c.restante); $('#h_segMonto').textContent = `${d.seguimientoMoneda === 'USD' ? `≈ ${fm(d.seguimientoMonto)} al dólar Spazios de hoy. ` : ''}Si se cumple dentro del plazo, suma ${fm(pos)} de comisión.`; } else $('#h_segMonto').textContent = d.seguimientoTipo === 'incremento' ? 'Cuánto va a aumentar la cuota.' : '';
+  // Botones según modo
+  const editFinal = S.editOrig?.estado === 'final';
+  const lockCk = editFinal && !esResp();
+  $('#ckLock').hidden = !lockCk; document.body.classList.toggle('ck-lock', lockCk);
+  for (const el of $$('.ck-list input, #sec-asesor input, #sec-asesor textarea')) el.disabled = lockCk;
+  $('#btnDraft').hidden = editFinal; $('#btnDraft2').hidden = editFinal;
+  $('#btnFinal').textContent = editFinal ? 'Guardar cambios' : 'Finalizar entrevista';
+  $('#btnFinal2').textContent = editFinal ? 'Guardar' : 'Finalizar';
+  $('#editBanner').hidden = !S.editId;
+  if (S.editId) $('#editTxt').innerHTML = `Editando la entrevista de <b>${esc(d.cliente || 'cliente sin nombre')}</b> del ${fd(d.fecha)}.${editFinal ? ' Si cambian los montos, la comisión vuelve a quedar por revisar.' : ''}`;
+  const bloqueado = !S.canWrite || S.sinDb;
+  for (const b of ['#btnDraft', '#btnFinal', '#btnDraft2', '#btnFinal2']) $(b).disabled = bloqueado || S.saving;
+  const sinEquipo = S.ajCargado && !equipo().length;
+  const he = $('#h_esp');
+  if (sinEquipo) { he.innerHTML = esResp() ? 'No hay asesores OB cargados. <button class="linkbtn" type="button" data-tabgo="ajustes">Cargarlos en Ajustes</button>' : 'La responsable todavía no cargó los asesores OB en Ajustes.'; he.classList.add('warn'); }
+  else { he.textContent = ''; he.classList.remove('warn'); }
+  if (S.errs?.length) { const e2 = validar(d, S.errFinal); if (JSON.stringify(e2) !== JSON.stringify(S.errs)) mostrarErrores(e2); }
+  $('#roNote').innerHTML = sinEquipo ? `<div class="banner warn"><b>Falta cargar los asesores OB.</b> Sin esa lista no se puede elegir el asesor OB y la entrevista no se puede guardar. ${esResp() ? '<button class="linkbtn" type="button" data-tabgo="ajustes">Ir a Ajustes</button>' : 'Pedirle a la responsable que los cargue en Ajustes.'}</div>` : !S.canWrite ? `<div class="banner warn">Esta cuenta puede ver las entrevistas pero no guardarlas. La responsable tiene que darle permiso de Colaborador o Editor desde Compartir.</div>` : '';
+}
+
+function validar(d, final) {
+  const err = [];
+  if (!d.fecha) err.push(['f_fecha', 'Falta la fecha.']);
+  if (!d.especialista) err.push(['f_esp', 'Falta elegir el asesor OB.']);
+  if (!d.cliente) err.push(['f_cli', 'Falta el nombre del cliente.']);
+  if (final) {
+    if (!d.dni) err.push(['f_dni', 'Falta el DNI del cliente.']);
+    if (!d.asesor) err.push(['f_asesor', 'Falta el asesor de ventas.']);
+    if (!d.cuotaAsesor) err.push(['f_cuotaA', 'Falta la cuota pactada por el asesor.']);
+    if (d.cuotaFinal && d.cuotaFinal < d.cuotaAsesor) err.push(['f_cuotaF', 'La cuota final es menor que la del asesor.']);
+    const pend = ITEMS.filter(i => !d.checklist[i.id]);
+    if (pend.length) err.push(['row_' + pend[0].id, `Quedan ${pend.length} ${pend.length === 1 ? 'ítem' : 'ítems'} del checklist sin responder.`]);
+    if (!d.fallaAsesor) err.push(['sec-asesor', 'Indicar si hubo una falla del asesor.']);
+    if (d.fallaAsesor === 'si' && !d.fallaDetalle) err.push(['f_fallaDet', 'Describir la falla del asesor.']);
+    if (!d.seguimiento) err.push(['sec-seg', 'Indicar si queda algo para seguimiento.']);
+    if (d.seguimiento === 'si' && !d.seguimientoTipo) err.push(['f_segTipo_ahorro', 'Indicar qué se pactó para el seguimiento.']);
+    if (d.seguimiento === 'si' && ['ahorro', 'incremento'].includes(d.seguimientoTipo) && !d.seguimientoMonto) err.push(['f_segMonto', 'Falta el monto pactado.']);
+    if (d.seguimiento === 'si' && !d.seguimientoDetalle) err.push(['f_segDet', 'Describir qué queda pendiente.']);
+    if (d.seguimiento === 'si' && !d.seguimientoFecha) err.push(['f_segFecha', 'Falta la fecha pactada.']);
+    if (d.seguimiento === 'si' && d.seguimientoAcuerdo && (d.seguimientoAcuerdo < d.fecha || d.seguimientoAcuerdo > hoy())) err.push(['f_segAcuerdo', 'La fecha del acuerdo tiene que estar entre la entrevista y hoy.']);
+    if (d.seguimiento === 'si' && d.seguimientoAcuerdo && d.seguimientoFecha && d.seguimientoFecha < d.seguimientoAcuerdo) err.push(['f_segFecha', 'La fecha de pago no puede ser anterior al acuerdo.']);
+    if (d.seguimiento === 'si' && d.seguimientoFecha && d.fecha) { const lim = addMonths(d.fecha, S.editOrig?.plazoMeses ?? S.aj.plazoMeses); if (d.seguimientoFecha > lim) err.push(['f_segFecha', `La fecha pactada no puede pasar del ${fd(lim)} (un mes desde la entrevista).`]); else if (d.seguimientoFecha < d.fecha) err.push(['f_segFecha', 'La fecha pactada no puede ser anterior a la entrevista.']); }
+  }
+  if (d.ahorroMoneda === 'USD' && d.ahorroUsd && !d.ahorroCot) err.push(['f_ahorro', 'Falta la cotización del dólar Spazios para la fecha de la entrevista.']);
+  for (const g of d.gestiones) {
+    if (g.moneda === 'USD' && g.montoUsd && !g.cot) err.push([`g_${g.id}_monto`, `No hay cotización del dólar Spazios para el ${fd(g.fecha)}.`]);
+    if (g.monto && !g.fecha) err.push([`g_${g.id}_fecha`, 'Una gestión posterior no tiene fecha.']);
+    if (g.fecha && !g.monto) err.push([`g_${g.id}_monto`, 'Una gestión posterior no tiene monto.']);
+    if (g.fecha && g.fecha > hoy() && !(S.editOrig?.gestiones || []).some(o => o.id === g.id && o.fecha === g.fecha)) err.push([`g_${g.id}_fecha`, `Una gestión tiene fecha futura (${fd(g.fecha)}). Se carga el día en que el cliente la hace; lo pactado va en Seguimiento.`]);
+  }
+  return err;
+}
+function mostrarErrores(err) {
+  S.errs = err;
+  $('#bbErr').hidden = !err.length;
+  $('#bbErrTxt').textContent = err.length === 1 ? err[0][1] : `Faltan ${err.length} datos.`;
+  $$('.has-err').forEach(el => el.classList.remove('has-err'));
+  for (const [id] of err) { const el = document.getElementById(id); if (el && el.matches('input,textarea,select')) el.classList.add('has-err'); }
+  $('#formErrors').innerHTML = err.length ? `<ul class="errs">${err.map(([id, m]) => `<li><button type="button" data-go="${esc(id)}">${esc(m)}</button></li>`).join('')}</ul>` : '';
+}
+function irA(id) {
+  const el = document.getElementById(id); if (!el) return;
+  el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+  const f = el.matches('input,textarea,select') ? el : el.querySelector('input,textarea,select');
+  if (f) setTimeout(() => f.focus({preventScroll: true}), 250);
+}
+
+async function conReintento(fn) {
+  try { return await fn(); }
+  catch (e) { if (e?.code === 'unavailable') { await new Promise(r => setTimeout(r, 700 + Math.random() * 800)); return await fn(); } throw e; }
+}
+function errorEscritura(e) {
+  if (e?.code === 'invalid_argument') { S.canWrite = false; actualizarForm(); toast('Esta cuenta no tiene permiso para guardar.', 'bad'); }
+  else if (e?.code === 'quota_exceeded') toast('La base de datos llegó a su límite. Hay que borrar entrevistas viejas para seguir cargando.', 'bad');
+  else if (e?.code === 'resource_exhausted') toast('Demasiados guardados seguidos. Esperar unos segundos y volver a intentar.', 'bad');
+  else toast('No se pudo guardar. Revisar la conexión y volver a intentar.', 'bad');
+}
+
+async function guardar(final) {
+  if (S.saving) return;
+  const d = leerForm();
+  const err = validar(d, final);
+  S.errFinal = final;
+  mostrarErrores(err);
+  if (err.length) { toast(err.length === 1 ? err[0][1] : `Faltan ${err.length} datos para ${final ? 'finalizar' : 'guardar'}.`, 'bad'); irA(err[0][0]); return; }
+  if (!S.db) { toast('No hay conexión con la base de datos: no se puede guardar.', 'bad'); return; }
+  const prev = (S.editId && S.E.find(x => x.id === S.editId)) || S.editOrig;
+  const now = new Date().toISOString();
+  const yaFinal = prev?.estado === 'final';
+  if (d.seguimiento === 'si' && !d.seguimientoAcuerdo) d.seguimientoAcuerdo = yaFinal ? hoy() : d.fecha;
+  if ((final || yaFinal) && !d.cuotaFinal) d.cuotaFinal = d.cuotaAsesor;
+  const rec = {...d,
+    estado: (final || yaFinal) ? 'final' : 'borrador', mes: d.fecha.slice(0, 7),
+    pct: prev?.pct ?? S.aj.pct, plazoMeses: prev?.plazoMeses ?? S.aj.plazoMeses, tope: prev?.tope ?? S.aj.tope ?? DEF_AJ.tope,
+    creado: prev?.creado || now, creadoPor: prev?.creadoPor ?? S.uid ?? null,
+    actualizado: now, actualizadoPor: S.uid ?? null,
+    finalizado: (final || yaFinal) ? (prev?.finalizado || now) : null,
+    seguimientoResuelto: d.seguimiento === 'si' && !!prev?.seguimientoResuelto && firmaSeg(prev) === firmaSeg(d),
+  };
+  let rev = prev?.revision ? {...prev.revision} : {estado: 'pendiente', nota: ''};
+  if (prev && rev.estado !== 'pendiente' && firmaMontos(prev) !== firmaMontos(rec)) rev = {estado: 'pendiente', nota: 'Montos modificados después de la revisión.' + (rev.nota ? ' Nota anterior: ' + rev.nota : ''), fecha: now, por: S.uid ?? null};
+  rec.revision = rev;
+  if (yaFinal && !esResp() && prev) { rec.checklist = clone(prev.checklist || {}); rec.fallaAsesor = prev.fallaAsesor || ''; rec.fallaTipos = clone(prev.fallaTipos || []); rec.fallaDetalle = prev.fallaDetalle || ''; }
+  if (S.resolverAlGuardar && S.resolverAlGuardar === S.editId && d.gestiones.some(g => g.id === S.resolverGid && g.monto > 0)) { rec.seguimientoResuelto = true; rec.seguimientoResueltoFecha = hoy(); }
+  rec.seguimientoResueltoFecha = rec.seguimientoResuelto ? (rec.seguimientoResueltoFecha || prev?.seguimientoResueltoFecha || hoy()) : null;
+  S.saving = true; actualizarForm();
+  try {
+    const col = S.db.collection('entrevistas');
+    const ref = S.editId ? col.doc(S.editId) : col.doc();
+    await conReintento(() => ref.set(clone(rec)));
+    S.resolverAlGuardar = null;
+    if (rec.estado === 'final') {
+      toast(yaFinal ? 'Cambios guardados.' : `Entrevista finalizada. Comisión estimada ${fm(comision(rec).total)}.`);
+      S.saving = false;
+      vaciarForm();
+      abrirDetalle(ref.id, {...rec, id: ref.id});
+    } else {
+      S.editId = ref.id; S.editOrig = {...rec, id: ref.id};
+      guardarBorradorLocal();
+      toast('Borrador guardado. Se puede retomar desde Entrevistas.');
+    }
+  } catch (e) { errorEscritura(e); }
+  finally { S.saving = false; actualizarForm(); }
+}
+
+let tDraft = 0;
+function guardarBorradorLocal() { lsSet('onb_draft', {editId: S.editId, editOrig: S.editOrig, data: leerForm(), t: Date.now()}); }
+function programarBorrador() { clearTimeout(tDraft); tDraft = setTimeout(guardarBorradorLocal, 500); }
+
+function editar(e) {
+  S.editId = e.id; S.editOrig = clone(e);
+  cargarForm(clone(e));
+  cerrarDetalle();
+  setTab('cargar');
+  guardarBorradorLocal();
+}
+
+function bindForm() {
+  const main = $('#v-cargar');
+  main.addEventListener('input', ev => {
+    const t = ev.target;
+    if (t.closest('#gestList')) {
+      const row = t.closest('.g-row'); const g = S.gest.find(x => x.id === row?.dataset.gid); const k = t.dataset.k;
+      if (g && k) { if (k === 'monto') { if (g.moneda === 'USD') g.montoUsd = num(t.value); else g.monto = num(t.value); } else g[k] = t.value; if (k === 'moneda') { const v = num($(`#g_${g.id}_monto`).value); if (g.moneda === 'USD') g.montoUsd = v; else g.monto = v; } recalcG(g); const cv = $(`#g_${g.id}_conv`); if (cv) cv.innerHTML = convTxt(g); if (k === 'tipo') { renderGest(); } if (k === 'fecha') { const lim = $('#f_fecha').value ? addMonths($('#f_fecha').value, S.editOrig?.plazoMeses ?? S.aj.plazoMeses) : ''; const st = $(`#g_${g.id}_st`); const ok = g.fecha && lim && g.fecha >= $('#f_fecha').value && g.fecha <= lim; st.textContent = g.fecha ? (ok ? 'En plazo' : 'Fuera de plazo') : ''; st.className = 'g-st ' + (g.fecha ? (ok ? 'in' : 'out') : ''); } }
+    }
+    if (t.classList.contains('has-err')) t.classList.remove('has-err');
+    if (t.id === 'f_fecha') renderGest();
+    actualizarForm(); programarBorrador();
+  });
+  main.addEventListener('change', ev => { if (ev.target.matches('select,input[type=radio],input[type=checkbox]')) { actualizarForm(); programarBorrador(); } });
+  main.addEventListener('focusout', ev => { const t = ev.target; if (t.classList?.contains('money')) t.value = fmtIn(num(t.value)); });
+  main.addEventListener('click', ev => {
+    const go = ev.target.closest('[data-go]'); if (go) { irA(go.dataset.go); return; }
+    const del = ev.target.closest('[data-del]'); if (del) { S.gest = S.gest.filter(g => g.id !== del.dataset.del); renderGest(); actualizarForm(); programarBorrador(); return; }
+    if (ev.target.closest('#btnAddGest')) { const id = gid(); S.gest.push({id, tipo: 'incremento', fecha: hoy(), monto: 0, nota: ''}); renderGest(); actualizarForm(); setTimeout(() => $(`#g_${id}_monto`)?.focus(), 30); return; }
+    if (ev.target.closest('#btnCancelEdit')) { vaciarForm(); toast('Edición cancelada.'); return; }
+    if (ev.target.closest('#btnDraft')) guardar(false);
+    if (ev.target.closest('#btnFinal')) guardar(true);
+  });
+  $('#btnDraft2').addEventListener('click', () => guardar(false));
+  $('#btnFinal2').addEventListener('click', () => guardar(true));
+  $('#bbErrGo').addEventListener('click', () => { if (S.errs?.length) irA(S.errs[0][0]); });
+}
+
+/* ---------- Pestañas ---------- */
+const ADMIN_TABS = ['panel', 'ajustes'];
+function setTab(t, sinScroll) {
+  if (ADMIN_TABS.includes(t) && !esResp()) t = 'cargar';
+  S.tab = t; document.body.dataset.tab = t;
+  $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+  $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + t; });
+  $('#barTitle').textContent = {cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel de la responsable', ajustes: 'Ajustes'}[t];
+  cerrarMenu();
+  renderVista();
+  if (!sinScroll) window.scrollTo({top: 0});
+}
+function abrirMenu() { $('#menu').hidden = false; $('#menuScrim').hidden = false; $('#menuBtn').setAttribute('aria-expanded', 'true'); setTimeout(() => $('#menu .tab[aria-selected="true"]')?.focus(), 30); }
+function cerrarMenu() { if ($('#menu').hidden) return; $('#menu').hidden = true; $('#menuScrim').hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); }
+function etiquetar(root) {
+  for (const w of $$('.tbl-wrap', root)) {
+    w.classList.add('stack');
+    const heads = $$('thead th', w).map(th => th.textContent.trim());
+    for (const tr of $$('tbody tr, tfoot tr', w)) { let i = 0; for (const td of tr.children) { const span = td.colSpan || 1; td.dataset.l = span > 1 ? '' : (heads[i] || ''); i += span; } }
+  }
+}
+function renderTabs() {
+  $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp();
+  const pend = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length;
+  $('#t-panel').innerHTML = `<span>Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
+  const urg = (esResp() || miNombre()) ? avisosDe(esResp() ? '' : miNombre()).filter(a => a.est === 'atrasado' || a.est === 'hoy').length : 0;
+  $('#t-avisos').innerHTML = `<span>Avisos</span><small>Seguimientos y ahorros pactados</small>${urg ? `<span class="badge bad" title="Atrasados o para hoy">${urg}</span>` : ''}`;
+  $('#menuBtn').classList.toggle('has-badge', (esResp() && pend > 0) || urg > 0);
+}
+function renderVista() {
+  if (S.tab === 'entrevistas') renderEntrevistas();
+  else if (S.tab === 'panel') renderPanel();
+  else if (S.tab === 'comisiones') renderComisiones();
+  else if (S.tab === 'ajustes') renderAjustes();
+  else if (S.tab === 'avisos') renderAvisos();
+}
+function fillSelect(sel, opts) {
+  const v = sel.value;
+  sel.innerHTML = opts.map(([val, lab]) => `<option value="${esc(val)}">${esc(lab)}</option>`).join('');
+  if (opts.some(o => o[0] === v)) sel.value = v;
+  return sel.value;
+}
+function renderFiltros() {
+  const esp = especialistas(), suc = sucursales();
+  const mset = new Set(monthsBack(12)); const cur = hoy().slice(0, 7);
+  for (const e of S.E) { if (e.fecha) mset.add(e.fecha.slice(0, 7)); for (const g of e.gestiones || []) { if (g.fecha) mset.add(g.fecha.slice(0, 7)); if (g.fechaAcuerdo) mset.add(g.fechaAcuerdo.slice(0, 7)); } if (e.seguimientoAcuerdo) mset.add(e.seguimientoAcuerdo.slice(0, 7)); }
+  const meses = [...mset].sort().reverse();
+  $('#dl_equipo').innerHTML = esp.map(n => `<option value="${esc(n)}"></option>`).join('');
+  $('#dl_asesores').innerHTML = asesores().map(n => `<option value="${esc(n)}"></option>`).join('');
+  $('#dl_suc').innerHTML = suc.map(n => `<option value="${esc(n)}"></option>`).join('');
+  const espOpts = [['', 'Todos'], ...esp.map(n => [n, n])];
+  if (S.f.ent.esp === null) S.f.ent.esp = miNombre();
+  if (!esResp()) S.f.ent.esp = miNombre();
+  fillEsp($('#f_esp').value);
+  if (S.f.ent.esp && !esp.some(n => norm(n) === norm(S.f.ent.esp))) espOpts.push([S.f.ent.esp, S.f.ent.esp]);
+  fillSelect($('#fe_esp'), espOpts); $('#fe_esp').value = espOpts.find(o => norm(o[0]) === norm(S.f.ent.esp))?.[0] ?? ''; $('#fe_esp').disabled = !esResp();
+  fillSelect($('#fe_per'), [['', 'Todos'], ...meses.map(m => [m, mesLabel(m)])]); $('#fe_per').value = S.f.ent.per;
+  fillSelect($('#fc_mes'), meses.map(m => [m, mesLabel(m) + (m === cur ? ' (en curso)' : '')])); $('#fc_mes').value = S.f.com.mes || cur;
+  const comEsp = esResp() ? espOpts : [[miNombre(), miNombre() || 'Sin elegir']];
+  fillSelect($('#fc_esp'), comEsp); $('#fc_esp').value = esResp() ? (comEsp.find(o => norm(o[0]) === norm(S.f.com.esp))?.[0] ?? '')   : miNombre();
+  $('#fc_esp').disabled = !esResp();
+  fillSelect($('#fp_per'), [...meses.map(m => [m, mesLabel(m) + (m === cur ? ' (en curso)' : '')]), ['3m', 'Últimos 3 meses']]); $('#fp_per').value = S.f.pan.per || cur;
+  fillSelect($('#fp_esp'), espOpts); $('#fp_esp').value = espOpts.find(o => norm(o[0]) === norm(S.f.pan.esp))?.[0] ?? '';
+  fillSelect($('#fa_esp'), espOpts); $('#fa_esp').value = espOpts.find(o => norm(o[0]) === norm(S.f.av.esp))?.[0] ?? ''; $('#fa_espWrap').hidden = !esResp();
+  fillSelect($('#fp_suc'), [['', 'Todas'], ...suc.map(n => [n, n])]); $('#fp_suc').value = S.f.pan.suc;
+}
+
+/* ---------- Vista: Entrevistas ---------- */
+function renderEntrevistas() {
+  const out = $('#ent-out');
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando entrevistas…</h3><p>Conectando con la base de datos compartida del equipo.</p></div>`; return; }
+  if (!S.E.length) { out.innerHTML = `<div class="empty"><h3>Todavía no hay entrevistas cargadas</h3><p>Cuando un asesor OB completa el checklist y lo finaliza, la entrevista aparece acá con su resultado, la cuota, el ahorro, la comisión y el estado de revisión.</p><button class="btn btn-primary" type="button" data-tabgo="cargar">Cargar la primera entrevista</button></div>`; return; }
+  if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
+  const f = {...S.f.ent, esp: esResp() ? S.f.ent.esp : miNombre()}, q = norm(f.q);
+  const rows = S.E.filter(e => {
+    if (f.esp && norm(e.especialista) !== norm(f.esp)) return false;
+    if (f.per && !(e.fecha || '').startsWith(f.per)) return false;
+    if (f.est) {
+      if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final' || revEst(e) !== f.est) return false; }
+      else if (estList(e) !== f.est) return false;
+    }
+    if (q && !(norm(e.cliente).includes(q) || norm(e.dni).includes(q) || norm(e.asesor).includes(q))) return false;
+    return true;
+  }).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || (b.actualizado || '').localeCompare(a.actualizado || ''));
+  if (!rows.length) { out.innerHTML = `<div class="empty"><h3>Ninguna entrevista coincide con los filtros</h3><p>Probar con otro mes, otro asesor OB o borrar la búsqueda.</p></div>`; return; }
+  const tot = rows.reduce((a, e) => a + (e.estado === 'final' ? comision(e).total : 0), 0);
+  out.innerHTML = `<p class="list-meta" style="margin-bottom:8px">${rows.length} ${rows.length === 1 ? 'entrevista' : 'entrevistas'} · comisión estimada ${fm(tot)}</p>
+  <div class="elist">${rows.map(e => {
+    const c = comision(e); const st = estList(e);
+    return `<button class="erow" type="button" data-id="${esc(e.id)}">
+      <span class="e-date">${fdc(e.fecha)}</span>
+      <span class="e-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${e.dni ? 'DNI ' + esc(e.dni) + ' · ' : ''}Asesor: ${esc(e.asesor || '—')}</small></span>
+      <span class="e-esp"><b style="font-weight:500">${esc(e.especialista || '—')}</b><small>${esc(e.sucursal || '')}</small></span>
+      <span class="e-chips chips">${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
+      <span class="e-money"><b>${fm(c.total)}</b><small>${c.items.length ? `sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'sin incremento'}</small></span>
+    </button>`; }).join('')}</div>`;
+}
+function vacioSinDb() {
+  return `<div class="empty"><h3>Sin conexión con la base de datos</h3><p>Revisar la configuración de Supabase (archivo config.js) y la conexión a internet. ${S.errorDb ? esc(S.errorDb) : ''}</p></div>`;
+}
+
+/* ---------- Detalle ---------- */
+function abrirDetalle(id, fallback) {
+  S.detalle = id; S.detalleFallback = fallback || null;
+  renderDetalle();
+  $('#drawer').hidden = false; $('#scrim').hidden = false;
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => $('#drClose')?.focus(), 30);
+}
+function cerrarDetalle() {
+  S.detalle = null; S.detalleFallback = null;
+  $('#drawer').hidden = true; $('#scrim').hidden = true; $('#drawer').innerHTML = '';
+  document.body.style.overflow = '';
+}
+function renderDetalle() {
+  const e = S.E.find(x => x.id === S.detalle) || S.detalleFallback;
+  if (!e) { cerrarDetalle(); return; }
+  const r = resultado(e.checklist); const st = estList(e); const c = comision(e); const rv = revEst(e);
+  const q = c.limite ? diffDays(hoy(), c.limite) : null;
+  const secs = SECCIONES.map((s, si) => {
+    const its = s.items.map(([id, t]) => ({id, t, v: e.checklist?.[id] || ''}));
+    const ns = its.filter(i => i.v === 'si').length, nn = its.filter(i => i.v === 'no').length, na = its.filter(i => i.v === 'na').length;
+    return `<div class="dsec"><div class="dsec-h"><span>${si+1}. ${esc(s.titulo)}</span><span class="count">${ns} Sí · ${nn ? `<span class="nob">${nn} No</span>` : '0 No'} · ${na} N/A</span></div>
+      <ul class="dlist">${its.map(i => `<li class="${i.v === 'no' ? 'is-no' : ''}"><span class="ans ${i.v || 'pe'}">${i.v === 'si' ? 'Sí' : i.v === 'no' ? 'No' : i.v === 'na' ? 'N/A' : '—'}</span><span>${esc(i.t)}</span></li>`).join('')}</ul></div>`;
+  }).join('');
+  const puedeEsc = S.canWrite && !!S.db;
+  $('#drawer').innerHTML = `
+  <div class="dr-head">
+    <div style="min-width:0"><span class="eyebrow">Entrevista del ${fd(e.fecha)}${e.estado !== 'final' ? ' · borrador' : ''}</span><h2>${esc(e.cliente || 'Sin nombre')}</h2>
+      <div class="chips">${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv) : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.seguimiento === 'si' && !e.seguimientoResuelto ? chip('pendiente', 'Seguimiento pendiente') : ''}</div></div>
+    <button class="btn btn-sm" id="drClose" type="button">Cerrar</button>
+  </div>
+  <div class="dr-body">
+    <section class="dcard"><dl class="kv">
+      <div><dt>Asesor OB</dt><dd>${esc(e.especialista || '—')}</dd></div>
+      <div><dt>Asesor de ventas</dt><dd>${esc(e.asesor || '—')}</dd></div>
+      <div><dt>Sucursal</dt><dd>${esc(e.sucursal || '—')}</dd></div>
+      <div><dt>DNI</dt><dd class="mono">${esc(e.dni || '—')}</dd></div>
+      <div><dt>Teléfono</dt><dd>${esc(e.telefono || '—')}</dd></div>
+      <div><dt>Contrato o plan</dt><dd>${esc(e.contrato || '—')}</dd></div>
+    </dl></section>
+    <section class="dcard"><h3>Cuota, ahorro y comisión</h3>
+      <dl class="kv">
+        <div><dt>Cuota del asesor</dt><dd class="mono">${fm(e.cuotaAsesor)}</dd></div>
+        <div><dt>Cuota al salir</dt><dd class="mono">${fm(e.cuotaFinal || e.cuotaAsesor)}</dd></div>
+        <div><dt>Cuota actual</dt><dd class="mono">${fm(c.cuotaActual)}</dd></div>
+      </dl>
+      ${c.items.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
+        ${c.items.map(it => `<tr><td class="mono">${fdc(it.fecha)}</td><td><span>${esc(it.concepto)}${it.nota ? `<br><small class="muted">${esc(it.nota)}</small>` : ''}</span></td><td class="n">${montoHtml(it)}</td><td class="n"><span>${fm(it.comision)}${it.recorte ? `<br><small class="muted">tope (era ${fm(it.bruto)})</small>` : ''}</span></td><td>${chip(estadoComision(e, it))}</td></tr>`).join('')}
+        </tbody><tfoot><tr><td colspan="3">Total (${c.pct}%)</td><td class="n">${fm(c.total)}</td><td></td></tr></tfoot></table></div>` : `<p class="note">Sin incremento de cuota ni ahorro registrados.</p>`}
+      ${c.pactados.map(pa => `<div class="banner" style="background:var(--accent-soft);border-color:transparent;font-size:14px"><b>${pa.concepto}: ${pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} (≈ ${fm(pa.monto)})` : fm(pa.monto)}</b>, acordado el ${fd(pa.acuerdo)}${pa.fecha ? ` con pago para el ${fd(pa.fecha)}` : ''}. ${pa.dentro ? `Suma ${fm(pa.comision)} de comisión cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}</div>`).join('')}
+      ${c.topeAlcanzado ? `<p class="note"><b>Se aplicó el tope de ${fm(c.tope)} por cliente.</b> Lo que supera ese monto no comisiona.</p>` : ''}
+      <p class="note">${q === null ? '' : q >= 0 ? `Plazo abierto hasta el ${fd(c.limite)} · quedan ${q} ${q === 1 ? 'día' : 'días'} para sumar incremento o ahorro.` : `Plazo vencido el ${fd(c.limite)}.`}</p>
+    </section>
+    <section class="dcard"><h3>Checklist · ${r.si} Sí · ${r.nos} No · ${r.na} N/A${r.pend ? ` · ${r.pend} sin responder` : ''}</h3>${secs}</section>
+    <section class="dcard"><h3>Falla del asesor</h3>
+      ${e.fallaAsesor === 'si' ? `<div class="chips">${(e.fallaTipos || []).map(t => chip('falla', t)).join('') || chip('falla', 'Sí')}</div><p class="pre">${esc(e.fallaDetalle || '')}</p>` : `<p class="note">${e.fallaAsesor === 'no' ? 'No se detectaron fallas del asesor.' : 'Sin responder.'}</p>`}
+    </section>
+    <section class="dcard"><h3>Seguimiento</h3>
+      ${e.seguimiento === 'si' ? `${e.seguimientoTipo && e.seguimientoTipo !== 'otro' ? `<div class="av-m"><span class="chip chip-acc"><i></i>${e.seguimientoTipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado'}</span><b>${e.seguimientoMoneda === 'USD' && e.seguimientoMontoUsd ? fu(e.seguimientoMontoUsd) : fm(e.seguimientoMonto)}</b></div>` : ''}<p class="pre">${esc(e.seguimientoDetalle || '')}</p><p class="note">${e.seguimientoFecha ? 'Retomar el ' + fd(e.seguimientoFecha) + '. ' : ''}${e.seguimientoResuelto ? 'Resuelto' + (e.seguimientoResueltoFecha ? ' el ' + fd(e.seguimientoResueltoFecha) : '') + '.' : ''}</p>
+        ${puedeEsc && S.E.some(x => x.id === e.id) ? (e.seguimientoResuelto ? `<div class="row">${chip('aprobada', 'Resuelto')}<button class="btn btn-sm" id="drReabrir" type="button">Volver a pendiente</button></div>` : `<div><button class="btn btn-sm" id="drResolver" type="button">Marcar seguimiento como resuelto</button></div>`) : ''}` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
+    </section>
+    ${e.observaciones ? `<section class="dcard"><h3>Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
+    ${e.estado === 'final' ? `<section class="dcard"><h3>Revisión de la responsable</h3>
+      ${esResp() && puedeEsc ? `<div class="seg" role="radiogroup" aria-label="Estado de la revisión" style="align-self:flex-start">
+          <input type="radio" name="rv" id="rv_p" value="pendiente"${rv === 'pendiente' ? ' checked' : ''}><label class="pe" for="rv_p">Por revisar</label>
+          <input type="radio" name="rv" id="rv_a" value="aprobada"${rv === 'aprobada' ? ' checked' : ''}><label class="si" for="rv_a">Aprobar</label>
+          <input type="radio" name="rv" id="rv_o" value="observada"${rv === 'observada' ? ' checked' : ''}><label class="no" for="rv_o">Observar</label>
+        </div>
+        <div class="field"><label for="rv_nota">Nota para el asesor OB</label><textarea id="rv_nota" placeholder="Ej.: falta adjuntar el comprobante del ahorro.">${esc(e.revision?.nota || '')}</textarea></div>
+        <div class="row"><button class="btn btn-primary btn-sm" id="drRev" type="button">Guardar revisión</button>${e.revision?.fecha ? `<span class="note">Última revisión: ${fd(e.revision.fecha.slice(0, 10))}</span>` : ''}</div>`
+      : `<div>${chip(rv)}</div>${e.revision?.nota ? `<p class="pre">${esc(e.revision.nota)}</p>` : `<p class="note">${rv === 'pendiente' ? 'La responsable todavía no la revisó.' : 'Sin nota.'}</p>`}`}
+    </section>` : ''}
+    ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o sumar gestión' : 'Continuar borrador'}</button>${esResp() ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar</button>` : ''}</div>
+    <div class="confirm" id="drConfirm" hidden><span>¿Eliminar esta entrevista? No se puede deshacer.</span><button class="btn btn-sm btn-danger" id="drDelYes" type="button">Sí, eliminar</button><button class="btn btn-sm" id="drDelNo" type="button">Cancelar</button></div>` : ''}
+    <p class="note">Cargada el ${fd((e.creado || '').slice(0, 10))}${e.actualizado && e.actualizado !== e.creado ? ` · última modificación ${fd(e.actualizado.slice(0, 10))}` : ''}.</p>
+  </div>`;
+  etiquetar($('#drawer'));
+}
+function bindDetalle() {
+  $('#scrim').addEventListener('click', cerrarDetalle);
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#drawer').hidden) cerrarDetalle(); });
+  $('#drawer').addEventListener('click', async ev => {
+    const id = ev.target.closest('button')?.id; if (!id) return;
+    const e = S.E.find(x => x.id === S.detalle);
+    if (id === 'drClose') return cerrarDetalle();
+    if (!e) return;
+    const ref = S.db.collection('entrevistas').doc(e.id);
+    if (id === 'drEdit') return editar(e);
+    if (id === 'drDel') { $('#drConfirm').hidden = false; return; }
+    if (id === 'drDelNo') { $('#drConfirm').hidden = true; return; }
+    try {
+      if (id === 'drDelYes') { await conReintento(() => ref.delete()); cerrarDetalle(); toast('Entrevista eliminada.'); if (S.editId === e.id) vaciarForm(); return; }
+      if (id === 'drReabrir') { await conReintento(() => ref.update({seguimientoResuelto: false, seguimientoResueltoFecha: null})); toast('El seguimiento volvió a Avisos.'); return; }
+      if (id === 'drResolver') { await conReintento(() => ref.update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy()})); toast('Seguimiento resuelto.'); return; }
+      if (id === 'drRev') {
+        const estado = $('input[name="rv"]:checked')?.value || 'pendiente';
+        await conReintento(() => ref.update({revision: {estado, nota: $('#rv_nota').value.trim(), fecha: new Date().toISOString(), por: S.uid ?? null}}));
+        toast(estado === 'aprobada' ? 'Comisión aprobada.' : estado === 'observada' ? 'Entrevista observada.' : 'Revisión guardada.');
+      }
+    } catch (err) { errorEscritura(err); }
+  });
+}
+
+/* ---------- Vista: Comisiones ---------- */
+function filasComision(mes, esp) {
+  const rows = [];
+  for (const e of S.E) {
+    if (esp && norm(e.especialista) !== norm(esp)) continue;
+    const c = comision(e);
+    for (const it of c.items) if ((it.mesCom || it.fecha || '').startsWith(mes)) rows.push({e, it, st: estadoComision(e, it), lim: c.limite, pct: c.pct});
+    if (e.estado === 'final') for (const it of c.pactados) if ((it.mesCom || '').startsWith(mes)) rows.push({e, it, st: estadoComision(e, it), lim: c.limite, pct: c.pct});
+  }
+  return rows.sort((a, b) => (a.e.especialista || '').localeCompare(b.e.especialista || '', 'es') || (a.it.mesCom || a.it.fecha || '').localeCompare(b.it.mesCom || b.it.fecha || ''));
+}
+function renderComisiones() {
+  const out = $('#com-out');
+  $('#btnCsv').hidden = !(esResp() && S.dl);
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
+  const mes = $('#fc_mes').value || monthsBack(1)[0];
+  const esp = esResp() ? $('#fc_esp').value : miNombre();
+  if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
+  const rows = filasComision(mes, esp);
+  const sum = f => rows.filter(f).reduce((a, r) => a + r.it.comision, 0);
+  const valid = r => ['pendiente', 'aprobada', 'observada'].includes(r.st);
+  const total = sum(valid), ap = sum(r => r.st === 'aprobada'), pe = sum(r => r.st === 'pendiente'), ob = sum(r => r.st === 'observada');
+  const fuera = rows.filter(r => r.st === 'fuera').reduce((a, r) => a + r.it.monto, 0);
+  const borr = rows.filter(r => r.st === 'borrador');
+  const pact = rows.filter(r => r.st === 'pago_pendiente').reduce((a, r) => a + r.it.comision, 0);
+  let html = `<div class="kpis">
+    <div class="kpi"><span class="k-l">Comisión del mes</span><span class="k-v">${fm(total)}</span><span class="k-s">${esc(mesLabel(mes))}${esp ? ' · ' + esc(esp) : ' · todo el equipo'}</span></div>
+    <div class="kpi"><span class="k-l">Aprobada</span><span class="k-v">${fm(ap)}</span><span class="k-s">Revisada por la responsable</span></div>
+    <div class="kpi${pe ? ' attn' : ''}"><span class="k-l">Por revisar</span><span class="k-v">${fm(pe)}</span><span class="k-s">Pendiente de aprobación</span></div>
+    <div class="kpi"><span class="k-l">Observada</span><span class="k-v">${fm(ob)}</span><span class="k-s">Con algo para corregir</span></div>
+    <div class="kpi"><span class="k-l">Pactado sin pagar · referencia</span><span class="k-v" style="color:var(--accent)">${fm(pact)}</span><span class="k-s">Si todos pagan a tiempo, el mes llegaría a ${fm(total + pact)}</span></div>
+    <div class="kpi"><span class="k-l">Fuera de plazo</span><span class="k-v">${fm(fuera)}</span><span class="k-s">Monto que no comisiona</span></div>
+  </div>`;
+  if (esp && (S.aj.metaEnt || S.aj.metaMonto)) {
+    const entM = S.E.filter(e => e.estado === 'final' && norm(e.especialista) === norm(esp) && (e.fecha || '').startsWith(mes)).length;
+    const montoM = rows.filter(r => valid(r)).reduce((a, r) => a + r.it.monto, 0);
+    const esCur = mes === hoy().slice(0, 7); const dHoy = +hoy().slice(8, 10), dMes = +lastDay(mes).slice(8, 10);
+    const pr = v => esCur ? v / dHoy * dMes : null;
+    html += `<section class="card"><div class="card-h"><h3>Meta de ${esc(mesLabel(mes))}</h3>${esCur ? '<p>La marca muestra la proyección a fin de mes según el ritmo actual.</p>' : ''}</div><div class="meta-row" style="border:0;padding-top:0"><b>${esc(esp)}</b>${S.aj.metaEnt ? `<div><span class="lbl">Entrevistas</span>${barraMeta(entM, S.aj.metaEnt, v => String(v), pr(entM))}</div>` : ''}${S.aj.metaMonto ? `<div><span class="lbl">Incremento + ahorro</span>${barraMeta(montoM, S.aj.metaMonto, fm, pr(montoM))}</div>` : ''}</div></section>`;
+  }
+  if (esResp() && !esp) {
+    const g = new Map();
+    for (const r of rows) { const k = norm(r.e.especialista); if (!g.has(k)) g.set(k, {n: r.e.especialista || '—', inc: 0, aho: 0, tot: 0, ap: 0, pe: 0}); const x = g.get(k); if (!valid(r)) continue; if (r.it.tipo === 'ahorro') x.aho += r.it.monto; else x.inc += r.it.monto; x.tot += r.it.comision; if (r.st === 'aprobada') x.ap += r.it.comision; if (r.st === 'pendiente') x.pe += r.it.comision; }
+    const arr = [...g.values()].sort((a, b) => b.tot - a.tot);
+    if (arr.length) html += `<section class="card"><div class="card-h"><h3>Liquidación por asesor OB</h3></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th><th class="n">Aprobada</th><th class="n">Por revisar</th></tr></thead><tbody>
+      ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.tot)}</b></td><td class="n">${fm(x.ap)}</td><td class="n">${fm(x.pe)}</td></tr>`).join('')}
+      </tbody><tfoot><tr><td>Total</td><td class="n">${fm(arr.reduce((a, x) => a + x.inc, 0))}</td><td class="n">${fm(arr.reduce((a, x) => a + x.aho, 0))}</td><td class="n">${fm(total)}</td><td class="n">${fm(ap)}</td><td class="n">${fm(pe)}</td></tr></tfoot></table></div></section>`;
+  }
+  const filtro = S.f.com.pago;
+  const vis = rows.filter(r => filtro === 'pagados' ? !r.it.pendiente : filtro === 'pactados' ? r.it.pendiente : true);
+  const hayRef = vis.some(r => r.it.pendiente);
+  if (rows.length && !vis.length) html += `<div class="empty"><h3>${filtro === 'pactados' ? 'No hay pactados sin pagar' : 'No hay gestiones pagadas'} en ${esc(mesLabel(mes))}</h3><p>Cambiar el filtro «Pago» para ver el resto.</p></div>`;
+  if (!rows.length) html += `<div class="empty"><h3>Sin incrementos ni ahorros en ${esc(mesLabel(mes))}</h3><p>Acá se listan los incrementos de cuota y los ahorros del mes, con la comisión que generan. Cuentan las gestiones hechas dentro del plazo de ${S.aj.plazoMeses === 1 ? 'un mes' : S.aj.plazoMeses + ' meses'} desde la entrevista.</p></div>`;
+  else if (vis.length) html += `<section class="card"><div class="card-h"><h3>Detalle de gestiones</h3><p>Cada gestión cuenta en el mes en que el cliente pagó, si es dentro del plazo de un mes. Lo pactado aparece en el mes de la fecha pactada hasta que se pague. Los borradores no suman hasta que se finaliza la entrevista.${borr.length ? ` Hay ${borr.length} en borrador.` : ''}</p></div>
+    ${hayRef ? `<div class="refnote"><b>Los pactados sin pagar son solo de referencia.</b> Muestran lo que se podría cobrar si el cliente paga dentro del plazo. No forman parte de la comisión del mes hasta que se carga el pago.</div>` : ''}<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th>${esp ? '' : '<th>Asesor OB</th>'}<th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
+    ${vis.map(r => `<tr class="clk${r.it.pendiente ? ' ref' : ''}" data-id="${esc(r.e.id)}" tabindex="0"><td class="mono">${fdc(r.it.mesCom || r.it.fecha)}</td><td>${esc(r.e.cliente || '—')}</td>${esp ? '' : `<td>${esc(r.e.especialista || '—')}</td>`}<td><span>${esc(r.it.concepto)}${r.it.pendiente ? `<br><small class="muted">Pago pactado para el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : r.it.acuerdo && r.it.acuerdo !== r.it.fecha ? `<br><small class="muted">Pagado el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : ''}</span></td><td class="n">${montoHtml(r.it)}</td><td class="n"><span>${r.it.pendiente ? `(${fm(r.it.comision)})<br><small class="muted">referencia</small>` : fm(r.it.comision)}${r.it.recorte ? `<br><small class="muted">tope</small>` : ''}</span></td><td>${chip(r.st)}</td></tr>`).join('')}
+    </tbody></table></div></section>`;
+  out.innerHTML = html; etiquetar(out);
+}
+async function exportarCsv() {
+  if (!S.dl) return;
+  const mes = $('#fc_mes').value; const esp = $('#fc_esp').value;
+  const rows = filasComision(mes, esp);
+  const ST = {pendiente: 'Por revisar', aprobada: 'Aprobada', observada: 'Observada', fuera: 'Fuera de plazo', borrador: 'Borrador', pago_pendiente: 'Pactado, falta el pago'};
+  const q = v => { const s = String(v ?? ''); return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const lines = [['Asesor OB','Sucursal','Fecha acuerdo','Fecha pago','Cliente','DNI','Asesor','Concepto','Monto (pesos)','Moneda','Monto en dólares','Cotización dólar Spazios','Porcentaje','Comisión','Estado','Fecha entrevista','Vence plazo'].join(';')];
+  for (const r of rows) lines.push([r.e.especialista, r.e.sucursal, fd(r.it.acuerdo || r.it.fecha), r.it.pendiente ? '' : fd(r.it.fecha), r.e.cliente, r.e.dni, r.e.asesor, r.it.concepto, r.it.monto, r.it.moneda === 'USD' ? 'Dólares' : 'Pesos', r.it.moneda === 'USD' ? r.it.usd : '', r.it.moneda === 'USD' ? COT.format(r.it.cot || 0) : '', r.pct + '%', r.it.comision, ST[r.st] || r.st, fd(r.e.fecha), fd(r.lim)].map(q).join(';'));
+  try { await S.dl.save({filename: `comisiones-onboarding-${mes}${esp ? '-' + norm(esp).replace(/[^a-z0-9ñáéíóú]+/g, '-') : ''}.csv`, data: '﻿' + lines.join('\r\n')}); toast('Archivo guardado.'); }
+  catch (e) { if (e?.code === 'declined') return; toast(e?.code === 'rate_limited' ? 'Ya hay una descarga esperando confirmación.' : 'No se pudo descargar el archivo en esta vista.', 'bad'); }
+}
+
+/* ---------- Vista: Avisos ---------- */
+function avisosDe(esp) {
+  const t0 = hoy();
+  const R = {atrasado: 0, hoy: 1, proximo: 2, sinfecha: 3};
+  return S.E.filter(e => e.estado === 'final' && e.seguimiento === 'si' && !e.seguimientoResuelto && (!esp || norm(e.especialista) === norm(esp)))
+    .map(e => {
+      const c = comision(e); const f = e.seguimientoFecha || '';
+      const d = f ? diffDays(t0, f) : null;
+      const est = d === null ? 'sinfecha' : d < 0 ? 'atrasado' : d === 0 ? 'hoy' : 'proximo';
+      const qPlazo = c.limite ? diffDays(t0, c.limite) : null;
+      const conMonto = ['ahorro', 'incremento'].includes(e.seguimientoTipo) && e.seguimientoMonto > 0;
+      const fueraPlazo = conMonto && f && c.limite && f > c.limite;
+      const posible = conMonto && !fueraPlazo && qPlazo !== null && qPlazo >= 0 ? Math.min(Math.round(e.seguimientoMonto * c.pct / 100), c.restante) : 0;
+      return {e, c, d, est, qPlazo, conMonto, posible, fueraPlazo};
+    })
+    .sort((a, b) => R[a.est] - R[b.est] || (a.e.seguimientoFecha || '9').localeCompare(b.e.seguimientoFecha || '9'));
+}
+function renderAvisos() {
+  const out = $('#av-out');
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
+  if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
+  const esp = esResp() ? S.f.av.esp : miNombre();
+  $('#av-sub').textContent = esResp() ? (esp ? `Seguimientos pendientes de ${esp}.` : 'Seguimientos pendientes de todo el equipo.') : 'Tus seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.';
+  let av = avisosDe(esp);
+  if (S.f.av.tipo) av = av.filter(a => (a.e.seguimientoTipo || 'otro') === S.f.av.tipo);
+  const n = k => av.filter(a => a.est === k).length;
+  const pactado = av.filter(a => a.conMonto).reduce((t, a) => t + a.e.seguimientoMonto, 0);
+  const posible = av.reduce((t, a) => t + a.posible, 0);
+  let html = `<div class="kpis">
+    <div class="kpi${n('atrasado') ? ' attn' : ''}"><span class="k-l">Atrasados</span><span class="k-v"${n('atrasado') ? ' style="color:var(--bad)"' : ''}>${n('atrasado')}</span><span class="k-s">Pasó la fecha pactada</span></div>
+    <div class="kpi${n('hoy') ? ' attn' : ''}"><span class="k-l">Para hoy</span><span class="k-v">${n('hoy')}</span><span class="k-s">${fd(hoy())}</span></div>
+    <div class="kpi"><span class="k-l">Próximos</span><span class="k-v">${n('proximo') + n('sinfecha')}</span><span class="k-s">${n('sinfecha') ? `${n('sinfecha')} sin fecha` : 'Con fecha más adelante'}</span></div>
+    <div class="kpi"><span class="k-l">Monto pactado</span><span class="k-v">${fm(pactado)}</span><span class="k-s">Ahorros e incrementos por cobrar</span></div>
+    <div class="kpi"><span class="k-l">Comisión posible</span><span class="k-v">${fm(posible)}</span><span class="k-s">Si se cumplen dentro del plazo</span></div>
+  </div>`;
+  if (!av.length) html += `<div class="empty"><h3>Sin seguimientos pendientes</h3><p>Cuando en una entrevista se marca que queda algo pendiente (un ahorro o un incremento que el cliente pactó, o cualquier otra cosa por resolver), aparece acá con la fecha acordada y el plazo para comisionar.</p></div>`;
+  else html += `<div class="avrows" role="table" aria-label="Seguimientos pendientes">
+    <div class="avrow av-head" role="row"><span>Estado</span><span>Cliente</span><span>Pactado</span><span>Fechas</span><span>Detalle</span><span></span></div>
+    ${av.map(a => {
+    const e = a.e; const tipo = e.seguimientoTipo || 'otro';
+    const st = a.est === 'atrasado' ? chip('falla', `Atrasado ${-a.d} d`) : a.est === 'hoy' ? chip('pendiente', 'Para hoy') : a.est === 'proximo' ? chip('borrador', `En ${a.d} ${a.d === 1 ? 'día' : 'días'}`) : chip('borrador', 'Sin fecha');
+    const plazo = a.qPlazo === null ? '' : a.qPlazo >= 0 ? `Comisiona hasta ${fdc(a.c.limite)}` : 'Plazo vencido';
+    const det = e.seguimientoDetalle || '';
+    return `<div class="avrow ${a.est}" role="row">
+      <div class="ar-st">${st}</div>
+      <div class="ar-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${e.telefono ? esc(e.telefono) : 'Sin teléfono'}</small></div>
+      <div class="ar-what"><span class="chip ${tipo === 'otro' ? 'chip-muted' : 'chip-acc'}"><i></i>${tipo === 'ahorro' ? 'Ahorro' : tipo === 'incremento' ? 'Incremento' : 'Pendiente'}</span>${a.conMonto ? (e.seguimientoMoneda === 'USD' && e.seguimientoMontoUsd ? `<b class="mono">${fu(e.seguimientoMontoUsd)}</b><small>≈ ${fm(a.c.pactados[0]?.monto || e.seguimientoMonto)}</small>` : `<b class="mono">${fm(e.seguimientoMonto)}</b>`) : ''}${a.posible ? `<small>+${fm(a.posible)} comisión</small>` : a.conMonto && a.c.topeAlcanzado ? '<small>Ya en el tope</small>' : ''}</div>
+      <div class="ar-date"><b class="mono"${a.fueraPlazo ? ' style="color:var(--bad)" title="La fecha pactada es posterior al vencimiento del plazo"' : ''}>${e.seguimientoFecha ? fd(e.seguimientoFecha) : '—'}</b><small${a.qPlazo !== null && a.qPlazo < 0 ? ' style="color:var(--bad)"' : ''}>${plazo}</small></div>
+      <div class="ar-det" title="${esc(det)}">${esc(det) || '<span class="muted">—</span>'}</div>
+      <div class="ar-act">${S.canWrite && S.db ? `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(e.id)}">Resuelto</button>` : ''}<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button></div>
+    </div>`; }).join('')}</div>`;
+  const obs = S.E.filter(e => e.estado === 'final' && revEst(e) === 'observada' && (!esp || norm(e.especialista) === norm(esp)));
+  if (obs.length) html += `<section class="card"><div class="card-h"><h3>Entrevistas observadas por la responsable</h3><p>Tienen algo para corregir antes de aprobar la comisión.</p></div><ul class="slist">${obs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(e.revision?.nota || 'Sin nota')}</small></div><div class="s-side">${chip('observada')}</div></li>`).join('')}</ul></section>`;
+  out.innerHTML = html;
+}
+function cumplirAviso(id) {
+  const e = S.E.find(x => x.id === id); if (!e) return;
+  editar(e);
+  const gidN = gid();
+  const ng = {id: gidN, tipo: e.seguimientoTipo === 'ahorro' ? 'ahorro' : 'incremento', fecha: hoy(), monto: e.seguimientoMonto || 0, nota: 'Pago de lo pactado', pacto: true, fechaAcuerdo: e.seguimientoAcuerdo || e.fecha, moneda: e.seguimientoMoneda === 'USD' && e.seguimientoTipo === 'ahorro' ? 'USD' : 'ARS', montoUsd: e.seguimientoMontoUsd || 0};
+  recalcG(ng); S.gest.push(ng);
+  S.resolverAlGuardar = e.id; S.resolverGid = gidN;
+  renderGest(); actualizarForm(); guardarBorradorLocal();
+  setTimeout(() => irA(`g_${gidN}_monto`), 80);
+  toast('Cargar la fecha real del pago y el monto, y tocar «Guardar cambios». La comisión cuenta en el mes del pago.');
+}
+async function resolverAviso(id) {
+  try { await conReintento(() => S.db.collection('entrevistas').doc(id).update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy()})); toast('Seguimiento resuelto.'); }
+  catch (e) { errorEscritura(e); }
+}
+
+/* ---------- Vista: Panel ---------- */
+function rango(per) {
+  if (per === '3m') return {desde: monthsBack(3)[2] + '-01', hasta: hoy()};
+  const fin = lastDay(per); return {desde: per + '-01', hasta: fin < hoy() ? fin : (per === hoy().slice(0, 7) ? hoy() : fin)};
+}
+function metricas(base, d0, d1) {
+  const inP = f => f && f >= d0 && f <= d1;
+  const fin = base.filter(e => e.estado === 'final' && inP(e.fecha));
+  const ok = fin.filter(e => resultado(e.checklist).est === 'ok').length;
+  let inc = 0, aho = 0, com = 0;
+  for (const e of base) { if (e.estado !== 'final') continue; for (const it of comision(e).items) { if (!it.dentro || !inP(it.mesCom || it.fecha)) continue; if (it.tipo === 'ahorro') aho += it.monto; else inc += it.monto; com += it.comision; } }
+  return {n: fin.length, pctOk: fin.length ? ok / fin.length * 100 : null, inc, aho, com};
+}
+function delta(cur, prev, pts) {
+  if (prev === null || prev === undefined || cur === null || cur === undefined) return '<span class="dl">sin datos</span>';
+  if (pts) { const d = Math.round(cur - prev); return `<span class="dl ${d > 0 ? 'up' : d < 0 ? 'down' : ''}">${d > 0 ? '↑' : d < 0 ? '↓' : '='} ${Math.abs(d)} pts</span>`; }
+  if (!prev && !cur) return '<span class="dl">= igual</span>';
+  if (!prev) return '<span class="dl up">↑ nuevo</span>';
+  const d = Math.round((cur - prev) / prev * 100);
+  return `<span class="dl ${d > 0 ? 'up' : d < 0 ? 'down' : ''}">${d > 0 ? '↑' : d < 0 ? '↓' : '='} ${Math.abs(d)}%</span>`;
+}
+function pactoDe(e, c) {
+  if (e.seguimiento !== 'si' || !['ahorro', 'incremento'].includes(e.seguimientoTipo) || !(e.seguimientoMonto > 0)) return null;
+  const okPagos = c.items.filter(i => i.pacto && i.dentro);
+  const cobrado = okPagos.reduce((a, i) => a + i.monto, 0);
+  const est = okPagos.length ? 'cobrado' : !e.seguimientoResuelto ? (c.limite && hoy() > c.limite ? 'vencido' : 'pendiente') : 'sinpago';
+  return {acuerdo: e.seguimientoAcuerdo || e.fecha, monto: e.seguimientoMonto, cobrado, est};
+}
+const prom = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+function barraMeta(val, meta, fmt, proy) {
+  const p = meta ? Math.min(100, Math.round(val / meta * 100)) : 0;
+  const pp = meta && proy != null ? Math.min(100, Math.round(proy / meta * 100)) : null;
+  return `<div class="goal"><div class="g-bar"><span style="width:${p}%"></span>${pp != null && pp > p ? `<i style="left:${pp}%" title="Proyección a fin de mes"></i>` : ''}</div><div class="g-t"><b>${fmt(val)}</b> de ${fmt(meta)} · ${meta ? Math.round(val / meta * 100) : 0}%${proy != null ? ` · <span class="muted">proyección ${fmt(Math.round(proy))}</span>` : ''}</div></div>`;
+}
+function renderPanel() {
+  const out = $('#pan-out');
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
+  const per = $('#fp_per').value || monthsBack(1)[0]; const esp = $('#fp_esp').value; const suc = $('#fp_suc').value;
+  const {desde, hasta} = rango(per);
+  const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
+  const base = S.E.filter(e => (!suc || norm(e.sucursal) === norm(suc)) && (!esp || norm(e.especialista) === norm(esp)));
+  const delPer = base.filter(e => enPer(e.fecha));
+  const fin = delPer.filter(e => e.estado === 'final');
+  const nBorr = delPer.length - fin.length;
+  const res = new Map(fin.map(e => [e.id, resultado(e.checklist)]));
+  const nOk = fin.filter(e => res.get(e.id).est === 'ok').length;
+  const porRev = fin.filter(e => revEst(e) === 'pendiente').length;
+  const grupos = new Map();
+  const G = n => { const k = norm(n) || '—'; if (!grupos.has(k)) grupos.set(k, {n: n || '—', ent: 0, ok: 0, nos: 0, res: 0, inc: 0, aho: 0, com: 0}); return grupos.get(k); };
+  for (const e of fin) { const r = res.get(e.id); const x = G(e.especialista); x.ent++; if (r.est === 'ok') x.ok++; x.nos += r.nos; if (e.checklist?.k4 === 'si') x.res++; }
+  let inc = 0, aho = 0, com = 0, comAp = 0, ahoUsd = 0;
+  for (const e of base) { if (e.estado !== 'final') continue; const c = comision(e); for (const it of c.items) { if (!it.dentro || !enPer(it.mesCom || it.fecha)) continue; const x = G(e.especialista); if (it.tipo === 'ahorro') { aho += it.monto; x.aho += it.monto; if (it.moneda === 'USD') ahoUsd += it.usd || 0; } else { inc += it.monto; x.inc += it.monto; } com += it.comision; x.com += it.comision; if (revEst(e) === 'aprobada') comAp += it.comision; } }
+  const resenas = fin.filter(e => e.checklist?.k4 === 'si').length;
+  let curM = null, prevM = null, prevLbl = '';
+  if (per !== '3m') {
+    const pm = addMonths(per + '-01', -1).slice(0, 7);
+    const esCur = per === hoy().slice(0, 7);
+    const dd = esCur ? Math.min(+hoy().slice(8, 10), +lastDay(pm).slice(8, 10)) : +lastDay(pm).slice(8, 10);
+    curM = metricas(base, per + '-01', esCur ? hoy() : lastDay(per));
+    prevM = metricas(base, pm + '-01', `${pm}-${pad(dd)}`);
+    prevLbl = esCur ? `mismos días de ${MESES[+pm.slice(5) - 1]}` : MESES[+pm.slice(5) - 1];
+  }
+  const dk = (k, pts) => curM ? `<span class="k-d">${delta(curM[k], prevM[k], pts)} vs ${prevLbl}</span>` : '';
+
+  let html = `<div class="kpis">
+    <div class="kpi"><span class="k-l">Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
+    <div class="kpi"><span class="k-l">Sin errores</span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
+    <div class="kpi"><span class="k-l">Incremento de cuotas</span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
+    <div class="kpi"><span class="k-l">Ahorros</span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
+    <div class="kpi"><span class="k-l">Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
+    <button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>
+  </div>`;
+
+  if (!fin.length && !nBorr) {
+    html += `<div class="empty"><h3>Sin entrevistas en este período</h3><p>Cuando el equipo finalice entrevistas, este panel muestra el cumplimiento de cada paso del checklist, los pasos que más quedan en «No», las fallas de los asesores, los plazos abiertos para sumar incremento o ahorro y la comisión de cada asesor OB.</p></div>`;
+  }
+  // Por especialista
+  const arr = [...grupos.values()].sort((a, b) => b.ent - a.ent || b.com - a.com);
+  if (arr.length) html += `<section class="card"><div class="card-h"><h3>Por asesor OB</h3><p>«Sin errores» cuenta las entrevistas con todos los pasos en Sí o N/A.</p></div><div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th>Sin errores</th><th class="n">Ítems en No</th><th class="n">Reseña pedida</th><th class="n">Incremento</th><th class="n">Ahorro</th><th class="n">Comisión</th></tr></thead><tbody>
+    ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td><div class="meter"><div class="m-bar"><span style="width:${x.ent ? Math.round(x.ok / x.ent * 100) : 0}%"></span></div><span class="m-v">${pctTxt(x.ok, x.ent)}</span></div></td><td class="n">${x.nos}</td><td class="n">${pctTxt(x.res, x.ent)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.com)}</b></td></tr>`).join('')}
+    </tbody></table></div></section>`;
+
+  // Metas del mes
+  if (per !== '3m' && (S.aj.metaEnt || S.aj.metaMonto)) {
+    for (const n of equipo()) if (!esp || norm(n) === norm(esp)) G(n);
+    const esCur = per === hoy().slice(0, 7);
+    const dHoy = +hoy().slice(8, 10), dMes = +lastDay(per).slice(8, 10);
+    const pr = v => esCur && dHoy ? v / dHoy * dMes : null;
+    const lista = [...grupos.values()].filter(x => x.n !== '—').sort((a, b) => (b.inc + b.aho) - (a.inc + a.aho));
+    if (lista.length) html += `<section class="card"><div class="card-h"><h3>Metas de ${esc(mesLabel(per))}</h3><p>Meta por asesor OB: ${S.aj.metaEnt ? `${S.aj.metaEnt} entrevistas` : ''}${S.aj.metaEnt && S.aj.metaMonto ? ' y ' : ''}${S.aj.metaMonto ? `${fm(S.aj.metaMonto)} entre incremento y ahorro` : ''}.${esCur ? ' La marca muestra la proyección a fin de mes según el ritmo actual.' : ''}</p></div>
+      <div class="metas">${lista.map(x => `<div class="meta-row"><b>${esc(x.n)}</b>${S.aj.metaEnt ? `<div><span class="lbl">Entrevistas</span>${barraMeta(x.ent, S.aj.metaEnt, v => String(v), pr(x.ent))}</div>` : ''}${S.aj.metaMonto ? `<div><span class="lbl">Incremento + ahorro</span>${barraMeta(x.inc + x.aho, S.aj.metaMonto, fm, pr(x.inc + x.aho))}</div>` : ''}</div>`).join('')}</div></section>`;
+  }
+
+  if (fin.length) {
+    // Cuánto suben la cuota
+    const subaDe = e => { const ca = e.cuotaAsesor || 0; const cu = comision(e).cuotaActual; const ah = (e.ahorro || 0) + (e.gestiones || []).filter(g => g.tipo === 'ahorro').reduce((a, g) => a + (g.monto || 0), 0); return {ca, d: Math.max(0, cu - ca), ah}; };
+    const statsCuota = list => { const v = list.map(subaDe); const ci = v.filter(x => x.d > 0); const ch = v.filter(x => x.ah > 0); return {n: v.length, ci: ci.length, incProm: prom(ci.map(x => x.d)), subaProm: prom(ci.filter(x => x.ca).map(x => x.d / x.ca * 100)), ch: ch.length, ahoProm: prom(ch.map(x => x.ah))}; };
+    const tq = statsCuota(fin);
+    const porEspC = new Map(); for (const e of fin) { const k = norm(e.especialista) || '—'; if (!porEspC.has(k)) porEspC.set(k, {n: e.especialista || '—', l: []}); porEspC.get(k).l.push(e); }
+    const filasC = [...porEspC.values()].map(g => ({nom: g.n, ...statsCuota(g.l)})).sort((a, b) => b.incProm * b.ci - a.incProm * a.ci);
+    html += `<section class="card"><div class="card-h"><h3>Cuánto suben la cuota</h3><p>Sobre la cuota que cerró el asesor de ventas, incluidos los incrementos posteriores. Entrevistas finalizadas en el período.</p></div>
+      <div class="calc" style="margin:0 0 12px">
+        <div><small>Con incremento</small><b>${pctTxt(tq.ci, tq.n)}</b><small>${tq.ci} de ${tq.n} entrevistas</small></div>
+        <div><small>Incremento promedio</small><b>${fm(tq.incProm)}</b><small>Por cliente que subió</small></div>
+        <div><small>Suba promedio</small><b>${tq.ci ? '+' + Math.round(tq.subaProm) + '%' : '—'}</b><small>Sobre la cuota del asesor</small></div>
+        <div><small>Con ahorro</small><b>${pctTxt(tq.ch, tq.n)}</b><small>${tq.ch} de ${tq.n} clientes</small></div>
+        <div><small>Ahorro promedio</small><b>${fm(tq.ahoProm)}</b><small>Por cliente que ahorró</small></div>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Entrevistas</th><th class="n">Con incremento</th><th class="n">Incremento prom.</th><th class="n">Suba prom.</th><th class="n">Con ahorro</th><th class="n">Ahorro prom.</th></tr></thead><tbody>
+      ${filasC.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${pctTxt(x.ci, x.n)}</td><td class="n">${fm(x.incProm)}</td><td class="n">${x.ci ? '+' + Math.round(x.subaProm) + '%' : '—'}</td><td class="n">${pctTxt(x.ch, x.n)}</td><td class="n">${fm(x.ahoProm)}</td></tr>`).join('')}
+      </tbody></table></div></section>`;
+
+    // Efectividad de los pactos (por fecha de acuerdo en el período)
+    const pactos = base.filter(e => e.estado === 'final').map(e => ({e, p: pactoDe(e, comision(e))})).filter(x => x.p && enPer(x.p.acuerdo));
+    if (pactos.length) {
+      const resumen = l => ({n: l.length, cob: l.filter(x => x.p.est === 'cobrado').length, pend: l.filter(x => x.p.est === 'pendiente').length, perd: l.filter(x => x.p.est === 'vencido' || x.p.est === 'sinpago').length, mp: l.reduce((a, x) => a + x.p.monto, 0), mc: l.reduce((a, x) => a + x.p.cobrado, 0)});
+      const tp = resumen(pactos); const cerr = tp.cob + tp.perd;
+      const gp = new Map(); for (const x of pactos) { const k = norm(x.e.especialista) || '—'; if (!gp.has(k)) gp.set(k, {n: x.e.especialista || '—', l: []}); gp.get(k).l.push(x); }
+      const filasP = [...gp.values()].map(g => ({nom: g.n, ...resumen(g.l)})).sort((a, b) => b.mc - a.mc);
+      html += `<section class="card"><div class="card-h"><h3>Efectividad de los pactos</h3><p>Ahorros e incrementos que el cliente se comprometió a hacer, acordados en el período. «Efectividad» es cobrados sobre pactos ya cerrados (cobrados, vencidos o resueltos sin pago).</p></div>
+        <div class="calc" style="margin:0 0 12px">
+          <div><small>Pactos</small><b>${tp.n}</b><small>${tp.pend} todavía en plazo</small></div>
+          <div class="hl"><small>Efectividad</small><b>${pctTxt(tp.cob, cerr)}</b><small>${tp.cob} cobrados de ${cerr} cerrados</small></div>
+          <div><small>Monto pactado</small><b>${fm(tp.mp)}</b><small>Total comprometido</small></div>
+          <div><small>Monto cobrado</small><b>${fm(tp.mc)}</b><small>${pctTxt(tp.mc, tp.mp)} de lo pactado</small></div>
+          <div><small>No se concretaron</small><b${tp.perd ? ' style="color:var(--bad)"' : ''}>${tp.perd}</b><small>Vencidos o sin pago</small></div>
+        </div>
+        <div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pactos</th><th class="n">Cobrados</th><th class="n">En plazo</th><th class="n">No concretados</th><th class="n">Efectividad</th><th class="n">Pactado</th><th class="n">Cobrado</th></tr></thead><tbody>
+        ${filasP.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${x.cob}</td><td class="n">${x.pend}</td><td class="n">${x.perd}</td><td class="n">${pctTxt(x.cob, x.cob + x.perd)}</td><td class="n">${fm(x.mp)}</td><td class="n">${fm(x.mc)}</td></tr>`).join('')}
+        </tbody></table></div></section>`;
+    }
+
+    // Pasos en No
+    const cnt = ITEMS.map(it => ({it, n: fin.filter(e => e.checklist?.[it.id] === 'no').length})).filter(x => x.n).sort((a, b) => b.n - a.n).slice(0, 8);
+    const pasos = cnt.length ? `<ul class="bars">${cnt.map(x => `<li><div class="b-t"><span>${x.it.sn}. ${esc(x.it.t)}</span><span>${x.n} · ${pctTxt(x.n, fin.length)}</span></div><div class="m-bar"><span style="width:${Math.round(x.n / fin.length * 100)}%"></span></div></li>`).join('')}</ul>` : `<p class="note">Ningún paso quedó en «No» en este período.</p>`;
+    // Semanas
+    const semanas = []; for (let w = lunes(desde); w <= hasta; w = addDays(w, 7)) semanas.push(w);
+    const sdata = semanas.map(w => { const fw = addDays(w, 6); const es = fin.filter(e => e.fecha >= w && e.fecha <= fw); const ok = es.filter(e => res.get(e.id).est === 'ok').length; return {w, ok, bad: es.length - ok, t: es.length}; });
+    const mx = Math.max(1, ...sdata.map(s => s.t)); const top = mx <= 4 ? mx : Math.ceil(mx / 2) * 2;
+    const ticks = top <= 4 ? Array.from({length: top + 1}, (_, i) => i) : [0, top / 2, top];
+    const chart = `<div class="legend"><span><i class="sw-ok"></i>Sin errores</span><span><i class="sw-bad"></i>Con falla</span></div>
+      <div class="wc" role="group" aria-label="Entrevistas finalizadas por semana, separadas en sin errores y con falla">
+        <div class="wc-y">${ticks.map(t => `<span style="bottom:${t / top * 100}%">${t}</span>`).join('')}</div>
+        <div class="wc-plot">${ticks.slice(1).map(t => `<div class="wc-grid" style="bottom:${t / top * 100}%"></div>`).join('')}
+          ${sdata.map((s, i) => `<div class="wc-col${i === 0 ? ' first' : ''}${i === sdata.length - 1 && i > 0 ? ' last' : ''}" tabindex="0" aria-label="Semana del ${fdc(s.w)}: ${s.t} entrevistas, ${s.ok} sin errores, ${s.bad} con falla">
+            <div class="wc-stack" style="height:${s.t / top * 100}%">${s.ok ? `<div class="wc-seg ok" style="flex:${s.ok}"></div>` : ''}${s.bad ? `<div class="wc-seg bad" style="flex:${s.bad}"></div>` : ''}</div>
+            <div class="wc-tip" style="bottom:calc(${s.t / top * 100}% + 8px)"><b>Semana del ${fdc(s.w)}</b><br>${s.t} entrevistas · ${s.ok} sin errores · ${s.bad} con falla</div>
+          </div>`).join('')}
+        </div>
+        <div class="wc-x">${sdata.map((s, i) => `<span>${sdata.length > 8 && i % 2 ? '' : fdc(s.w)}</span>`).join('')}</div>
+      </div>`;
+    const secs = SECCIONES.map((sc, si) => { let a = 0, t = 0; for (const e of fin) for (const [id] of sc.items) { const v = e.checklist?.[id]; if (!v) continue; t++; if (v !== 'no') a++; } return {n: `${si + 1}. ${sc.titulo}`, p: t ? a / t * 100 : 0, t}; });
+    const minP = Math.min(...secs.map(x => x.p));
+    const secHtml = `<ul class="bars">${secs.map(x => `<li><div class="b-t"><span>${esc(x.n)}</span><span${x.p === minP && x.p < 100 ? ' style="color:var(--bad);font-weight:700"' : ''}>${Math.round(x.p)}%</span></div><div class="m-bar"><span style="width:${Math.round(x.p)}%"></span></div></li>`).join('')}</ul>`;
+    // Disciplina con los seguimientos (estado actual)
+    const t0d = hoy(); const gd = new Map();
+    for (const e of base) { if (e.estado !== 'final' || e.seguimiento !== 'si') continue; const k = norm(e.especialista) || '—'; if (!gd.has(k)) gd.set(k, {n: e.especialista || '—', pend: 0, atr: 0, dias: 0, res: 0, aTiempo: 0}); const x = gd.get(k);
+      if (!e.seguimientoResuelto) { x.pend++; if (e.seguimientoFecha && e.seguimientoFecha < t0d) { x.atr++; x.dias += diffDays(e.seguimientoFecha, t0d); } }
+      else { x.res++; if (!e.seguimientoFecha || !e.seguimientoResueltoFecha || e.seguimientoResueltoFecha <= e.seguimientoFecha) x.aTiempo++; } }
+    const filasD = [...gd.values()].sort((a, b) => b.atr - a.atr || b.pend - a.pend);
+    const discHtml = filasD.length ? `<div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pendientes</th><th class="n">Atrasados</th><th class="n">Atraso prom.</th><th class="n">Resueltos a tiempo</th></tr></thead><tbody>${filasD.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.pend}</td><td class="n">${x.atr ? `<b style="color:var(--bad)">${x.atr}</b>` : '0'}</td><td class="n">${x.atr ? (Math.round(x.dias / x.atr) === 1 ? '1 día' : Math.round(x.dias / x.atr) + ' días') : '—'}</td><td class="n">${pctTxt(x.aTiempo, x.res)}</td></tr>`).join('')}</tbody></table></div>` : `<p class="note">Todavía no hay seguimientos cargados.</p>`;
+    html += `<div class="two"><section class="card"><div class="card-h"><h3>Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>
+      <section class="card"><div class="card-h"><h3>Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section></div>
+      <div class="two"><section class="card"><div class="card-h"><h3>Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>
+      <section class="card"><div class="card-h"><h3>Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section></div>`;
+    // Fallas de asesores
+    const ga = new Map();
+    for (const e of fin) { const k = norm(e.asesor) || '—'; if (!ga.has(k)) ga.set(k, {n: e.asesor || '—', ent: 0, f: 0, tipos: {}}); const x = ga.get(k); x.ent++; if (e.fallaAsesor === 'si') { x.f++; for (const t of e.fallaTipos || []) x.tipos[t] = (x.tipos[t] || 0) + 1; } }
+    const asa = [...ga.values()].sort((a, b) => b.f - a.f || b.ent - a.ent);
+    const totF = asa.reduce((a, x) => a + x.f, 0);
+    const fallasHtml = `<div class="tbl-wrap"><table><thead><tr><th>Asesor</th><th class="n">Entrevistas</th><th class="n">Con falla</th><th>Tipo más frecuente</th></tr></thead><tbody>${asa.slice(0, 12).map(x => { const tt = Object.entries(x.tipos).sort((a, b) => b[1] - a[1])[0]; return `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td class="n">${x.f ? `<span><b style="color:var(--bad)">${x.f}</b> · ${pctTxt(x.f, x.ent)}</span>` : '0'}</td><td>${tt ? esc(tt[0]) : '<span class="muted">—</span>'}</td></tr>`; }).join('')}</tbody></table></div>`;
+    // Plazos abiertos
+    const t0 = hoy();
+    const abiertos = base.filter(e => e.estado === 'final').map(e => ({e, c: comision(e)})).filter(x => x.c.limite && x.c.limite >= t0 && x.e.fecha <= t0).sort((a, b) => a.c.limite.localeCompare(b.c.limite));
+    const abHtml = abiertos.length ? `<ul class="slist scroll">${abiertos.map(({e, c}) => { const q = diffDays(t0, c.limite); return `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · cuota actual ${fm(c.cuotaActual)}</small></div><div class="s-side">${q <= 5 ? chip('pendiente', `Vence en ${q} ${q === 1 ? 'día' : 'días'}`) : `<span class="mono" style="font-size:13px">${q} días</span>`}<small class="muted">hasta ${fdc(c.limite)}</small></div></li>`; }).join('')}</ul>` : `<p class="note">No hay clientes con plazo abierto.</p>`;
+    html += `<div class="two"><section class="card"><div class="card-h"><h3>Fallas detectadas en asesores</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>
+      <section class="card"><div class="card-h"><h3>Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section></div>`;
+  }
+  // Seguimientos
+  const segs = base.filter(e => e.seguimiento === 'si' && !e.seguimientoResuelto).sort((a, b) => (a.seguimientoFecha || '9').localeCompare(b.seguimientoFecha || '9'));
+  if (segs.length) html += `<section class="card"><div class="card-h"><h3>Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'cliente' : 'clientes'} con algo por resolver.</p></div><ul class="slist">${segs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${esc((e.seguimientoDetalle || '').slice(0, 140))}</small></div><div class="s-side">${e.seguimientoFecha ? `<span class="mono" style="font-size:13px">${fdc(e.seguimientoFecha)}</span>` : ''}${e.seguimientoFecha && e.seguimientoFecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
+  out.innerHTML = html; etiquetar(out);
+}
+
+/* ---------- Vista: Ajustes ---------- */
+function renderAjustes() {
+  const v = $('#v-ajustes');
+  if (v.innerHTML && (S.ajDirty || v.contains(document.activeElement))) return;
+  const a = S.aj;
+  v.innerHTML = `
+    <div class="v-head"><div><h2>Ajustes</h2><p>Parámetros de comisión y listas que usa el equipo. Solo la responsable los modifica.</p></div></div>
+    <section class="card"><div class="card-h"><h3>Comisión</h3></div>
+      <div class="grid-f">
+        <div class="field"><label for="a_pct">Porcentaje de comisión</label><input type="text" id="a_pct" inputmode="numeric" class="money" value="${esc(a.pct)}"><span class="hint">Sobre el incremento de cuota y el ahorro.</span></div>
+        <div class="field"><label for="a_min">Cuota mínima de ingreso</label><input type="text" id="a_min" inputmode="numeric" class="money" value="${esc(fmtIn(a.minimo))}"><span class="hint">Aviso cuando la cuota del asesor es menor.</span></div>
+        <div class="field"><label for="a_plazo">Plazo para sumar incremento o ahorro</label><select id="a_plazo">${[1, 2, 3].map(n => `<option value="${n}"${a.plazoMeses === n ? ' selected' : ''}>${n === 1 ? '1 mes' : n + ' meses'} desde la entrevista</option>`).join('')}</select></div>
+        <div class="field"><label for="a_tope">Tope de comisión por cliente</label><input type="text" id="a_tope" inputmode="numeric" class="money" value="${esc(fmtIn(a.tope ?? DEF_AJ.tope))}"><span class="hint">Lo máximo que cobra el asesor OB por un cliente, sumando incremento y ahorro.</span></div>
+      </div>
+      <div class="rule" style="margin-top:14px"><b>Cómo se calcula</b><span>Comisión = ${esc(a.pct)}% × (cuota final − cuota pactada por el asesor) + ${esc(a.pct)}% × ahorro. Cada gestión posterior suma si su fecha cae dentro del plazo. Por cliente, la comisión no supera ${fm(a.tope ?? DEF_AJ.tope)}.</span><span class="muted">Ejemplo: el asesor de ventas cierra en ${fm(a.minimo)}, el asesor OB lo lleva a ${fm(a.minimo + 100000)} → comisiona ${esc(a.pct)}% de ${fm(100000)} = ${fm(100000 * a.pct / 100)}.</span><span class="muted">Cada entrevista guarda el porcentaje y el plazo vigentes al cargarla; un cambio acá aplica a las entrevistas nuevas.</span></div>
+    </section>
+    <section class="card"><div class="card-h"><h3>Dólar Spazios</h3><p>Se usa el <b>dólar Spazios ingreso</b> de spazios.com.ar/indices2 para pasar a pesos los ahorros en dólares, con la cotización del día del pago. Se actualiza solo todos los días.</p></div>
+      ${(() => { const u = S.dolar.at(-1); const ult = S.dolar.slice(-8).reverse(); return `<div class="calc" style="margin:0 0 12px"><div class="hl"><small>Última cotización</small><b>${u ? '$ ' + COT.format(u.ingreso) : '—'}</b><small>${u ? 'del ' + fd(u.fecha) : 'Sin datos'}</small></div>${ult.slice(1, 5).map(x => `<div><small>${fd(x.fecha)}</small><b>$ ${COT.format(x.ingreso)}</b></div>`).join('')}</div>`; })()}
+      <div class="grid-f"><div class="field"><label for="a_dFecha">Cargar o corregir una fecha</label><input type="date" id="a_dFecha" max="${hoy()}" value="${hoy()}"></div>
+        <div class="field"><label for="a_dValor">Dólar Spazios ingreso</label><input type="text" id="a_dValor" inputmode="decimal" class="money" placeholder="1.503,50"></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn" type="button" id="btnDolar">Guardar cotización</button><span class="note" id="a_dMsg" role="alert"></span></div>
+    </section>
+    <section class="card"><div class="card-h"><h3>Metas del mes</h3><p>Por asesor OB. Dejar en 0 para no usar meta. Se ven en el Panel y en Comisiones.</p></div>
+      <div class="grid-f">
+        <div class="field"><label for="a_metaEnt">Entrevistas por mes</label><input type="text" id="a_metaEnt" inputmode="numeric" class="money" value="${esc(a.metaEnt || '')}" placeholder="0"></div>
+        <div class="field"><label for="a_metaMonto">Incremento + ahorro por mes</label><input type="text" id="a_metaMonto" inputmode="numeric" class="money" value="${esc(fmtIn(a.metaMonto))}" placeholder="0"><span class="hint">Suma de incrementos de cuota y ahorros cobrados en el mes.</span></div>
+      </div>
+    </section>
+    <div class="aj-grid">
+      <section class="card"><div class="card-h"><h3>Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3>Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3>Sucursales</h3><p>Una por línea. La primera es la predeterminada.</p></div><textarea id="a_suc" aria-label="Sucursales">${esc((a.sucursales || []).join('\n'))}</textarea></section>
+    </div>
+    <section class="card"><div class="card-h"><h3>PIN de la responsable</h3><p>Se pide al elegir «Soy la responsable». Queda recordado 12 horas en cada navegador.</p></div>
+      <div class="grid-f"><div class="field"><label for="a_pin0">PIN actual</label><input type="password" id="a_pin0" inputmode="numeric" maxlength="6" autocomplete="current-password" class="mono"></div><div class="field"><label for="a_pin1">PIN nuevo</label><input type="password" id="a_pin1" inputmode="numeric" maxlength="6" autocomplete="new-password" class="mono"></div>
+      <div class="field"><label for="a_pin2">Repetir el PIN</label><input type="password" id="a_pin2" inputmode="numeric" maxlength="6" autocomplete="new-password" class="mono"></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn" type="button" id="btnPin">Cambiar PIN</button><span class="note" id="a_pinMsg" role="alert"></span></div>
+    </section>
+    <div class="row"><button class="btn btn-primary" id="btnAj" type="button"${S.db && S.canWrite ? '' : ' disabled'}>Guardar ajustes</button><span class="note" id="ajMsg"></span></div>
+    <section class="card"><div class="card-h"><h3>Acceso del equipo</h3></div>
+      <div class="view" style="gap:8px;font-size:14px"><p>Cada asesor OB entra con el link de la página y elige su nombre. La responsable entra con «Soy la responsable» y su PIN.</p>
+      <p class="muted">El dólar Spazios se actualiza solo con la acción programada de GitHub, dos veces por día.</p></div>
+    </section>`;
+}
+async function guardarDolar() {
+  const f = $('#a_dFecha').value; const raw = ($('#a_dValor').value || '').trim().replace(/\./g, '').replace(',', '.'); const v = parseFloat(raw); const m = $('#a_dMsg');
+  if (!f || !(v > 0)) { m.textContent = 'Completar la fecha y el valor (por ejemplo 1.503,50).'; return; }
+  try { await conReintento(() => S.db.collection('dolar').doc(f).set({fecha: f, ingreso: Math.round(v * 100) / 100, fuente: 'manual', actualizado: new Date().toISOString()})); m.textContent = ''; $('#a_dValor').value = ''; toast(`Cotización del ${fd(f)} guardada.`); }
+  catch (e) { errorEscritura(e); }
+}
+async function guardarAjustes() {
+  const lines = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean);
+  const pct = Math.min(100, num($('#a_pct').value));
+  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), actualizado: new Date().toISOString()};
+  try { await conReintento(() => S.db.doc('ajustes/general').set(data)); S.ajDirty = false; toast('Ajustes guardados.'); }
+  catch (e) { if (e?.code === 'invalid_argument') toast('Solo una cuenta con permiso de Editor puede cambiar los ajustes.', 'bad'); else errorEscritura(e); }
+}
+
+/* ---------- General ---------- */
+let tToast = 0;
+function toast(msg, kind) { const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (kind ? ' ' + kind : ''); t.hidden = false; clearTimeout(tToast); tToast = setTimeout(() => { t.hidden = true; }, kind === 'bad' ? 5200 : 3200); }
+function renderBanner() {
+  const b = $('#banner');
+  if (S.sinDb) b.innerHTML = `<div class="banner warn">${S.errorDb ? esc(S.errorDb) : 'Esta página no está conectada a la base de datos: el checklist se puede completar, pero no guardar.'}</div>`;
+  else if (!S.conectado) b.innerHTML = `<div class="banner">Conectando con la base de datos del equipo…</div>`;
+  else b.innerHTML = '';
+}
+function pintarDolar() {
+  const u = S.dolar?.at(-1); const ch = $('#usdChip');
+  if (!u) { ch.hidden = true; return; }
+  ch.hidden = false; $('#usdVal').textContent = '$ ' + COT.format(u.ingreso);
+  const dias = diffDays(u.fecha, hoy());
+  $('#usdFecha').textContent = u.fecha === hoy() ? 'hoy' : 'del ' + fdc(u.fecha);
+  ch.classList.toggle('viejo', dias > 4);
+  ch.title = `Dólar Spazios ingreso del ${fd(u.fecha)}${dias > 4 ? ' · hace ' + dias + ' días sin actualizar' : ''}`;
+}
+function renderAll() {
+  pintarDolar();
+  renderBanner(); renderTabs(); renderFiltros(); renderVista(); actualizarForm();
+  if (S.detalle && !$('#drawer').hidden) { const a = document.activeElement; if (!(a && $('#drawer').contains(a) && a.matches('textarea,input'))) renderDetalle(); }
+}
+
+function bindGeneral() {
+  $$('.tab').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  $('#menuBtn').addEventListener('click', abrirMenu);
+  $('#menuClose').addEventListener('click', cerrarMenu);
+  $('#menuScrim').addEventListener('click', cerrarMenu);
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMenu(); });
+  document.addEventListener('click', ev => {
+    const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
+    if (ev.target.closest('[data-pick]')) { cerrarMenu(); abrirPicker(true); return; }
+    const cu = ev.target.closest('[data-cumplir]'); if (cu) { cumplirAviso(cu.dataset.cumplir); return; }
+    const rs = ev.target.closest('[data-resolver]'); if (rs) { rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
+    const vr = ev.target.closest('[data-ver]'); if (vr) { abrirDetalle(vr.dataset.ver); return; }
+    const row = ev.target.closest('.erow, tr.clk, li.clk'); if (row && !row.closest('#drawer')) { abrirDetalle(row.dataset.id); return; }
+    if (ev.target.closest('#kpiRev')) { S.f.ent = {...S.f.ent, est: 'pendiente', per: '', esp: $('#fp_esp').value}; $('#fe_est').value = 'pendiente'; setTab('entrevistas'); return; }
+    if (ev.target.closest('#btnAj')) guardarAjustes();
+    if (ev.target.closest('#btnPin')) cambiarPin();
+    if (ev.target.closest('#btnDolar')) guardarDolar();
+    if (ev.target.closest('#btnCsv')) exportarCsv();
+  });
+  document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('tr.clk, li.clk')) { ev.preventDefault(); abrirDetalle(ev.target.dataset.id); } });
+  $('#v-ajustes').addEventListener('input', ev => { if (ev.target.id?.startsWith('a_pin') || ev.target.id?.startsWith('a_d')) return; S.ajDirty = true; $('#ajMsg').textContent = 'Cambios sin guardar.'; });
+  $('#v-ajustes').addEventListener('focusout', ev => { if (ev.target.id === 'a_min' || ev.target.id === 'a_tope' || ev.target.id === 'a_metaMonto') ev.target.value = fmtIn(num(ev.target.value)); });
+  $('#fe_q').addEventListener('input', ev => { S.f.ent.q = ev.target.value; renderEntrevistas(); });
+  $('#fe_esp').addEventListener('change', ev => { S.f.ent.esp = ev.target.value; renderEntrevistas(); });
+  $('#fe_per').addEventListener('change', ev => { S.f.ent.per = ev.target.value; renderEntrevistas(); });
+  $('#fe_est').addEventListener('change', ev => { S.f.ent.est = ev.target.value; renderEntrevistas(); });
+  $('#fc_mes').addEventListener('change', ev => { S.f.com.mes = ev.target.value; renderComisiones(); });
+  $('#fc_esp').addEventListener('change', ev => { S.f.com.esp = ev.target.value; renderComisiones(); });
+  $('#fc_pago').addEventListener('change', ev => { S.f.com.pago = ev.target.value; renderComisiones(); });
+  $('#fp_per').addEventListener('change', ev => { S.f.pan.per = ev.target.value; renderPanel(); });
+  $('#fp_esp').addEventListener('change', ev => { S.f.pan.esp = ev.target.value; renderPanel(); });
+  $('#fa_esp').addEventListener('change', ev => { S.f.av.esp = ev.target.value; renderAvisos(); });
+  $('#fa_tipo').addEventListener('change', ev => { S.f.av.tipo = ev.target.value; renderAvisos(); });
+  $('#fp_suc').addEventListener('change', ev => { S.f.pan.suc = ev.target.value; renderPanel(); });
+  $('#whoBtn').addEventListener('click', () => abrirPicker(true));
+  $('#pickClose').addEventListener('click', cerrarPicker);
+  $('#picker').addEventListener('click', ev => { if (ev.target.closest('#pinOk')) confirmarPin(); else if (ev.target.closest('#pinBack')) abrirPicker(identidadValida()); });
+  $('#picker').addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target.matches('#pin1,#pin2')) { ev.preventDefault(); confirmarPin(); } });
+  $('#pickList').addEventListener('click', ev => { const bt = ev.target.closest('button[data-n]'); if (bt) { if (bt.dataset.n === RESP) vistaPin(); else elegir(bt.dataset.n); } else if (ev.target.closest('[data-tabgo]')) cerrarPicker(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#picker').hidden && !$('#pickClose').hidden) cerrarPicker(); });
+
+}
+
+/* ---------- Identidad: qué asesor OB usa la página ---------- */
+const RESP = '__responsable__';
+const esResp = () => S.admin && S.yo === RESP && S.pinOk;
+const miNombre = () => (S.yo && S.yo !== RESP) ? S.yo : '';
+function equipo() { return (S.aj.equipo || []).map(n => String(n).trim()).filter(Boolean); }
+function identidadValida() {
+  if (S.yo === RESP) return esResp();
+  return !!S.yo && equipo().some(n => norm(n) === norm(S.yo));
+}
+function pintarQuien() { $('#whoName').textContent = S.yo === RESP ? 'Responsable' : (S.yo || 'Elegir'); $('#menuWho').textContent = S.yo === RESP ? 'Responsable (todo el equipo)' : (S.yo || 'Sin elegir'); }
+function fillEsp(v) {
+  const sel = $('#f_esp'); const lista = equipo();
+  const opts = [['', 'Elegir asesor OB'], ...lista.map(n => [n, n])];
+  if (v && !lista.some(n => norm(n) === norm(v))) opts.push([v, v]);
+  sel.innerHTML = opts.map(([a, b]) => `<option value="${esc(a)}">${esc(b)}</option>`).join('');
+  sel.value = opts.find(o => norm(o[0]) === norm(v))?.[0] ?? '';
+  sel.disabled = !esResp() && !!miNombre();
+}
+function abrirPicker(cancelable) {
+  $('#pickTitle').textContent = '¿Qué asesor OB eres?'; $('#pickTitle').nextElementSibling.textContent = 'Se cargan tus entrevistas, tus datos y tus comisiones.';
+  const lista = equipo();
+  let html = lista.map(n => `<button type="button" data-n="${esc(n)}"${norm(n) === norm(S.yo) ? ' aria-current="true"' : ''}><span>${esc(n)}</span>${norm(n) === norm(S.yo) ? '<small>Actual</small>' : ''}</button>`).join('');
+  if (!lista.length) html = `<div class="banner warn">Todavía no hay asesores OB cargados. ${S.admin ? 'Entrar como responsable y cargarlos en Ajustes, uno por línea.' : 'La responsable tiene que cargarlos en Ajustes.'}</div>`;
+  if (S.admin) html += `<button type="button" class="resp" data-n="${RESP}"${S.yo === RESP ? ' aria-current="true"' : ''}><span>Soy la responsable</span><small>Ver todo el equipo</small></button>`;
+  $('#pickList').innerHTML = html;
+  $('#pickClose').hidden = !(cancelable && identidadValida());
+  $('#picker').hidden = false; $('#pickScrim').hidden = false;
+  setTimeout(() => $('#pickList button')?.focus(), 30);
+}
+const PIN_TTL = 12 * 3600 * 1000;
+async function hashPin(pin, salt) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(salt + ':' + pin));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function restaurarPin() {
+  const g = lsGet('onb_pinok', null);
+  S.pinOk = !!(g && S.pinDoc?.hash && g.h === S.pinDoc.hash && Date.now() - g.t < PIN_TTL);
+}
+let pinFallos = 0, pinBloqueo = 0;
+function vistaPin() {
+  const crear = !S.pinDoc?.hash;
+  $('#pickTitle').textContent = crear ? 'Crear el PIN de la responsable' : 'PIN de la responsable';
+  $('#pickTitle').nextElementSibling.textContent = crear ? 'Todavía no hay PIN. Elegir uno de 4 a 6 números; se va a pedir cada vez que se entre como responsable.' : 'Ingresar el PIN para ver el panel, aprobar comisiones y cambiar los ajustes.';
+  $('#pickList').innerHTML = `
+    <div class="field"><label for="pin1">${crear ? 'PIN nuevo' : 'PIN'}</label><input type="password" id="pin1" inputmode="numeric" maxlength="6" autocomplete="off" class="mono"></div>
+    ${crear ? `<div class="field"><label for="pin2">Repetir el PIN</label><input type="password" id="pin2" inputmode="numeric" maxlength="6" autocomplete="off" class="mono"></div>` : ''}
+    <p class="note" id="pinMsg" role="alert"></p>
+    <div class="row"><button class="btn btn-primary" type="button" id="pinOk">${crear ? 'Crear PIN y entrar' : 'Entrar'}</button><button class="btn" type="button" id="pinBack">Volver</button></div>`;
+  $('#pickClose').hidden = true;
+  setTimeout(() => $('#pin1')?.focus(), 30);
+}
+async function confirmarPin() {
+  const msg = $('#pinMsg'); const p1 = ($('#pin1').value || '').trim();
+  if (Date.now() < pinBloqueo) { msg.textContent = 'Demasiados intentos. Esperar 30 segundos.'; return; }
+  if (!/^\d{4,6}$/.test(p1)) { msg.textContent = 'El PIN tiene que tener de 4 a 6 números.'; return; }
+  try {
+    if (!S.pinDoc?.hash) {
+      if (p1 !== ($('#pin2').value || '').trim()) { msg.textContent = 'Los dos PIN no coinciden.'; return; }
+      const r = await SB.rpc('onb_pin_cambiar', {actual: null, nuevo: p1}); if (r.error) throw r.error;
+      if (!r.data) { msg.textContent = 'Ya hay un PIN creado. Volver a intentar.'; await cargarPinInfo(); vistaPin(); return; }
+    } else {
+      const r = await SB.rpc('onb_pin_verificar', {p: p1}); if (r.error) throw r.error;
+      if (!r.data) { pinFallos++; if (pinFallos >= 5) { pinBloqueo = Date.now() + 30000; pinFallos = 0; } msg.textContent = 'PIN incorrecto.'; $('#pin1').value = ''; $('#pin1').focus(); return; }
+    }
+    await cargarPinInfo();
+    pinFallos = 0; S.pinOk = true; lsSet('onb_pinok', {h: S.pinDoc?.hash, t: Date.now()});
+    elegir(RESP);
+  } catch (e) { console.warn(e); msg.textContent = 'No se pudo verificar el PIN. Revisar la conexión y volver a intentar.'; }
+}
+async function cambiarPin() {
+  const act = ($('#a_pin0').value || '').trim(), a = ($('#a_pin1').value || '').trim(), b = ($('#a_pin2').value || '').trim(), m = $('#a_pinMsg');
+  if (!/^\d{4,6}$/.test(a)) { m.textContent = 'El PIN tiene que tener de 4 a 6 números.'; return; }
+  if (a !== b) { m.textContent = 'Los dos PIN nuevos no coinciden.'; return; }
+  try {
+    const r = await SB.rpc('onb_pin_cambiar', {actual: act, nuevo: a}); if (r.error) throw r.error;
+    if (!r.data) { m.textContent = 'El PIN actual no es correcto.'; return; }
+    await cargarPinInfo(); lsSet('onb_pinok', {h: S.pinDoc?.hash, t: Date.now()}); S.pinOk = true;
+    $('#a_pin0').value = ''; $('#a_pin1').value = ''; $('#a_pin2').value = ''; m.textContent = ''; toast('PIN cambiado.');
+  } catch (e) { console.warn(e); m.textContent = 'No se pudo cambiar el PIN. Volver a intentar.'; }
+}
+function cerrarPicker() { $('#picker').hidden = true; $('#pickScrim').hidden = true; }
+function elegir(n) {
+  S.yo = n; lsSet('onb_yo', n); pintarQuien(); cerrarPicker();
+  const nom = miNombre();
+  S.f.ent.esp = nom; S.f.com.esp = nom; S.f.pan.esp = '';
+  if (!S.editId) fillEsp(nom);
+  if (ADMIN_TABS.includes(S.tab) && !esResp()) setTab('cargar', true);
+  renderAll(); programarBorrador();
+  toast(n === RESP ? 'Viendo todo el equipo.' : `Hola, ${n}. Se cargaron tus entrevistas.`);
+}
+function revisarIdentidad() {
+  if (!S.conectado || !S.ajCargado || !S.pinCargado) return;
+  pintarQuien();
+  if (!identidadValida()) { if ($('#picker').hidden) abrirPicker(false); }
+}
+function vacioIdentidad() {
+  return `<div class="empty"><h3>Falta elegir quién eres</h3><p>Elige tu nombre de asesor OB para ver tus entrevistas y tus comisiones.</p><button class="btn btn-primary" type="button" data-pick="1">Elegir asesor OB</button></div>`;
+}
+
+/* ---------- Conexión a Supabase ---------- */
+const T_DOCS = 'onb_docs';
+function crearDb(sb) {
+  const subs = new Set();
+  const notify = col => { for (const x of subs) if (x.col === col) x.refresh(); };
+  try { sb.channel('onb-cambios').on('postgres_changes', {event: '*', schema: 'public', table: T_DOCS}, p => notify((p.new && p.new.col) || (p.old && p.old.col))).subscribe(); } catch (e) { console.warn(e); }
+  setInterval(() => { if (!document.hidden) for (const x of subs) x.refresh(); }, 30000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) for (const x of subs) x.refresh(); });
+  const snap = (id, data) => ({id, exists: data != null, data: () => data == null ? undefined : JSON.parse(JSON.stringify(data)), metadata: {fromCache: false, hasPendingWrites: false}});
+  const chk = r => { if (r.error) throw {code: 'unavailable', message: r.error.message}; return r; };
+  async function todos(col, filtros) {
+    const out = []; const N = 1000;
+    for (let i = 0; ; i += N) {
+      let q = sb.from(T_DOCS).select('id,data').eq('col', col);
+      for (const [f, op, v] of filtros) if (op === '>=') q = q.gte('data->>' + f, v);
+      const r = chk(await q.order('id').range(i, i + N - 1));
+      out.push(...(r.data || [])); if (!r.data || r.data.length < N) break;
+    }
+    return out;
+  }
+  function suscripcion(col, leer, next, err) {
+    let last = null, primera = true;
+    const x = {col, refresh: async () => {
+      try { const v = await leer(); const j = JSON.stringify(v); if (j !== last) { last = j; next(v); } primera = false; }
+      catch (e) { console.warn(e); if (primera && err) err(e); primera = false; }
+    }};
+    subs.add(x); x.refresh(); return () => subs.delete(x);
+  }
+  const docRef = (col, id) => ({
+    id, path: col + '/' + id,
+    async get() { const r = chk(await sb.from(T_DOCS).select('data').eq('col', col).eq('id', id).maybeSingle()); return snap(id, r.data ? r.data.data : null); },
+    async set(data) { chk(await sb.from(T_DOCS).upsert({col, id, data, updated_at: new Date().toISOString()})); notify(col); },
+    async update(patch) { chk(await sb.rpc('onb_doc_update', {p_col: col, p_id: id, p_patch: patch})); notify(col); },
+    async delete() { chk(await sb.from(T_DOCS).delete().eq('col', col).eq('id', id)); notify(col); },
+    onSnapshot(next, err) { return suscripcion(col, async () => { const r = chk(await sb.from(T_DOCS).select('data').eq('col', col).eq('id', id).maybeSingle()); return r.data ? r.data.data : null; }, v => next(snap(id, v)), err); },
+  });
+  const coll = (col, filtros = []) => ({
+    path: col,
+    doc: id => docRef(col, id || (Date.now().toString(36) + Math.random().toString(36).slice(2, 10))),
+    where: (f, op, v) => coll(col, [...filtros, [f, op, v]]),
+    onSnapshot(next, err) { return suscripcion(col, () => todos(col, filtros), rows => { const docs = rows.map(x => snap(x.id, x.data)); next({docs, size: docs.length, empty: !docs.length, docChanges: () => [], metadata: {}}); }, err); },
+  });
+  return {doc: p => { const [c, i] = p.split('/'); return docRef(c, i); }, collection: c => coll(c)};
+}
+const descargas = {async save({filename, data}) { const blob = new Blob([data], {type: 'text/csv;charset=utf-8'}); const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 3000); return {status: 'saved'}; }};
+let SB = null;
+async function cargarPinInfo() {
+  try { const r = await SB.rpc('onb_pin_info'); if (r.error) throw r.error; S.pinDoc = r.data ? {hash: String(r.data)} : null; }
+  catch (e) { console.warn(e); S.pinDoc = null; }
+  S.pinCargado = true; restaurarPin();
+}
+async function conectar() {
+  const cfg = window.ONB_CONFIG || {};
+  if (!window.supabase || !cfg.url || !cfg.anonKey || /PEGAR/.test(cfg.url + cfg.anonKey)) { S.sinDb = true; S.errorDb = 'Falta configurar Supabase: completar la URL y la clave pública (anon) en el archivo config.js.'; S.conectado = true; renderAll(); return; }
+  SB = window.supabase.createClient(cfg.url, cfg.anonKey);
+  const db = crearDb(SB);
+  S.db = db; S.dl = descargas; S.admin = true; S.canWrite = true;
+  S.uid = lsGet('onb_uid', null); if (!S.uid) { S.uid = 'web_' + gid() + gid(); lsSet('onb_uid', S.uid); }
+  S.conectado = true;
+  db.doc('ajustes/general').onSnapshot(s => { S.aj = {...DEF_AJ, ...(s.exists ? clone(s.data()) : {})}; S.ajCargado = true; renderAll(); revisarIdentidad(); }, () => { S.sinDb = true; S.errorDb = 'No se pudo conectar con Supabase. Revisar la URL y la clave de config.js, y que se haya ejecutado el archivo supabase.sql.'; renderAll(); });
+  db.collection('dolar').where('fecha', '>=', monthsBack(15)[14] + '-01').onSnapshot(sn => { S.dolar = sn.docs.map(d => clone(d.data())).filter(x => x.fecha && x.ingreso > 0).sort((a, b) => a.fecha.localeCompare(b.fecha)); for (const g of S.gest) recalcG(g); renderAll(); }, () => {});
+  await cargarPinInfo();
+  suscribir();
+  if (S.wantTab) { setTab(S.wantTab, true); S.wantTab = null; }
+  renderAll(); revisarIdentidad();
+}
+let reintentos = 0;
+function suscribir() {
+  const desde = monthsBack(14)[13] + '-01';
+  try {
+    S.unsub?.();
+    S.unsub = S.db.collection('entrevistas').where('fecha', '>=', desde).onSnapshot(snap => {
+      S.E = snap.docs.map(d => ({id: d.id, ...clone(d.data())})); S.cargado = true; reintentos = 0; renderAll();
+    }, err => {
+      if (err?.code === 'unavailable' && reintentos < 3) { reintentos++; setTimeout(suscribir, 1500 * reintentos); return; }
+      S.sinDb = true; S.errorDb = err?.code === 'revoked' ? 'El acceso a esta página cambió. Recargar para continuar.' : 'Se perdió la conexión con la base de datos. Recargar la página.'; renderAll();
+    });
+  } catch { S.sinDb = true; renderAll(); }
+}
+
+function start(hot) {
+  construirForm(); bindForm(); bindDetalle(); bindGeneral();
+  pintarQuien();
+  const hints = lsGet('onb_hints', true);
+  $('#optHints').checked = hints; document.body.classList.toggle('no-hints', !hints);
+  $('#optHints').addEventListener('change', ev => { document.body.classList.toggle('no-hints', !ev.target.checked); lsSet('onb_hints', ev.target.checked); });
+  const draft = hot?.draft || lsGet('onb_draft', null);
+  if (draft?.data) { S.editId = draft.editId || null; S.editOrig = draft.editOrig || null; cargarForm(draft.data); }
+  else vaciarForm();
+  const want = hot?.tab || (location.hash || '').slice(1);
+  if (ADMIN_TABS.includes(want)) S.wantTab = want;
+  setTab(['cargar', 'entrevistas', 'comisiones', 'avisos'].includes(want) ? want : 'cargar', true);
+  renderAll();
+  try { window.claude?.hot?.snapshot?.(() => ({draft: {editId: S.editId, editOrig: S.editOrig, data: leerForm()}, tab: S.tab})); } catch {}
+  conectar();
+}
+try { window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {}); }
+catch { start({}); }
+</script>
+
+</body>
+</html>
