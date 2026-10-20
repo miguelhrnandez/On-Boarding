@@ -412,6 +412,24 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .money-in input{flex:1;min-width:0}
 .seg-sm{grid-auto-columns:minmax(40px,auto)}
 .seg-sm label{padding:6px 9px}
+.hero-me{background:linear-gradient(135deg,var(--accent-soft),var(--surface) 70%);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.hm-h{display:flex;gap:12px;align-items:center}
+.hm-h h3{font-size:21px;font-weight:800}
+.hm-h p{color:var(--muted);font-size:14px}
+.hm-wave{font-size:34px;display:inline-block;transform-origin:70% 70%;animation:saludo 1.6s ease-in-out 1}
+@keyframes saludo{0%,100%{transform:rotate(0)}15%{transform:rotate(16deg)}30%{transform:rotate(-8deg)}45%{transform:rotate(14deg)}60%{transform:rotate(-4deg)}75%{transform:rotate(10deg)}}
+.hm-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:8px}
+.hm-list li{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.45;animation:aparece .45s ease-out both}
+.hm-e{font-size:20px;line-height:1.1;flex:none}
+@keyframes aparece{from{opacity:0;transform:translateY(6px)}}
+.emo{font-size:1.05em;margin-right:2px}
+.kpi .k-l .emo{font-size:15px;letter-spacing:0}
+.meta-msg{display:block;font-weight:600;font-size:13px;color:var(--muted);margin-top:2px}
+.didac .m-bar span,.didac .g-bar span{animation:crecer 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes crecer{from{width:0}}
+.didac .wc-stack{animation:subir .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes subir{from{height:0}}
+.didac .card{transition:transform .15s}
 .refnote{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:10px}
 tr.ref td{color:var(--muted);font-style:italic;background:repeating-linear-gradient(135deg,transparent 0 8px,var(--accent-soft) 8px 9px)}
 tr.ref td .chip{font-style:normal}
@@ -1570,6 +1588,8 @@ function renderPanel() {
   $('#pan-title').textContent = personal ? `Mis estadísticas · ${miNombre()}` : 'Panel de la responsable';
   $('#pan-sub').textContent = personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
   if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
+  const E = em => personal ? `<span class="emo" aria-hidden="true">${em}</span> ` : '';
+  out.classList.toggle('didac', personal);
   const {desde, hasta} = rango(per);
   const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
   const base = S.E.filter(e => (!suc || norm(e.sucursal) === norm(suc)) && (!esp || norm(e.especialista) === norm(esp)));
@@ -1598,14 +1618,37 @@ function renderPanel() {
   const dk = (k, pts) => dk0(k, pts);
 
   let html = `<div class="kpis">
-    <div class="kpi"><span class="k-l">Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
-    <div class="kpi"><span class="k-l">Sin errores</span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
-    <div class="kpi"><span class="k-l">Incremento de cuotas</span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
-    <div class="kpi"><span class="k-l">Ahorros</span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
-    <div class="kpi"><span class="k-l">Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
-    <button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>
+    <div class="kpi"><span class="k-l">${E('📋')}Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
+    <div class="kpi"><span class="k-l">${E('✅')}Sin errores</span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
+    <div class="kpi"><span class="k-l">${E('📈')}Incremento de cuotas</span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
+    <div class="kpi"><span class="k-l">${E('🐷')}Ahorros</span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
+    <div class="kpi"><span class="k-l">${E('💰')}Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
+    <button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>
   </div>`;
 
+  if (personal) {
+    const ins = [];
+    const nombre = miNombre().split(' ')[0];
+    const g = grupos.get(norm(miNombre())) || {ent: 0, inc: 0, aho: 0};
+    if (!fin.length) ins.push(['📝', 'Todavía no hay entrevistas finalizadas en este período. ¡La primera está por llegar!']);
+    else {
+      let t = `Finalizaste <b>${fin.length}</b> ${fin.length === 1 ? 'entrevista' : 'entrevistas'}`;
+      if (S.aj.metaEnt && per !== '3m') { const f = S.aj.metaEnt - fin.length; t += f > 0 ? ` · te ${f === 1 ? 'falta 1' : 'faltan ' + f} para tu meta de ${S.aj.metaEnt}` : ' · 🏆 ¡meta de entrevistas cumplida!'; }
+      ins.push(['📋', t + '.']);
+      const p = Math.round(nOk / fin.length * 100);
+      ins.push(['✅', `<b>${nOk} de ${fin.length}</b> sin errores (${p}%). ${p === 100 ? '¡Impecable! 🌟' : p >= 70 ? '¡Muy bien!' : 'Mira abajo qué pasos conviene reforzar 👇'}`]);
+    }
+    if (com > 0 || fin.length) { let t = `Llevas <b>${fm(com)}</b> de comisión`; if (curM && prevM && prevM.com) { const d = Math.round((curM.com - prevM.com) / prevM.com * 100); t += d > 0 ? ` · 📈 ${d}% más que el mes pasado` : d < 0 ? ` · 📉 ${-d}% menos que el mes pasado` : ' · igual que el mes pasado'; } ins.push(['💰', t + '.']); }
+    if (S.aj.metaMonto && per !== '3m') { const v = g.inc + g.aho, f = S.aj.metaMonto - v; ins.push(['🎯', f > 0 ? `Te faltan <b>${fm(f)}</b> de incremento + ahorro para tu meta de ${fm(S.aj.metaMonto)}.` : `🏆 ¡Superaste tu meta de incremento + ahorro (${fm(S.aj.metaMonto)})!`]); }
+    const av = avisosDe(miNombre()); const urg = av.filter(a => a.est === 'atrasado' || a.est === 'hoy').length; const pos = av.reduce((t, a) => t + a.posible, 0);
+    if (urg) ins.push(['⏰', `Tienes <b>${urg}</b> ${urg === 1 ? 'seguimiento' : 'seguimientos'} para hoy o atrasados. <button class="linkbtn" type="button" data-tabgo="avisos">Ver avisos</button>`]);
+    else if (av.length) ins.push(['📌', `Tienes ${av.length} ${av.length === 1 ? 'seguimiento pendiente' : 'seguimientos pendientes'}, ninguno atrasado. ¡Bien!`]);
+    if (pos) ins.push(['🤝', `Si se cumplen tus pactos en plazo, sumas <b>${fm(pos)}</b> más de comisión.`]);
+    const top = ITEMS.map(it => ({it, n: fin.filter(e => e.checklist?.[it.id] === 'no').length})).filter(x => x.n).sort((a, b) => b.n - a.n)[0];
+    if (top) ins.push(['💡', `Para mejorar: el paso que más te queda en «No» es <b>«${esc(top.it.t.replace(/\.$/, ''))}»</b>.`]);
+    html = `<section class="hero-me"><div class="hm-h"><span class="hm-wave" aria-hidden="true">👋</span><div><h3>¡Hola, ${esc(nombre)}!</h3><p>Así viene tu ${per === '3m' ? 'trimestre' : 'mes de ' + MESES[+per.slice(5) - 1]}.</p></div></div>
+      <ul class="hm-list">${ins.map(([em, t], i) => `<li style="animation-delay:${i * 70}ms"><span class="hm-e" aria-hidden="true">${em}</span><span>${t}</span></li>`).join('')}</ul></section>` + html;
+  }
   if (!fin.length && !nBorr) {
     html += `<div class="empty"><h3>Sin entrevistas en este período</h3><p>Cuando el equipo finalice entrevistas, este panel muestra el cumplimiento de cada paso del checklist, los pasos que más quedan en «No», las fallas de los asesores, los plazos abiertos para sumar incremento o ahorro y la comisión de cada asesor OB.</p></div>`;
   }
@@ -1621,9 +1664,10 @@ function renderPanel() {
     const esCur = per === hoy().slice(0, 7);
     const dHoy = +hoy().slice(8, 10), dMes = +lastDay(per).slice(8, 10);
     const pr = v => esCur && dHoy ? v / dHoy * dMes : null;
+    const msgMeta = x => { const ps = [S.aj.metaEnt ? x.ent / S.aj.metaEnt : null, S.aj.metaMonto ? (x.inc + x.aho) / S.aj.metaMonto : null].filter(v => v !== null); const m = Math.min(...ps); return m >= 1 ? '🏆 ¡Meta cumplida!' : m >= .5 ? '🔥 ¡Vas muy bien!' : '💪 ¡Vamos que se puede!'; };
     const lista = [...grupos.values()].filter(x => x.n !== '—').sort((a, b) => (b.inc + b.aho) - (a.inc + a.aho));
-    if (lista.length) html += `<section class="card"><div class="card-h"><h3>Metas de ${esc(mesLabel(per))}</h3><p>Meta por asesor OB: ${S.aj.metaEnt ? `${S.aj.metaEnt} entrevistas` : ''}${S.aj.metaEnt && S.aj.metaMonto ? ' y ' : ''}${S.aj.metaMonto ? `${fm(S.aj.metaMonto)} entre incremento y ahorro` : ''}.${esCur ? ' La marca muestra la proyección a fin de mes según el ritmo actual.' : ''}</p></div>
-      <div class="metas">${lista.map(x => `<div class="meta-row"><b>${esc(x.n)}</b>${S.aj.metaEnt ? `<div><span class="lbl">Entrevistas</span>${barraMeta(x.ent, S.aj.metaEnt, v => String(v), pr(x.ent))}</div>` : ''}${S.aj.metaMonto ? `<div><span class="lbl">Incremento + ahorro</span>${barraMeta(x.inc + x.aho, S.aj.metaMonto, fm, pr(x.inc + x.aho))}</div>` : ''}</div>`).join('')}</div></section>`;
+    if (lista.length) html += `<section class="card"><div class="card-h"><h3>${E('🎯')}Metas de ${esc(mesLabel(per))}</h3><p>Meta por asesor OB: ${S.aj.metaEnt ? `${S.aj.metaEnt} entrevistas` : ''}${S.aj.metaEnt && S.aj.metaMonto ? ' y ' : ''}${S.aj.metaMonto ? `${fm(S.aj.metaMonto)} entre incremento y ahorro` : ''}.${esCur ? ' La marca muestra la proyección a fin de mes según el ritmo actual.' : ''}</p></div>
+      <div class="metas">${lista.map(x => `<div class="meta-row"><b>${esc(x.n)}${personal ? `<small class="meta-msg">${msgMeta(x)}</small>` : ''}</b>${S.aj.metaEnt ? `<div><span class="lbl">Entrevistas</span>${barraMeta(x.ent, S.aj.metaEnt, v => String(v), pr(x.ent))}</div>` : ''}${S.aj.metaMonto ? `<div><span class="lbl">Incremento + ahorro</span>${barraMeta(x.inc + x.aho, S.aj.metaMonto, fm, pr(x.inc + x.aho))}</div>` : ''}</div>`).join('')}</div></section>`;
   }
 
   if (fin.length) {
@@ -1633,7 +1677,7 @@ function renderPanel() {
     const tq = statsCuota(fin);
     const porEspC = new Map(); for (const e of fin) { const k = norm(e.especialista) || '—'; if (!porEspC.has(k)) porEspC.set(k, {n: e.especialista || '—', l: []}); porEspC.get(k).l.push(e); }
     const filasC = [...porEspC.values()].map(g => ({nom: g.n, ...statsCuota(g.l)})).sort((a, b) => b.incProm * b.ci - a.incProm * a.ci);
-    html += `<section class="card"><div class="card-h"><h3>Cuánto suben la cuota</h3><p>Sobre la cuota que cerró el asesor de ventas, incluidos los incrementos posteriores. Entrevistas finalizadas en el período.</p></div>
+    html += `<section class="card"><div class="card-h"><h3>${E('🚀')}Cuánto suben la cuota</h3><p>Sobre la cuota que cerró el asesor de ventas, incluidos los incrementos posteriores. Entrevistas finalizadas en el período.</p></div>
       <div class="calc" style="margin:0 0 12px">
         <div><small>Con incremento</small><b>${pctTxt(tq.ci, tq.n)}</b><small>${tq.ci} de ${tq.n} entrevistas</small></div>
         <div><small>Incremento promedio</small><b>${fm(tq.incProm)}</b><small>Por cliente que subió</small></div>
@@ -1652,7 +1696,7 @@ function renderPanel() {
       const tp = resumen(pactos); const cerr = tp.cob + tp.perd;
       const gp = new Map(); for (const x of pactos) { const k = norm(x.e.especialista) || '—'; if (!gp.has(k)) gp.set(k, {n: x.e.especialista || '—', l: []}); gp.get(k).l.push(x); }
       const filasP = [...gp.values()].map(g => ({nom: g.n, ...resumen(g.l)})).sort((a, b) => b.mc - a.mc);
-      html += `<section class="card"><div class="card-h"><h3>Efectividad de los pactos</h3><p>Ahorros e incrementos que el cliente se comprometió a hacer, acordados en el período. «Efectividad» es cobrados sobre pactos ya cerrados (cobrados, vencidos o resueltos sin pago).</p></div>
+      html += `<section class="card"><div class="card-h"><h3>${E('🤝')}Efectividad de los pactos</h3><p>Ahorros e incrementos que el cliente se comprometió a hacer, acordados en el período. «Efectividad» es cobrados sobre pactos ya cerrados (cobrados, vencidos o resueltos sin pago).</p></div>
         <div class="calc" style="margin:0 0 12px">
           <div><small>Pactos</small><b>${tp.n}</b><small>${tp.pend} todavía en plazo</small></div>
           <div class="hl"><small>Efectividad</small><b>${pctTxt(tp.cob, cerr)}</b><small>${tp.cob} cobrados de ${cerr} cerrados</small></div>
@@ -1694,10 +1738,10 @@ function renderPanel() {
       else { x.res++; if (!e.seguimientoFecha || !e.seguimientoResueltoFecha || e.seguimientoResueltoFecha <= e.seguimientoFecha) x.aTiempo++; } }
     const filasD = [...gd.values()].sort((a, b) => b.atr - a.atr || b.pend - a.pend);
     const discHtml = filasD.length ? `<div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pendientes</th><th class="n">Atrasados</th><th class="n">Atraso prom.</th><th class="n">Resueltos a tiempo</th></tr></thead><tbody>${filasD.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.pend}</td><td class="n">${x.atr ? `<b style="color:var(--bad)">${x.atr}</b>` : '0'}</td><td class="n">${x.atr ? (Math.round(x.dias / x.atr) === 1 ? '1 día' : Math.round(x.dias / x.atr) + ' días') : '—'}</td><td class="n">${pctTxt(x.aTiempo, x.res)}</td></tr>`).join('')}</tbody></table></div>` : `<p class="note">Todavía no hay seguimientos cargados.</p>`;
-    html += `<div class="two"><section class="card"><div class="card-h"><h3>Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>
-      <section class="card"><div class="card-h"><h3>Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section></div>
-      <div class="two"><section class="card"><div class="card-h"><h3>Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>
-      <section class="card"><div class="card-h"><h3>Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section></div>`;
+    html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('💡')}Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>
+      <section class="card"><div class="card-h"><h3>${E('🧩')}Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section></div>
+      <div class="two"><section class="card"><div class="card-h"><h3>${E('📅')}Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>
+      <section class="card"><div class="card-h"><h3>${E('⏰')}Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section></div>`;
     // Fallas de asesores
     const ga = new Map();
     for (const e of fin) { const k = norm(e.asesor) || '—'; if (!ga.has(k)) ga.set(k, {n: e.asesor || '—', ent: 0, f: 0, tipos: {}}); const x = ga.get(k); x.ent++; if (e.fallaAsesor === 'si') { x.f++; for (const t of e.fallaTipos || []) x.tipos[t] = (x.tipos[t] || 0) + 1; } }
@@ -1708,12 +1752,12 @@ function renderPanel() {
     const t0 = hoy();
     const abiertos = base.filter(e => e.estado === 'final').map(e => ({e, c: comision(e)})).filter(x => x.c.limite && x.c.limite >= t0 && x.e.fecha <= t0).sort((a, b) => a.c.limite.localeCompare(b.c.limite));
     const abHtml = abiertos.length ? `<ul class="slist scroll">${abiertos.map(({e, c}) => { const q = diffDays(t0, c.limite); return `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · cuota actual ${fm(c.cuotaActual)}</small></div><div class="s-side">${q <= 5 ? chip('pendiente', `Vence en ${q} ${q === 1 ? 'día' : 'días'}`) : `<span class="mono" style="font-size:13px">${q} días</span>`}<small class="muted">hasta ${fdc(c.limite)}</small></div></li>`; }).join('')}</ul>` : `<p class="note">No hay clientes con plazo abierto.</p>`;
-    html += `<div class="two"><section class="card"><div class="card-h"><h3>Fallas detectadas en asesores</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>
-      <section class="card"><div class="card-h"><h3>Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section></div>`;
+    html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('🧑‍💼')}Fallas detectadas en asesores</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>
+      <section class="card"><div class="card-h"><h3>${E('⏳')}Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section></div>`;
   }
   // Seguimientos
   const segs = base.filter(e => e.seguimiento === 'si' && !e.seguimientoResuelto).sort((a, b) => (a.seguimientoFecha || '9').localeCompare(b.seguimientoFecha || '9'));
-  if (segs.length) html += `<section class="card"><div class="card-h"><h3>Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'cliente' : 'clientes'} con algo por resolver.</p></div><ul class="slist">${segs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${esc((e.seguimientoDetalle || '').slice(0, 140))}</small></div><div class="s-side">${e.seguimientoFecha ? `<span class="mono" style="font-size:13px">${fdc(e.seguimientoFecha)}</span>` : ''}${e.seguimientoFecha && e.seguimientoFecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
+  if (segs.length) html += `<section class="card"><div class="card-h"><h3>${E('📌')}Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'cliente' : 'clientes'} con algo por resolver.</p></div><ul class="slist">${segs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${esc((e.seguimientoDetalle || '').slice(0, 140))}</small></div><div class="s-side">${e.seguimientoFecha ? `<span class="mono" style="font-size:13px">${fdc(e.seguimientoFecha)}</span>` : ''}${e.seguimientoFecha && e.seguimientoFecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
   out.innerHTML = html; etiquetar(out);
 }
 
