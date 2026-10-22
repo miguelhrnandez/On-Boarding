@@ -552,6 +552,11 @@ tr.ref td .chip{font-style:normal}
 .helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .helppop[hidden]{display:none}
 .nw{white-space:nowrap}
+.st-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.st-wrap small{color:var(--muted);font-size:12px;max-width:220px}
+.prev{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.prev input{flex:1 1 170px;min-width:0;font-size:14px}
+@media (max-width:640px){.st-wrap{align-items:flex-end;text-align:right}.prev{justify-content:flex-end}}
 .mix-row{display:flex;gap:6px;align-items:stretch}
 .mix-row[hidden]{display:none}
 .mix-tag{display:grid;place-items:center;min-width:52px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);font-weight:700;font-size:14px;color:var(--ink)}
@@ -854,7 +859,7 @@ function comision(e) {
   const inc = Math.max(0, (e.cuotaFinal || 0) - (e.cuotaAsesor || 0));
   if (inc > 0) items.push({concepto:'Incremento de cuota en la entrevista', tipo:'incremento', fecha:e.fecha, mesCom:e.fecha, monto:inc, ...(e.cuotaMoneda === 'MIX' ? {moneda: 'MIX', ars: (e.cuotaFinalArs || 0) - (e.cuotaAsesorArs || 0), usd: (e.cuotaFinalUsd || 0) - (e.cuotaAsesorUsd || 0), cot: e.cuotaCot || 0} : e.cuotaMoneda === 'USD' ? {moneda: 'USD', usd: Math.max(0, (e.cuotaFinalUsd || 0) - (e.cuotaAsesorUsd || 0)), cot: e.cuotaCot || 0} : {})});
   if ((e.ahorro || 0) > 0) items.push({concepto:'Ahorro en la entrevista', tipo:'ahorro', fecha:e.fecha, mesCom:e.fecha, monto:e.ahorro, moneda: e.ahorroMoneda || 'ARS', usd: e.ahorroUsd || 0, cot: e.ahorroCot || 0, ars: e.ahorroArs || 0});
-  for (const g of e.gestiones || []) if ((g.monto || 0) > 0) items.push({concepto: g.pacto ? (g.tipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado') : (g.tipo === 'ahorro' ? 'Ahorro posterior' : 'Incremento posterior'), tipo:g.tipo, fecha:g.fecha, mesCom: g.fecha, acuerdo: g.fechaAcuerdo || '', pacto: !!g.pacto, monto:g.monto, nota:g.nota || '', moneda: g.moneda || 'ARS', usd: g.montoUsd || 0, cot: g.cot || 0});
+  for (const g of e.gestiones || []) if ((g.monto || 0) > 0) items.push({concepto: g.pacto ? (g.tipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado') : (g.tipo === 'ahorro' ? 'Ahorro posterior' : 'Incremento posterior'), tipo:g.tipo, fecha:g.fecha, mesCom: g.fecha, acuerdo: g.fechaAcuerdo || '', pacto: !!g.pacto, monto:g.monto, nota:g.nota || '', moneda: g.moneda || 'ARS', usd: g.montoUsd || 0, cot: g.cot || 0, gid: g.id, rev: g.rev?.estado || revEst(e), revPropia: !!g.rev, revNota: g.rev?.nota || ''});
   const tope = e.tope ?? S.aj.tope ?? 0;
   items.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
   let acum = 0;
@@ -880,9 +885,13 @@ function comision(e) {
   }
   return {items, pactados, total, limite, pct, cuotaActual, tope, topeAlcanzado: !!tope && items.some(i => i.recorte), restante};
 }
-function estadoComision(e, it) { if (it.pendiente) return it.dentro ? 'pago_pendiente' : 'fuera'; if (!it.dentro) return 'fuera'; if (e.estado !== 'final') return 'borrador'; return revEst(e); }
+function estadoComision(e, it) { if (it.pendiente) return it.dentro ? 'pago_pendiente' : 'fuera'; if (!it.dentro) return 'fuera'; if (e.estado !== 'final') return 'borrador'; return it.gid ? it.rev : revEst(e); }
+const pagosEstado = (e, est) => e.estado === 'final' ? comision(e).items.filter(i => i.gid && i.revPropia && i.dentro && i.rev === est) : [];
+const pagosPend = e => pagosEstado(e, 'pendiente');
+const nPorRevisar = () => S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length + S.E.reduce((a, e) => a + pagosPend(e).length, 0);
 const firmaSeg = e => JSON.stringify([e.seguimiento || '', e.seguimientoTipo || '', e.seguimientoMonto || 0, e.seguimientoFecha || '', e.seguimientoDetalle || '', e.seguimientoAcuerdo || '']);
-const firmaMontos = e => JSON.stringify([e.cuotaAsesor||0, e.cuotaFinal||0, e.ahorro||0, (e.gestiones||[]).map(g => [g.tipo, g.monto||0, g.fecha||''])]);
+const firmaMontos = e => JSON.stringify([e.cuotaAsesor||0, e.cuotaFinal||0, e.ahorro||0]);
+const firmaPago = g => JSON.stringify([g.tipo, g.fecha || '', g.moneda || 'ARS', g.moneda === 'USD' ? g.montoUsd || 0 : g.monto || 0]);
 
 const CHIP = {ok:['ok','Sin errores'], falla:['bad','Con falla'], incompleto:['warn','Incompleto'], borrador:['muted','Borrador'], pendiente:['warn','Por revisar'], aprobada:['ok','Comisión aprobada'], observada:['bad','Observada'], fuera:['muted','Fuera de plazo'], pago_pendiente:['acc','Referencia · falta el pago']};
 const chip = (k, txt) => { const [c, l] = CHIP[k] || ['muted', k]; return `<span class="chip chip-${c}"><i></i>${esc(txt || l)}</span>`; };
@@ -1068,7 +1077,7 @@ function leerForm() {
     fecha: $('#f_fecha').value, especialista: ($('#f_esp').value || '').trim(), sucursal: $('#f_suc').value.trim(), asesor: ($('#f_asesor').value || '').trim(),
     cliente: $('#f_cli').value.trim(), dni: $('#f_dni').value.trim(), telefono: $('#f_tel').value.trim(), contrato: $('#f_contrato').value.trim(),
     ...cuotasDeForm(), ...ahorroDeForm(),
-    gestiones: S.gest.map(g => ({id:g.id, tipo:g.tipo, fecha:g.fecha, monto:g.monto || 0, nota:g.nota || '', moneda: g.moneda || 'ARS', ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), ...(g.pacto ? {pacto: true, fechaAcuerdo: g.fechaAcuerdo || ''} : {})})),
+    gestiones: S.gest.map(g => ({id:g.id, tipo:g.tipo, fecha:g.fecha, monto:g.monto || 0, nota:g.nota || '', moneda: g.moneda || 'ARS', ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), ...(g.pacto ? {pacto: true, fechaAcuerdo: g.fechaAcuerdo || ''} : {}), ...(g.rev ? {rev: g.rev} : {})})),
     checklist: ck,
     fallaAsesor: $('input[name="f_falla"]:checked')?.value || '',
     fallaTipos: $$('input[name="f_ft"]:checked').map(i => i.value),
@@ -1304,6 +1313,11 @@ async function guardar(final) {
   let rev = prev?.revision ? {...prev.revision} : {estado: 'pendiente', nota: ''};
   if (prev && rev.estado !== 'pendiente' && firmaMontos(prev) !== firmaMontos(rec)) rev = {estado: 'pendiente', nota: 'Montos modificados después de la revisión.' + (rev.nota ? ' Nota anterior: ' + rev.nota : ''), fecha: now, por: S.uid ?? null};
   rec.revision = rev;
+  { const pg = new Map((prev?.gestiones || []).map(g => [g.id, g]));
+    rec.gestiones = rec.gestiones.map(g => { const o = pg.get(g.id); const {rev: _r, ...base} = g;
+      if (!o) return {...base, rev: {estado: 'pendiente', nota: ''}};
+      if (firmaPago(o) === firmaPago(g)) return o.rev ? {...base, rev: o.rev} : base;
+      return {...base, rev: {estado: 'pendiente', nota: o.rev && o.rev.estado !== 'pendiente' ? 'Pago modificado después de la revisión.' : (o.rev?.nota || ''), fecha: now, por: S.uid ?? null}}; }); }
   if (yaFinal && !esResp() && prev) { rec.checklist = clone(prev.checklist || {}); rec.fallaAsesor = prev.fallaAsesor || ''; rec.fallaTipos = clone(prev.fallaTipos || []); rec.fallaDetalle = prev.fallaDetalle || ''; }
   if (S.resolverAlGuardar && S.resolverAlGuardar === S.editId && d.gestiones.some(g => (S.resolverGids || []).includes(g.id) && g.monto > 0)) { rec.seguimientoResuelto = true; rec.seguimientoResueltoFecha = hoy(); }
   rec.seguimientoResueltoFecha = rec.seguimientoResuelto ? (rec.seguimientoResueltoFecha || prev?.seguimientoResueltoFecha || hoy()) : null;
@@ -1402,7 +1416,7 @@ function renderTabs() {
   $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp(); $('#t-inicio').hidden = !esResp();
   const nIni = esResp() ? bloquesInicio().filter(b => b.urgente).reduce((a, b) => a + b.items.length, 0) : 0;
   $('#t-inicio').innerHTML = `<span><span class="emo" aria-hidden="true">🏠</span> Para revisar hoy</span><small>Lo que necesita tu atención</small>${nIni ? `<span class="badge bad" title="Cosas para revisar">${nIni}</span>` : ''}`;
-  const pend = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length;
+  const pend = nPorRevisar();
   $('#t-panel').innerHTML = `<span><span class="emo" aria-hidden="true">📈</span> Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
   const urg = (esResp() || miNombre()) ? avisosDe(esResp() ? '' : miNombre()).filter(a => a.est === 'atrasado' || a.est === 'hoy').length : 0;
   $('#t-avisos').innerHTML = `<span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small>${urg ? `<span class="badge bad" title="Atrasados o para hoy">${urg}</span>` : ''}`;
@@ -1473,7 +1487,7 @@ function renderEntrevistas() {
     if (f.esp && norm(e.especialista) !== norm(f.esp)) return false;
     if (f.per && !(e.fecha || '').startsWith(f.per)) return false;
     if (f.est) {
-      if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final' || revEst(e) !== f.est) return false; }
+      if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final') return false; if (revEst(e) !== f.est && !(f.est !== 'aprobada' && pagosEstado(e, f.est).length)) return false; }
       else if (estList(e) !== f.est) return false;
     }
     if (q && !(norm(e.cliente).includes(q) || norm(e.dni).includes(q) || norm(e.asesor).includes(q))) return false;
@@ -1488,7 +1502,7 @@ function renderEntrevistas() {
       <span class="e-date">${fdc(e.fecha)}</span>
       <span class="e-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${e.dni ? 'DNI ' + esc(e.dni) + ' · ' : ''}Asesor: ${esc(e.asesor || '—')}</small></span>
       <span class="e-esp"><b style="font-weight:500">${esc(e.especialista || '—')}</b><small>${esc(e.sucursal || '')}</small></span>
-      <span class="e-chips chips">${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
+      <span class="e-chips chips">${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${pagosPend(e).length ? chip('pendiente', pagosPend(e).length === 1 ? 'Pago por aprobar' : `${pagosPend(e).length} pagos por aprobar`) : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
       <span class="e-money"><b>${fm(c.total)}</b><small>${c.items.length ? `sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'sin incremento'}</small></span>
     </button>`; }).join('')}</div>`;
 }
@@ -1505,9 +1519,19 @@ function abrirDetalle(id, fallback, verCalculo) {
   setTimeout(() => $('#drClose')?.focus(), 30);
 }
 function cerrarDetalle() {
-  S.detalle = null; S.detalleFallback = null;
+  S.obsPago = null; S.detalle = null; S.detalleFallback = null;
   $('#drawer').hidden = true; $('#scrim').hidden = true; $('#drawer').innerHTML = '';
   document.body.style.overflow = '';
+}
+function celdaEstado(e, it, puedeEsc) {
+  const st = estadoComision(e, it);
+  let h = chip(st, it.gid && st === 'aprobada' ? 'Pago aprobado' : it.gid && st === 'pendiente' ? 'Pago por aprobar' : it.gid && st === 'observada' ? 'Pago observado' : null);
+  if (it.gid && st === 'observada' && it.revNota) h += `<small>${esc(it.revNota)}</small>`;
+  if (it.gid && esResp() && puedeEsc && e.estado === 'final' && it.dentro && S.E.some(x => x.id === e.id)) {
+    if (S.obsPago === it.gid) h += `<div class="prev"><input type="text" id="pn_${esc(it.gid)}" placeholder="Qué falta (ej.: el comprobante)" aria-label="Motivo de la observación"><button class="btn btn-sm btn-primary" type="button" data-pagorev="${esc(it.gid)}" data-est="observada">Guardar</button><button class="btn btn-sm" type="button" data-pagocancel="1">Cancelar</button></div>`;
+    else h += `<div class="prev">${st !== 'aprobada' ? `<button class="btn btn-sm btn-primary" type="button" data-pagorev="${esc(it.gid)}" data-est="aprobada">Aprobar</button>` : ''}${st !== 'observada' ? `<button class="btn btn-sm" type="button" data-pagoobs="${esc(it.gid)}">Observar</button>` : ''}</div>`;
+  }
+  return `<div class="st-wrap">${h}</div>`;
 }
 function renderDetalle() {
   const e = S.E.find(x => x.id === S.detalle) || S.detalleFallback;
@@ -1524,7 +1548,7 @@ function renderDetalle() {
   $('#drawer').innerHTML = `
   <div class="dr-head">
     <div style="min-width:0"><span class="eyebrow">Entrevista del ${fd(e.fecha)}${e.estado !== 'final' ? ' · borrador' : ''}</span><h2>${esc(e.cliente || 'Sin nombre')}</h2>
-      <div class="chips">${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv) : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.seguimiento === 'si' && !e.seguimientoResuelto ? chip('pendiente', 'Seguimiento pendiente') : ''}</div></div>
+      <div class="chips">${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv, rv === 'aprobada' ? 'Entrevista aprobada' : null) : ''}${pagosPend(e).length ? chip('pendiente', 'Pago por aprobar') : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.seguimiento === 'si' && !e.seguimientoResuelto ? chip('pendiente', 'Seguimiento pendiente') : ''}</div></div>
     <button class="btn btn-sm" id="drClose" type="button">Cerrar</button>
   </div>
   <div class="dr-body">
@@ -1543,7 +1567,7 @@ function renderDetalle() {
         <div><dt>Cuota actual</dt><dd class="mono">${fm(c.cuotaActual)}</dd></div>
       </dl>
       ${c.items.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
-        ${c.items.map(it => `<tr><td class="mono">${fdc(it.fecha)}</td><td><span>${esc(it.concepto)}${it.nota ? `<br><small class="muted">${esc(it.nota)}</small>` : ''}</span></td><td class="n">${montoHtml(it)}</td><td class="n"><span>${fm(it.comision)}${it.recorte ? `<br><small class="muted">tope (era ${fm(it.bruto)})</small>` : ''}</span></td><td>${chip(estadoComision(e, it))}</td></tr>`).join('')}
+        ${c.items.map(it => `<tr><td class="mono">${fdc(it.fecha)}</td><td><span>${esc(it.concepto)}${it.nota ? `<br><small class="muted">${esc(it.nota)}</small>` : ''}</span></td><td class="n">${montoHtml(it)}</td><td class="n"><span>${fm(it.comision)}${it.recorte ? `<br><small class="muted">tope (era ${fm(it.bruto)})</small>` : ''}</span></td><td>${celdaEstado(e, it, puedeEsc)}</td></tr>`).join('')}
         </tbody><tfoot><tr><td colspan="3">Total (${c.pct}%)</td><td class="n">${fm(c.total)}</td><td></td></tr></tfoot></table></div>` : `<p class="note">Sin incremento de cuota ni ahorro registrados.</p>`}
       ${c.pactados.map(pa => `<div class="banner" style="background:var(--accent-soft);border-color:transparent;font-size:14px"><b>${pa.concepto}: ${pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} (≈ ${fm(pa.monto)})` : fm(pa.monto)}</b>, acordado el ${fd(pa.acuerdo)}${pa.fecha ? ` con pago para el ${fd(pa.fecha)}` : ''}. ${pa.dentro ? `Suma ${fm(pa.comision)} de comisión cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}</div>`).join('')}
       ${c.topeAlcanzado ? `<p class="note"><b>Se aplicó el tope de ${fm(c.tope)} por cliente.</b> Lo que supera ese monto no comisiona.</p>` : ''}
@@ -1559,7 +1583,7 @@ function renderDetalle() {
         ${puedeEsc && S.E.some(x => x.id === e.id) ? (e.seguimientoResuelto ? `<div class="row">${chip('aprobada', 'Resuelto')}<button class="btn btn-sm" id="drReabrir" type="button">Volver a pendiente</button></div>` : `<div><button class="btn btn-sm" id="drResolver" type="button">Marcar seguimiento como resuelto</button></div>`) : ''}` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
     ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
-    ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la responsable</h3>
+    ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la entrevista</h3>${(e.gestiones || []).some(g => (g.monto || 0) > 0) ? '<p class="note">Cubre el checklist y lo logrado el día de la entrevista. Los pagos posteriores se aprueban uno por uno en la tabla de montos.</p>' : ''}
       ${esResp() && puedeEsc ? `<div class="seg" role="radiogroup" aria-label="Estado de la revisión" style="align-self:flex-start">
           <input type="radio" name="rv" id="rv_p" value="pendiente"${rv === 'pendiente' ? ' checked' : ''}><label class="pe" for="rv_p">Por revisar</label>
           <input type="radio" name="rv" id="rv_a" value="aprobada"${rv === 'aprobada' ? ' checked' : ''}><label class="si" for="rv_a">Aprobar</label>
@@ -1580,6 +1604,19 @@ function bindDetalle() {
   $('#drawer').addEventListener('toggle', ev => { if (ev.target.classList?.contains('how')) S.howOpen = ev.target.open; }, true);
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#drawer').hidden) cerrarDetalle(); });
   $('#drawer').addEventListener('click', async ev => {
+    const po = ev.target.closest('[data-pagoobs]'); if (po) { S.obsPago = po.dataset.pagoobs; renderDetalle(); setTimeout(() => document.getElementById('pn_' + S.obsPago)?.focus(), 30); return; }
+    if (ev.target.closest('[data-pagocancel]')) { S.obsPago = null; renderDetalle(); return; }
+    const pr = ev.target.closest('[data-pagorev]'); if (pr) {
+      const e = S.E.find(x => x.id === S.detalle); if (!e) return;
+      const gidv = pr.dataset.pagorev, est = pr.dataset.est;
+      const nota = est === 'observada' ? (document.getElementById('pn_' + gidv)?.value || '').trim() : '';
+      if (est === 'observada' && !nota) { toast('Escribir qué falta para aprobar el pago.', 'bad'); document.getElementById('pn_' + gidv)?.focus(); return; }
+      const gest = (e.gestiones || []).map(g => g.id === gidv ? {...g, rev: {estado: est, nota, fecha: new Date().toISOString(), por: S.uid ?? null}} : g);
+      pr.disabled = true;
+      try { await conReintento(() => S.db.collection('entrevistas').doc(e.id).update({gestiones: gest})); S.obsPago = null; toast(est === 'aprobada' ? '✅ Pago aprobado: su comisión ya cuenta como aprobada.' : 'Pago observado. El asesor OB lo ve en Avisos.'); }
+      catch (err) { pr.disabled = false; errorEscritura(err); }
+      return;
+    }
     const id = ev.target.closest('button')?.id; if (!id) return;
     const e = S.E.find(x => x.id === S.detalle);
     if (id === 'drClose') return cerrarDetalle();
@@ -1595,7 +1632,7 @@ function bindDetalle() {
       if (id === 'drRev') {
         const estado = $('input[name="rv"]:checked')?.value || 'pendiente';
         await conReintento(() => ref.update({revision: {estado, nota: $('#rv_nota').value.trim(), fecha: new Date().toISOString(), por: S.uid ?? null}}));
-        toast(estado === 'aprobada' ? '✅ Comisión aprobada.' : estado === 'observada' ? 'Entrevista observada.' : 'Revisión guardada.');
+        toast(estado === 'aprobada' ? '✅ Entrevista aprobada.' : estado === 'observada' ? 'Entrevista observada.' : 'Revisión guardada.');
       }
     } catch (err) { errorEscritura(err); }
   });
@@ -1725,6 +1762,8 @@ function renderAvisos() {
       <div class="ar-det" title="${esc(det)}">${esc(det) || '<span class="muted">—</span>'}</div>
       <div class="ar-act">${S.canWrite && S.db ? `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(e.id)}">Resuelto</button>` : ''}<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button></div>
     </div>`; }).join('')}</div>`;
+  const obsP = S.E.filter(e => !esp || norm(e.especialista) === norm(esp)).flatMap(e => pagosEstado(e, 'observada').map(it => ({e, it})));
+  if (obsP.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💵</span> Pagos observados por la responsable</h3><p>Pagos posteriores que tienen algo para corregir antes de aprobar su comisión.</p></div><ul class="slist">${obsP.map(({e, it}) => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(it.concepto)} del ${fdc(it.fecha)} · ${esc(it.revNota || 'Sin nota')}</small></div><div class="s-side">${chip('observada', 'Pago observado')}</div></li>`).join('')}</ul></section>`;
   const obs = S.E.filter(e => e.estado === 'final' && revEst(e) === 'observada' && (!esp || norm(e.especialista) === norm(esp)));
   if (obs.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">📝</span> Entrevistas observadas por la responsable</h3><p>Tienen algo para corregir antes de aprobar la comisión.</p></div><ul class="slist">${obs.map(e => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(e.revision?.nota || 'Sin nota')}</small></div><div class="s-side">${chip('observada')}</div></li>`).join('')}</ul></section>`;
   out.innerHTML = html;
@@ -1803,12 +1842,13 @@ function renderPanel() {
   const nBorr = delPer.length - fin.length;
   const res = new Map(fin.map(e => [e.id, resultado(e.checklist)]));
   const nOk = fin.filter(e => res.get(e.id).est === 'ok').length;
-  const porRev = fin.filter(e => revEst(e) === 'pendiente').length;
+  const revEnt = fin.filter(e => revEst(e) === 'pendiente').length, revPag = base.reduce((a, e) => a + pagosPend(e).length, 0);
+  const porRev = revEnt + revPag;
   const grupos = new Map();
   const G = n => { const k = norm(n) || '—'; if (!grupos.has(k)) grupos.set(k, {n: n || '—', ent: 0, ok: 0, nos: 0, res: 0, inc: 0, aho: 0, com: 0}); return grupos.get(k); };
   for (const e of fin) { const r = res.get(e.id); const x = G(e.especialista); x.ent++; if (r.est === 'ok') x.ok++; x.nos += r.nos; if (e.checklist?.k4 === 'si') x.res++; }
   let inc = 0, aho = 0, com = 0, comAp = 0, ahoUsd = 0;
-  for (const e of base) { if (e.estado !== 'final') continue; const c = comision(e); for (const it of c.items) { if (!it.dentro || !enPer(it.mesCom || it.fecha)) continue; const x = G(e.especialista); if (it.tipo === 'ahorro') { aho += it.monto; x.aho += it.monto; if (it.moneda !== 'ARS') ahoUsd += it.usd || 0; } else { inc += it.monto; x.inc += it.monto; } com += it.comision; x.com += it.comision; if (revEst(e) === 'aprobada') comAp += it.comision; } }
+  for (const e of base) { if (e.estado !== 'final') continue; const c = comision(e); for (const it of c.items) { if (!it.dentro || !enPer(it.mesCom || it.fecha)) continue; const x = G(e.especialista); if (it.tipo === 'ahorro') { aho += it.monto; x.aho += it.monto; if (it.moneda !== 'ARS') ahoUsd += it.usd || 0; } else { inc += it.monto; x.inc += it.monto; } com += it.comision; x.com += it.comision; if (estadoComision(e, it) === 'aprobada') comAp += it.comision; } }
   const resenas = fin.filter(e => e.checklist?.k4 === 'si').length;
   let curM = null, prevM = null, prevLbl = '';
   if (per !== '3m') {
@@ -1828,7 +1868,7 @@ function renderPanel() {
     <div class="kpi"><span class="k-l">${E('📈')}Incremento de <span class="nw">cuotas${qm('inc')}</span></span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
     <div class="kpi"><span class="k-l">${E('🐷')}<span class="nw">Ahorros${qm('aho')}</span></span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
     ${vistaEq ? `<div class="kpi"><span class="k-l">${E('👥')}Asesores OB activos</span><span class="k-v">${new Set(fin.map(e => norm(e.especialista))).size}</span><span class="k-s">Con entrevistas en el período</span></div>` : ''}${vistaEq ? '' : `<div class="kpi"><span class="k-l">${E('💰')}<span class="nw">Comisiones${qm('com')}</span></span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
-`}${vistaEq ? '' : `<button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>`}
+`}${vistaEq ? '' : `<button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? [revEnt ? `${revEnt} ${revEnt === 1 ? 'entrevista' : 'entrevistas'}` : '', revPag ? `${revPag} ${revPag === 1 ? 'pago' : 'pagos'}` : ''].filter(Boolean).join(' · ') + ' · ver' : 'Todo revisado'}</span></button>`}
   </div>`;
 
   if (personal && !vistaEq) {
@@ -2002,7 +2042,7 @@ const qm = k => `<button type="button" class="qm" data-help="${k}" aria-label="�
 const plazoTxt = () => (S.aj.plazoMeses || 1) === 1 ? 'un mes' : `${S.aj.plazoMeses} meses`;
 const HELP = {
   inicio: () => 'Lo que necesita tu atención hoy, ordenado por urgencia. Cada bloque dice qué hacer. Toca un cliente para abrir su entrevista. Si un bloque no aparece, es porque está al día.',
-  entrevistas: () => 'Todas las entrevistas del equipo. Toca una para ver el checklist, los montos y la comisión. Ahí mismo la responsable la <b>aprueba</b> u <b>observa</b>. Arriba aparecen los borradores sin terminar.',
+  entrevistas: () => 'Todas las entrevistas del equipo. Toca una para ver el checklist, los montos y la comisión. Ahí mismo la responsable la <b>aprueba</b> u <b>observa</b>. Los pagos que el cliente hace después se aprueban aparte, uno por uno, sin tocar lo ya aprobado. Arriba aparecen los borradores sin terminar.',
   comisiones: () => `Lo que cobra cada asesor OB en el mes: el <b>${S.aj.pct}%</b> de lo que subió la cuota y del ahorro, si el cliente paga dentro de ${plazoTxt()} desde la entrevista. Máximo <b>${fm(S.aj.tope)}</b> por cliente. Cuenta en el mes en que el cliente pagó. Toca una fila para ver la cuenta.`,
   avisos: () => 'Cosas que quedaron pendientes con un cliente: un ahorro o un incremento que prometió pagar en una fecha, o algo por resolver. Primero aparecen los atrasados. «Cargar» registra el pago; «Resuelto» lo saca de la lista.',
   panel: () => 'Cómo viene el equipo en el período elegido: cuántas entrevistas hizo, si cumplió el checklist, cuánto subieron las cuotas y cuánto se comisiona. Se puede ver un asesor OB o una sucursal. Las flechas comparan con el mes anterior.',
@@ -2076,6 +2116,10 @@ function bloquesInicio() {
     go: 'Ver todas', items: rev.map(e => { const r = resultado(e.checklist); const d = e.finalizado ? diffDays(e.finalizado.slice(0, 10), t0) : null;
       return {id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · entrevista del ${fdc(e.fecha)}${d ? ` · espera hace ${d} ${d === 1 ? 'día' : 'días'}` : ''}`,
         side: `${r.est === 'falla' ? chip('falla', `${r.nos} en No`) : chip('ok', 'Checklist ok')}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}<small class="muted">Comisión ${fm(comision(e).total)}</small>`}; })});
+  const pp = S.E.flatMap(e => pagosPend(e).map(it => ({e, it}))).sort((a, b) => (a.it.fecha || '').localeCompare(b.it.fecha || ''));
+  B.push({key: 'pagos', tono: 'warn', urgente: true, em: '💵', titulo: 'Pagos posteriores para aprobar', ok: 'Sin pagos por aprobar',
+    desc: 'Lo que el cliente pagó después de la entrevista, por ejemplo lo pactado en el seguimiento. Abrir la entrevista y tocar <b>Aprobar</b> en ese pago: su comisión pasa a aprobada sin tocar el resto.',
+    go: 'Ver todos', items: pp.map(({e, it}) => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · ${esc(it.concepto.toLowerCase())} pagado el ${fdc(it.fecha)} · ${it.moneda === 'MIX' ? esc(mixTxt(it.ars, it.usd)) : it.moneda === 'USD' && it.usd ? fu(it.usd) : fm(it.monto)}`, side: `${chip('pendiente', 'Por aprobar')}<small class="muted">Comisión ${fm(it.comision)}</small>`}))});
   const av = avisosDe('');
   const seg = av.filter(a => a.est === 'atrasado' || a.est === 'hoy');
   B.push({key: 'seg', tono: 'bad', urgente: true, em: '⏰', titulo: 'Seguimientos atrasados o para hoy', ok: 'Ningún seguimiento atrasado',
@@ -2121,7 +2165,7 @@ function renderInicio() {
   out.innerHTML = html;
 }
 function irDesdeInicio(k) {
-  if (k === 'rev' || k === 'borr') { const est = k === 'rev' ? 'pendiente' : 'borrador'; S.f.ent = {...S.f.ent, est, per: '', esp: '', q: ''}; $('#fe_est').value = est; $('#fe_q').value = ''; setTab('entrevistas'); return; }
+  if (k === 'rev' || k === 'borr' || k === 'pagos') { const est = k === 'borr' ? 'borrador' : 'pendiente'; S.f.ent = {...S.f.ent, est, per: '', esp: '', q: ''}; $('#fe_est').value = est; $('#fe_q').value = ''; setTab('entrevistas'); return; }
   if (k === 'seg' || k === 'vence') { S.f.av = {esp: '', tipo: ''}; $('#fa_tipo').value = ''; setTab('avisos'); return; }
   if (k === 'fallas') { setTab('panel'); return; }
 }
