@@ -509,6 +509,103 @@ tr.ref td .chip{font-style:normal}
   .stack td .meter{flex:1;max-width:60%}
   .stack tr.clk:hover td{background:none}
 }
+
+/* Para revisar hoy (inicio de la responsable) */
+.ini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:14px;align-items:start}
+.todo{display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--line)}
+.todo.t-bad{border-left-color:var(--bad)}.todo.t-warn{border-left-color:var(--warn)}.todo.t-acc{border-left-color:var(--accent)}
+.todo-h{display:flex;gap:12px;align-items:flex-start}
+.todo-n{flex:none;min-width:42px;height:42px;padding:0 6px;border-radius:10px;display:grid;place-items:center;font:800 20px var(--f-display);background:var(--sunk);color:var(--ink)}
+.t-bad .todo-n{background:var(--bad-soft);color:var(--bad)}.t-warn .todo-n{background:var(--warn-soft);color:var(--warn)}.t-acc .todo-n{background:var(--accent-soft);color:var(--accent)}
+.todo-h h3{font-size:17px;font-weight:740}
+.todo-h p{color:var(--muted);font-size:13.5px;margin-top:3px;line-height:1.45}
+.todo .slist li{padding:9px 0}
+.todo-f{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ini-ok{background:linear-gradient(135deg,var(--ok-soft),var(--surface) 75%);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;gap:12px;align-items:center}
+.ini-ok .big{font-size:34px}
+.ini-ok h3{font-size:19px;font-weight:800}
+.ini-ok p{color:var(--muted);font-size:14px}
+.aldia{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.aldia .eyebrow{margin-right:4px}
+.ini-mes .calc{margin-top:0}
+/* ¿Cómo se calculó? */
+.how{border:1px solid var(--line);border-radius:10px;background:var(--sunk)}
+.how summary{cursor:pointer;padding:11px 14px;font-weight:700;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.how summary::-webkit-details-marker{display:none}
+.how summary::after{content:'+';font-size:18px;line-height:1;color:var(--muted)}
+.how[open] summary::after{content:'−'}
+.how-l{list-style:none;margin:0;padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:1.5}
+.how-l li{display:flex;gap:9px;align-items:flex-start}
+.how-l .hw-e{flex:none;font-size:16px;line-height:1.35}
+.how-l .hw-c{display:block;margin-top:2px;font-family:var(--f-mono);font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.how-l .hw-c b{color:var(--ink)}
+.how-l li.hw-tot{border-top:1px solid var(--line);padding-top:10px}
+/* Ayuda ❓ */
+.qm{appearance:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:700 12px/1 var(--f-body);cursor:pointer;vertical-align:middle;margin-left:6px;padding:0;flex:none;text-transform:none;letter-spacing:0}
+.qm:hover,.qm[aria-expanded="true"]{border-color:var(--accent);color:var(--accent)}
+.qm::before{content:'';position:absolute;inset:-10px}
+.qm{position:relative}
+.v-head h2 .qm{width:22px;height:22px;font-size:13px;top:-2px}
+.kpi .k-l .qm{width:18px;height:18px;font-size:11px;margin-left:4px}
+.helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.helppop[hidden]{display:none}
+.nw{white-space:nowrap}
+.helppop b{color:inherit}
+
+/* Celular: más aire, nada encimado */
+@media (max-width:640px){
+  .stack tbody tr{background:var(--sunk);border:0;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .stack tbody tr:last-child{margin-bottom:0}
+  .stack tfoot tr{border:0;background:var(--accent-soft);border-radius:10px;padding:10px 12px;margin-top:10px}
+  .stack td{padding:4px 0}
+  .stack td:first-child{padding-bottom:6px}
+  tr.ref td{background:none}
+  .stack tr.ref{background:repeating-linear-gradient(135deg,var(--sunk) 0 8px,var(--accent-soft) 8px 9px)}
+}
+@media (max-width:560px){
+  main{padding-block:16px 56px}
+  .view{gap:18px}
+  .v-head p{font-size:14.5px;line-height:1.5}
+  .kpis{grid-template-columns:minmax(0,1fr);gap:8px}
+  .kpi{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;row-gap:2px;align-items:center;padding:12px 14px}
+  .kpi .k-l{grid-column:1;grid-row:1;text-transform:none;letter-spacing:0;font-size:14.5px;font-weight:650;color:var(--ink);line-height:1.3}
+  .kpi .k-s{grid-column:1;grid-row:2;font-size:12.5px;line-height:1.35}
+  .kpi .k-v{grid-column:2;grid-row:1 / span 2;text-align:right;font-size:21px}
+  .kpi .k-d{grid-column:1 / -1;grid-row:3;margin-top:4px}
+  .kpi .k-l .qm{width:20px;height:20px;font-size:12px}
+  .calc>div:last-child:nth-child(odd){grid-column:1 / -1}
+  .calc>div{padding:10px 12px;gap:3px}
+  .filters{gap:12px}
+  .filters .field.grow{flex-basis:100%}
+  .erow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"d mo" "m mo" "c c";gap:2px 12px;padding:13px 14px}
+  .erow .e-date{font-size:12px;padding-top:0}
+  .erow .e-main b{font-size:15.5px}
+  .erow .e-chips{margin-top:8px}
+  .erow .e-money{align-self:center}
+  .dsec-h{flex-direction:column;gap:2px}
+  .dlist li{gap:10px}
+  .pick-list button{padding:14px 16px}
+  .pick-list .resp{flex-direction:column;align-items:flex-start;gap:2px}
+  .bbar{gap:8px;padding-top:10px}
+  .bb-info{flex:1 1 100%;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 10px}
+  .bb-actions{flex:1 1 100%}
+  .bb-actions .btn{flex:1;min-height:44px}
+  body[data-tab="cargar"] main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  body[data-tab="cargar"] .toast{bottom:calc(132px + env(safe-area-inset-bottom,0px))}
+  .t-n{display:none}
+  .slist li{padding:12px 0;gap:14px}
+  .todo .slist li{padding:11px 0;flex-direction:column;align-items:stretch;gap:6px}
+  .todo .slist .s-side{flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:6px 10px;text-align:left}
+  .todo-h{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center}
+  .todo-h>div{display:contents}
+  .todo-h p{grid-column:1 / -1;margin-top:0}
+  .todo-n{min-width:36px;height:36px;font-size:18px}
+  .ini-mes .card-h{align-items:center}
+  .todo-f .btn{min-height:40px}
+  .card-h{margin-bottom:14px}
+  .hero-me{padding:16px}
+  .avrow{padding:14px}
+}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -545,6 +642,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
+    <li><button class="tab" data-tab="inicio" id="t-inicio" type="button" hidden></button></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
     <li><button class="tab" data-tab="ajustes" id="t-ajustes" type="button" hidden><span><span class="emo" aria-hidden="true">⚙️</span> Ajustes</span><small>Comisión, equipo y PIN</small></button></li>
   </ul>
@@ -558,8 +656,13 @@ tr.ref td .chip{font-style:normal}
 
   <section class="view" id="v-cargar" aria-labelledby="t-cargar"></section>
 
+  <section class="view" id="v-inicio" hidden>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🏠</span> Para revisar hoy<button type="button" class="qm" data-help="inicio" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p id="ini-sub">Lo que necesita tu atención.</p></div></div>
+    <div id="ini-out" class="view"></div>
+  </section>
+
   <section class="view" id="v-entrevistas" hidden>
-    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🗂️</span> Entrevistas</h2><p>Cada entrevista con su checklist, montos, comisión y revisión.</p></div></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🗂️</span> Entrevistas<button type="button" class="qm" data-help="entrevistas" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p>Cada entrevista con su checklist, montos, comisión y revisión.</p></div></div>
     <div class="filters">
       <div class="field grow"><label for="fe_q">Buscar</label><input type="search" id="fe_q" placeholder="Cliente, DNI o asesor"></div>
       <div class="field"><label for="fe_esp">Asesor OB</label><select id="fe_esp"></select></div>
@@ -572,7 +675,7 @@ tr.ref td .chip{font-style:normal}
   </section>
 
   <section class="view" id="v-comisiones" hidden>
-    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">💰</span> Comisiones</h2><p id="com-sub">Incrementos de cuota y ahorros logrados dentro del plazo, por mes de la gestión.</p></div><button class="btn" id="btnCsv" hidden>Descargar CSV</button></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">💰</span> Comisiones<button type="button" class="qm" data-help="comisiones" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p id="com-sub">Incrementos de cuota y ahorros logrados dentro del plazo, por mes de la gestión.</p></div><button class="btn" id="btnCsv" hidden>Descargar CSV</button></div>
     <div class="filters">
       <div class="field"><label for="fc_mes">Mes</label><select id="fc_mes"></select></div>
       <div class="field"><label for="fc_esp">Asesor OB</label><select id="fc_esp"></select></div>
@@ -582,7 +685,7 @@ tr.ref td .chip{font-style:normal}
   </section>
 
   <section class="view" id="v-avisos" hidden>
-    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🔔</span> Avisos</h2><p id="av-sub">Seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.</p></div></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🔔</span> Avisos<button type="button" class="qm" data-help="avisos" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p id="av-sub">Seguimientos pendientes: ahorros e incrementos que el cliente pactó y cosas por resolver.</p></div></div>
     <div class="filters">
       <div class="field" id="fa_espWrap"><label for="fa_esp">Asesor OB</label><select id="fa_esp"></select></div>
       <div class="field"><label for="fa_tipo">Tipo</label><select id="fa_tipo"><option value="">Todos</option><option value="ahorro">Ahorro pactado</option><option value="incremento">Incremento pactado</option><option value="otro">Otros pendientes</option></select></div>
@@ -618,6 +721,7 @@ tr.ref td .chip{font-style:normal}
 </div>
 <aside class="drawer" id="drawer" hidden aria-label="Detalle de la entrevista" role="dialog" aria-modal="true"></aside>
 <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+<div class="helppop" id="helpPop" hidden role="tooltip"></div>
 
 <datalist id="dl_equipo"></datalist>
 <datalist id="dl_asesores"></datalist>
@@ -1204,7 +1308,7 @@ function bindForm() {
 }
 
 /* ---------- Pestañas ---------- */
-const ADMIN_TABS = ['panel', 'ajustes'];
+const ADMIN_TABS = ['inicio', 'panel', 'ajustes'];
 function setTab(t, sinScroll) {
   if (ADMIN_TABS.includes(t) && !esResp()) t = 'cargar';
   if (S.tab === 'cargar' && t !== 'cargar' && S.formBase !== undefined) {
@@ -1214,8 +1318,8 @@ function setTab(t, sinScroll) {
   S.tab = t; document.body.dataset.tab = t;
   $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
   { const vid = t === 'mias' ? 'panel' : t; $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + vid; }); }
-  $('#barTitle').textContent = {cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel de la responsable', ajustes: 'Ajustes', mias: 'Mis estadísticas'}[t];
-  cerrarMenu();
+  $('#barTitle').textContent = {inicio: 'Para revisar hoy', cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel', ajustes: 'Ajustes', mias: 'Mis estadísticas'}[t];
+  cerrarMenu(); cerrarAyuda();
   renderVista();
   if (!sinScroll) window.scrollTo({top: 0});
 }
@@ -1230,7 +1334,9 @@ function etiquetar(root) {
 }
 function renderTabs() {
   $('#t-mias').hidden = esResp() || !miNombre(); if (S.tab === 'mias' && (esResp() || !miNombre())) setTab(esResp() ? 'panel' : 'cargar', true);
-  $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp();
+  $('#t-panel').hidden = !esResp(); $('#t-ajustes').hidden = !esResp(); $('#sepResp').hidden = !esResp(); $('#t-inicio').hidden = !esResp();
+  const nIni = esResp() ? bloquesInicio().filter(b => b.urgente).reduce((a, b) => a + b.items.length, 0) : 0;
+  $('#t-inicio').innerHTML = `<span><span class="emo" aria-hidden="true">🏠</span> Para revisar hoy</span><small>Lo que necesita tu atención</small>${nIni ? `<span class="badge bad" title="Cosas para revisar">${nIni}</span>` : ''}`;
   const pend = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').length;
   $('#t-panel').innerHTML = `<span><span class="emo" aria-hidden="true">📈</span> Panel</span><small>Control y estadísticas del equipo</small>${pend ? `<span class="badge" title="Entrevistas por revisar">${pend}</span>` : ''}`;
   const urg = (esResp() || miNombre()) ? avisosDe(esResp() ? '' : miNombre()).filter(a => a.est === 'atrasado' || a.est === 'hoy').length : 0;
@@ -1247,7 +1353,8 @@ function ajustarKpis() {
 let tKpi = 0; window.addEventListener('resize', () => { clearTimeout(tKpi); tKpi = setTimeout(ajustarKpis, 120); });
 function renderVista() {
   requestAnimationFrame(ajustarKpis);
-  if (S.tab === 'entrevistas') renderEntrevistas();
+  if (S.tab === 'inicio') renderInicio();
+  else if (S.tab === 'entrevistas') renderEntrevistas();
   else if (S.tab === 'panel' || S.tab === 'mias') renderPanel();
   else if (S.tab === 'comisiones') renderComisiones();
   else if (S.tab === 'ajustes') renderAjustes();
@@ -1325,8 +1432,8 @@ function vacioSinDb() {
 }
 
 /* ---------- Detalle ---------- */
-function abrirDetalle(id, fallback) {
-  S.detalle = id; S.detalleFallback = fallback || null;
+function abrirDetalle(id, fallback, verCalculo) {
+  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; cerrarAyuda();
   renderDetalle();
   $('#drawer').hidden = false; $('#scrim').hidden = false;
   document.body.style.overflow = 'hidden';
@@ -1375,6 +1482,7 @@ function renderDetalle() {
         </tbody><tfoot><tr><td colspan="3">Total (${c.pct}%)</td><td class="n">${fm(c.total)}</td><td></td></tr></tfoot></table></div>` : `<p class="note">Sin incremento de cuota ni ahorro registrados.</p>`}
       ${c.pactados.map(pa => `<div class="banner" style="background:var(--accent-soft);border-color:transparent;font-size:14px"><b>${pa.concepto}: ${pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} (≈ ${fm(pa.monto)})` : fm(pa.monto)}</b>, acordado el ${fd(pa.acuerdo)}${pa.fecha ? ` con pago para el ${fd(pa.fecha)}` : ''}. ${pa.dentro ? `Suma ${fm(pa.comision)} de comisión cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}</div>`).join('')}
       ${c.topeAlcanzado ? `<p class="note"><b>Se aplicó el tope de ${fm(c.tope)} por cliente.</b> Lo que supera ese monto no comisiona.</p>` : ''}
+      ${desgloseHtml(e, c)}
       <p class="note">${q === null ? '' : q >= 0 ? `Plazo abierto hasta el ${fd(c.limite)} · quedan ${q} ${q === 1 ? 'día' : 'días'} para sumar incremento o ahorro.` : `Plazo vencido el ${fd(c.limite)}.`}</p>
     </section>
     <section class="dcard"><h3><span class="emo" aria-hidden="true">✅</span> Checklist · ${r.si} Sí · ${r.nos} No · ${r.na} N/A${r.pend ? ` · ${r.pend} sin responder` : ''}</h3>${secs}</section>
@@ -1404,6 +1512,7 @@ function renderDetalle() {
 }
 function bindDetalle() {
   $('#scrim').addEventListener('click', cerrarDetalle);
+  $('#drawer').addEventListener('toggle', ev => { if (ev.target.classList?.contains('how')) S.howOpen = ev.target.open; }, true);
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#drawer').hidden) cerrarDetalle(); });
   $('#drawer').addEventListener('click', async ev => {
     const id = ev.target.closest('button')?.id; if (!id) return;
@@ -1454,12 +1563,12 @@ function renderComisiones() {
   const borr = rows.filter(r => r.st === 'borrador');
   const pact = rows.filter(r => r.st === 'pago_pendiente').reduce((a, r) => a + r.it.comision, 0);
   let html = `<div class="kpis">
-    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión del mes</span><span class="k-v">${fm(total)}</span><span class="k-s">${esc(mesLabel(mes))}${esp ? ' · ' + esc(esp) : ' · todo el equipo'}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión del <span class="nw">mes${qm('comMes')}</span></span><span class="k-v">${fm(total)}</span><span class="k-s">${esc(mesLabel(mes))}${esp ? ' · ' + esc(esp) : ' · todo el equipo'}</span></div>
     <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">✅</span> Aprobada</span><span class="k-v">${fm(ap)}</span><span class="k-s">Revisada por la responsable</span></div>
     <div class="kpi${pe ? ' attn' : ''}"><span class="k-l"><span class="emo" aria-hidden="true">🔍</span> Por revisar</span><span class="k-v">${fm(pe)}</span><span class="k-s">Pendiente de aprobación</span></div>
     <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">📝</span> Observada</span><span class="k-v">${fm(ob)}</span><span class="k-s">Con algo para corregir</span></div>
-    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🤝</span> Pactado sin pagar · referencia</span><span class="k-v" style="color:var(--accent)">${fm(pact)}</span><span class="k-s">Si todos pagan a tiempo, el mes llegaría a ${fm(total + pact)}</span></div>
-    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">⌛</span> Fuera de plazo</span><span class="k-v">${fm(fuera)}</span><span class="k-s">Monto que no comisiona</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🤝</span> Pactado sin pagar · <span class="nw">referencia${qm('pactRef')}</span></span><span class="k-v" style="color:var(--accent)">${fm(pact)}</span><span class="k-s">Si todos pagan a tiempo, el mes llegaría a ${fm(total + pact)}</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">⌛</span> Fuera de <span class="nw">plazo${qm('fuera')}</span></span><span class="k-v">${fm(fuera)}</span><span class="k-s">Monto que no comisiona</span></div>
   </div>`;
   if (esp && (S.aj.metaEnt || S.aj.metaMonto)) {
     const entM = S.E.filter(e => e.estado === 'final' && norm(e.especialista) === norm(esp) && (e.fecha || '').startsWith(mes)).length;
@@ -1481,7 +1590,7 @@ function renderComisiones() {
   const hayRef = vis.some(r => r.it.pendiente);
   if (rows.length && !vis.length) html += `<div class="empty"><h3>${filtro === 'pactados' ? 'No hay pactados sin pagar' : 'No hay gestiones pagadas'} en ${esc(mesLabel(mes))}</h3><p>Cambiar el filtro «Pago» para ver el resto.</p></div>`;
   if (!rows.length) html += `<div class="empty"><h3>Sin incrementos ni ahorros en ${esc(mesLabel(mes))}</h3><p>Acá se listan los incrementos de cuota y los ahorros del mes, con la comisión que generan. Cuentan las gestiones hechas dentro del plazo de ${S.aj.plazoMeses === 1 ? 'un mes' : S.aj.plazoMeses + ' meses'} desde la entrevista.</p></div>`;
-  else if (vis.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">📋</span> Detalle de gestiones</h3><p>Cada gestión cuenta en el mes en que el cliente pagó, si es dentro del plazo de un mes. Lo pactado aparece en el mes de la fecha pactada hasta que se pague. Los borradores no suman hasta que se finaliza la entrevista.${borr.length ? ` Hay ${borr.length} en borrador.` : ''}</p></div>
+  else if (vis.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">📋</span> Detalle de gestiones</h3><p>Cada gestión cuenta en el mes en que el cliente pagó, si es dentro del plazo de un mes. Lo pactado aparece en el mes de la fecha pactada hasta que se pague. Los borradores no suman hasta que se finaliza la entrevista. <b>Toca una fila para ver cómo se calculó.</b>${borr.length ? ` Hay ${borr.length} en borrador.` : ''}</p></div>
     ${hayRef ? `<div class="refnote"><b>Los pactados sin pagar son solo de referencia.</b> Muestran lo que se podría cobrar si el cliente paga dentro del plazo. No forman parte de la comisión del mes hasta que se carga el pago.</div>` : ''}<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th>${esp ? '' : '<th>Asesor OB</th>'}<th>Concepto</th><th class="n">Monto</th><th class="n">Comisión</th><th>Estado</th></tr></thead><tbody>
     ${vis.map(r => `<tr class="clk${r.it.pendiente ? ' ref' : ''}" data-id="${esc(r.e.id)}" tabindex="0"><td class="mono">${fdc(r.it.mesCom || r.it.fecha)}</td><td>${esc(r.e.cliente || '—')}</td>${esp ? '' : `<td>${esc(r.e.especialista || '—')}</td>`}<td><span>${esc(r.it.concepto)}${r.it.pendiente ? `<br><small class="muted">Pago pactado para el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : r.it.acuerdo && r.it.acuerdo !== r.it.fecha ? `<br><small class="muted">Pagado el ${fd(r.it.fecha)} · acordado el ${fd(r.it.acuerdo)}</small>` : ''}</span></td><td class="n">${montoHtml(r.it)}</td><td class="n"><span>${r.it.pendiente ? `(${fm(r.it.comision)})<br><small class="muted">referencia</small>` : fm(r.it.comision)}${r.it.recorte ? `<br><small class="muted">tope</small>` : ''}</span></td><td>${chip(r.st)}</td></tr>`).join('')}
     </tbody></table></div></section>`;
@@ -1533,7 +1642,7 @@ function renderAvisos() {
     <div class="kpi${n('hoy') ? ' attn' : ''}"><span class="k-l"><span class="emo" aria-hidden="true">📅</span> Para hoy</span><span class="k-v">${n('hoy')}</span><span class="k-s">${fd(hoy())}</span></div>
     <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🔜</span> Próximos</span><span class="k-v">${n('proximo') + n('sinfecha')}</span><span class="k-s">${n('sinfecha') ? `${n('sinfecha')} sin fecha` : 'Con fecha más adelante'}</span></div>
     <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">🤝</span> Monto pactado</span><span class="k-v">${fm(pactado)}</span><span class="k-s">Ahorros e incrementos por cobrar</span></div>
-    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión posible</span><span class="k-v">${fm(posible)}</span><span class="k-s">Si se cumplen dentro del plazo</span></div>
+    <div class="kpi"><span class="k-l"><span class="emo" aria-hidden="true">💰</span> Comisión <span class="nw">posible${qm('posible')}</span></span><span class="k-v">${fm(posible)}</span><span class="k-s">Si se cumplen dentro del plazo</span></div>
   </div>`;
   if (!av.length) html += `<div class="empty"><h3>Sin seguimientos pendientes</h3><p>Cuando en una entrevista se marca que queda algo pendiente (un ahorro o un incremento que el cliente pactó, o cualquier otra cosa por resolver), aparece acá con la fecha acordada y el plazo para comisionar.</p></div>`;
   else html += `<div class="avrows" role="table" aria-label="Seguimientos pendientes">
@@ -1613,7 +1722,7 @@ function renderPanel() {
   const vistaEq = personal && S.f.pan.vista === 'eq';
   const per = $('#fp_per').value || monthsBack(1)[0]; const esp = personal ? (vistaEq ? '' : miNombre()) : $('#fp_esp').value; const suc = $('#fp_suc').value;
   $('#fp_espWrap').hidden = personal;
-  $('#pan-title').innerHTML = personal ? `<span class="emo" aria-hidden="true">📊</span> Mis estadísticas · ${esc(miNombre())}` : '<span class="emo" aria-hidden="true">📈</span> Panel de la responsable';
+  $('#pan-title').innerHTML = personal ? `<span class="emo" aria-hidden="true">📊</span> Mis estadísticas<span class="t-n"> · ${esc(miNombre())}</span>${qm('mias')}` : `<span class="emo" aria-hidden="true">📈</span> Panel de la responsable${qm('panel')}`;
   $('#pan-sub').textContent = vistaEq ? 'Estadísticas de todo el equipo junto, comparadas con el mes anterior.' : personal ? 'Tus resultados del período: solo tus entrevistas, comisiones y seguimientos.' : 'Cumplimiento del checklist, resultados y comisiones del equipo.';
   if (personal && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
   const E = em => `<span class="emo" aria-hidden="true">${em}</span> `;
@@ -1647,10 +1756,10 @@ function renderPanel() {
 
   let html = `<div class="kpis">
     <div class="kpi"><span class="k-l">${E('📋')}Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
-    <div class="kpi"><span class="k-l">${E('✅')}Sin errores</span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
-    <div class="kpi"><span class="k-l">${E('📈')}Incremento de cuotas</span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
-    <div class="kpi"><span class="k-l">${E('🐷')}Ahorros</span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
-    ${vistaEq ? `<div class="kpi"><span class="k-l">${E('👥')}Asesores OB activos</span><span class="k-v">${new Set(fin.map(e => norm(e.especialista))).size}</span><span class="k-s">Con entrevistas en el período</span></div>` : ''}${vistaEq ? '' : `<div class="kpi"><span class="k-l">${E('💰')}Comisiones</span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
+    <div class="kpi"><span class="k-l">${E('✅')}Sin <span class="nw">errores${qm('sinErrores')}</span></span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
+    <div class="kpi"><span class="k-l">${E('📈')}Incremento de <span class="nw">cuotas${qm('inc')}</span></span><span class="k-v">${fm(inc)}</span><span class="k-s">Sobre la cuota del asesor</span>${dk('inc')}</div>
+    <div class="kpi"><span class="k-l">${E('🐷')}<span class="nw">Ahorros${qm('aho')}</span></span><span class="k-v">${fm(aho)}</span><span class="k-s">${ahoUsd ? `Incluye ${fu(ahoUsd)} en dólares` : 'Dentro del plazo'}</span>${dk('aho')}</div>
+    ${vistaEq ? `<div class="kpi"><span class="k-l">${E('👥')}Asesores OB activos</span><span class="k-v">${new Set(fin.map(e => norm(e.especialista))).size}</span><span class="k-s">Con entrevistas en el período</span></div>` : ''}${vistaEq ? '' : `<div class="kpi"><span class="k-l">${E('💰')}<span class="nw">Comisiones${qm('com')}</span></span><span class="k-v">${fm(com)}</span><span class="k-s">${fm(comAp)} aprobadas</span>${dk('com')}</div>
 `}${vistaEq ? '' : `<button class="kpi${porRev ? ' attn' : ''}" type="button" id="kpiRev"><span class="k-l">${E('🔍')}Por revisar</span><span class="k-v">${porRev}</span><span class="k-s">${porRev ? 'Ver la lista' : 'Todo revisado'}</span></button>`}
   </div>`;
 
@@ -1819,13 +1928,143 @@ function renderPanel() {
   out.innerHTML = html; etiquetar(out);
 }
 
+
+/* ---------- Ayuda ❓ ---------- */
+const qm = k => `<button type="button" class="qm" data-help="${k}" aria-label="¿Qué es esto?" aria-expanded="false">?</button>`;
+const plazoTxt = () => (S.aj.plazoMeses || 1) === 1 ? 'un mes' : `${S.aj.plazoMeses} meses`;
+const HELP = {
+  inicio: () => 'Lo que necesita tu atención hoy, ordenado por urgencia. Cada bloque dice qué hacer. Toca un cliente para abrir su entrevista. Si un bloque no aparece, es porque está al día.',
+  entrevistas: () => 'Todas las entrevistas del equipo. Toca una para ver el checklist, los montos y la comisión. Ahí mismo la responsable la <b>aprueba</b> u <b>observa</b>. Arriba aparecen los borradores sin terminar.',
+  comisiones: () => `Lo que cobra cada asesor OB en el mes: el <b>${S.aj.pct}%</b> de lo que subió la cuota y del ahorro, si el cliente paga dentro de ${plazoTxt()} desde la entrevista. Máximo <b>${fm(S.aj.tope)}</b> por cliente. Cuenta en el mes en que el cliente pagó. Toca una fila para ver la cuenta.`,
+  avisos: () => 'Cosas que quedaron pendientes con un cliente: un ahorro o un incremento que prometió pagar en una fecha, o algo por resolver. Primero aparecen los atrasados. «Cargar» registra el pago; «Resuelto» lo saca de la lista.',
+  panel: () => 'Cómo viene el equipo en el período elegido: cuántas entrevistas hizo, si cumplió el checklist, cuánto subieron las cuotas y cuánto se comisiona. Se puede ver un asesor OB o una sucursal. Las flechas comparan con el mes anterior.',
+  mias: () => 'Tus resultados personales del período. En «Equipo» ves cómo le va a todo el equipo este mes comparado con el mes anterior.',
+  ajustes: () => 'Lo que usa toda la página: porcentaje de comisión, plazo, tope por cliente, metas, la lista de asesores OB, de asesores de ventas y de sucursales, el PIN y el dólar Spazios.',
+  sinErrores: () => 'Entrevistas con todos los pasos del checklist en «Sí» o «N/A». Si un solo paso quedó en «No», la entrevista cuenta «con falla».',
+  inc: () => 'Cuánto subieron las cuotas sobre lo que cerró el asesor de ventas: lo de la entrevista más lo que se sumó después, dentro del plazo. Lo que fue en dólares se pasa a pesos con el dólar Spazios del día del pago.',
+  aho: () => 'Ahorros que dejaron los clientes dentro del plazo. Lo que fue en dólares se pasa a pesos con el dólar Spazios del día del pago.',
+  com: () => `Comisión generada en el período: el ${S.aj.pct}% del incremento y del ahorro, con un máximo de ${fm(S.aj.tope)} por cliente. «Aprobadas» son las que la responsable ya revisó.`,
+  comMes: () => 'Suma de la comisión del mes, esté aprobada o no. Cuenta en el mes en que el cliente pagó. No incluye borradores ni pactos que todavía no se pagaron.',
+  pactRef: () => 'Lo que se cobraría si los clientes que pactaron un pago lo hacen dentro del plazo. <b>Es solo de referencia</b>: se suma a la comisión recién cuando se carga el pago.',
+  fuera: () => `Incrementos o ahorros que el cliente pagó después del plazo de ${plazoTxt()}. Se registran, pero no generan comisión.`,
+  posible: () => 'Comisión que se sumaría si cada cliente paga lo que pactó antes de que venza su plazo.',
+};
+function abrirAyuda(btn) {
+  const pop = $('#helpPop');
+  if (S.helpBtn === btn && !pop.hidden) { cerrarAyuda(); return; }
+  cerrarAyuda();
+  const t = HELP[btn.dataset.help]; if (!t) return;
+  pop.innerHTML = typeof t === 'function' ? t() : t; pop.hidden = false;
+  S.helpBtn = btn; btn.setAttribute('aria-expanded', 'true');
+  posAyuda();
+}
+function posAyuda() {
+  const pop = $('#helpPop'), btn = S.helpBtn; if (!btn || pop.hidden) return;
+  const r = btn.getBoundingClientRect();
+  if (!btn.isConnected || r.bottom < 0 || r.top > innerHeight) { cerrarAyuda(); return; }
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  const left = Math.min(Math.max(12, r.left + r.width / 2 - w / 2), innerWidth - w - 12);
+  let top = r.bottom + 8; if (top + h > innerHeight - 12) top = Math.max(12, r.top - h - 8);
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+}
+function cerrarAyuda() { const pop = $('#helpPop'); if (!pop || pop.hidden) return; pop.hidden = true; S.helpBtn?.setAttribute('aria-expanded', 'false'); S.helpBtn = null; }
+
+/* ---------- ¿Cómo se calculó? ---------- */
+function desgloseHtml(e, c) {
+  const pct = c.pct, L = [];
+  const pesos = v => '$ ' + COT.format(v || 0);
+  const montoTxt = it => it.moneda === 'USD' && it.usd ? `${fu(it.usd)} × dólar Spazios del ${fd(it.fecha)} (${pesos(it.cot)}) = <b>${fm(it.monto)}</b>` : `<b>${fm(it.monto)}</b>`;
+  const cuota = (ars, usd) => e.cuotaMoneda === 'USD' && usd ? fu(usd) : fm(ars);
+  const li = (em, txt, cls) => `<li${cls ? ` class="${cls}"` : ''}><span class="hw-e" aria-hidden="true">${em}</span><span>${txt}</span></li>`;
+  const cuenta = it => !it.dentro ? `<span class="hw-c">Fuera del plazo (vencía el ${fd(c.limite)}): <b>no comisiona</b>.</span>`
+    : `<span class="hw-c">${fm(it.monto)} × ${pct}% = <b>${fm(it.bruto)}</b>${it.recorte ? ` → se cobra <b>${fm(it.comision)}</b> por el tope` : ''}</span>`;
+  if (c.limite) L.push(li('📅', `La entrevista fue el <b>${fd(e.fecha)}</b>. Todo lo que el cliente pague hasta el <b>${fd(c.limite)}</b> comisiona el <b>${pct}%</b>.`));
+  for (const it of c.items) {
+    if (it.tipo === 'incremento' && it.concepto.includes('entrevista')) {
+      const usd = e.cuotaMoneda === 'USD' && it.usd;
+      L.push(li('📈', `<b>Incremento en la entrevista.</b> El asesor de ventas cerró la cuota en ${cuota(e.cuotaAsesor, e.cuotaAsesorUsd)} y salió en ${cuota(e.cuotaFinal, e.cuotaFinalUsd)}: subió ${usd ? `${fu(it.usd)} × dólar Spazios del ${fd(e.fecha)} (${pesos(it.cot)}) = <b>${fm(it.monto)}</b>` : `<b>${fm(it.monto)}</b>`}.${cuenta(it)}`));
+    } else if (it.concepto.includes('entrevista')) {
+      L.push(li('🐷', `<b>Ahorro en la entrevista:</b> ${montoTxt(it)}.${cuenta(it)}`));
+    } else {
+      const em = it.tipo === 'ahorro' ? '🐷' : '📈';
+      L.push(li(em, `<b>${esc(it.concepto)}</b>, pagado el ${fd(it.fecha)}${it.acuerdo && it.acuerdo !== it.fecha ? ` (acordado el ${fd(it.acuerdo)})` : ''}: ${montoTxt(it)}.${cuenta(it)}`));
+    }
+  }
+  if (!c.items.length) L.push(li('ℹ️', 'Todavía no hay incremento de cuota ni ahorro, así que la comisión es <b>$ 0</b>.'));
+  const val = c.items.filter(i => i.comision > 0);
+  if (c.items.length) L.push(li('💰', `<b>Comisión total: ${fm(c.total)}</b>${val.length > 1 ? `<span class="hw-c">${val.map(i => fm(i.comision)).join(' + ')} = <b>${fm(c.total)}</b></span>` : ''}`, 'hw-tot'));
+  if (c.tope) L.push(li('🔒', c.topeAlcanzado ? `Llegó al <b>máximo de ${fm(c.tope)}</b> por cliente: lo que pasa de ese monto no comisiona.` : `El máximo por cliente es ${fm(c.tope)}. Con este cliente todavía se pueden sumar <b>${fm(c.restante)}</b> de comisión.`));
+  for (const pa of c.pactados) L.push(li('🤝', `<b>${esc(pa.concepto)} sin pagar:</b> ${pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} × dólar Spazios de hoy (${pesos(pa.cot)}) ≈ ${fm(pa.monto)}` : fm(pa.monto)}. ${pa.dentro ? `<span class="hw-c">${fm(pa.monto)} × ${pct}% = <b>${fm(pa.bruto)}</b>${pa.recorte ? ` → ${fm(pa.comision)} por el tope` : ''}</span>Es de referencia: se suma cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}`));
+  if ([...c.items, ...c.pactados].some(i => i.moneda === 'USD' && i.usd)) L.push(li('💵', 'Lo que se paga en dólares se pasa a pesos con el dólar Spazios ingreso del día del pago. La comisión siempre se cobra en pesos.'));
+  return `<details class="how"${S.howOpen ? ' open' : ''}><summary><span><span aria-hidden="true">🧮</span> ¿Cómo se calculó la comisión?</span></summary><ol class="how-l">${L.join('')}</ol></details>`;
+}
+
+/* ---------- Vista: Para revisar hoy ---------- */
+function bloquesInicio() {
+  const t0 = hoy(); const B = [];
+  const rev = S.E.filter(e => e.estado === 'final' && revEst(e) === 'pendiente').sort((a, b) => (a.finalizado || a.fecha || '').localeCompare(b.finalizado || b.fecha || ''));
+  B.push({key: 'rev', tono: 'warn', urgente: true, em: '🔍', titulo: 'Entrevistas para revisar', ok: 'Sin entrevistas por revisar',
+    desc: 'Abrir cada una, mirar el checklist y los montos, y tocar <b>Aprobar</b> u <b>Observar</b>. Hasta que la apruebes, la comisión queda «por revisar».',
+    go: 'Ver todas', items: rev.map(e => { const r = resultado(e.checklist); const d = e.finalizado ? diffDays(e.finalizado.slice(0, 10), t0) : null;
+      return {id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · entrevista del ${fdc(e.fecha)}${d ? ` · espera hace ${d} ${d === 1 ? 'día' : 'días'}` : ''}`,
+        side: `${r.est === 'falla' ? chip('falla', `${r.nos} en No`) : chip('ok', 'Checklist ok')}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}<small class="muted">Comisión ${fm(comision(e).total)}</small>`}; })});
+  const av = avisosDe('');
+  const seg = av.filter(a => a.est === 'atrasado' || a.est === 'hoy');
+  B.push({key: 'seg', tono: 'bad', urgente: true, em: '⏰', titulo: 'Seguimientos atrasados o para hoy', ok: 'Ningún seguimiento atrasado',
+    desc: 'El asesor OB quedó en hacer algo con el cliente y la fecha ya llegó. Conviene preguntarle cómo va.',
+    go: 'Ver en Avisos', items: seg.map(a => ({id: a.e.id, main: a.e.cliente || '—', sub: `${esc(a.e.especialista || '—')} · ${a.conMonto ? `${a.e.seguimientoTipo === 'ahorro' ? 'Ahorro' : 'Incremento'} de ${a.e.seguimientoMoneda === 'USD' && a.e.seguimientoMontoUsd ? fu(a.e.seguimientoMontoUsd) : fm(a.e.seguimientoMonto)}` : esc((a.e.seguimientoDetalle || 'Pendiente').slice(0, 80))}`,
+      side: a.est === 'atrasado' ? chip('falla', `Atrasado ${-a.d} ${a.d === -1 ? 'día' : 'días'}`) : chip('pendiente', 'Para hoy')}))});
+  const vence = av.filter(a => a.conMonto && !a.fueraPlazo && a.qPlazo !== null && a.qPlazo >= 0 && a.qPlazo <= 7 && a.est !== 'atrasado' && a.est !== 'hoy');
+  B.push({key: 'vence', tono: 'acc', urgente: true, em: '🤝', titulo: 'Pactos que vencen esta semana', ok: 'Ningún pacto por vencer',
+    desc: 'Clientes que se comprometieron a pagar un ahorro o un incremento. Si no pagan antes de la fecha límite, esa comisión se pierde.',
+    go: 'Ver en Avisos', items: vence.map(a => ({id: a.e.id, main: a.e.cliente || '—', sub: `${esc(a.e.especialista || '—')} · ${a.e.seguimientoTipo === 'ahorro' ? 'ahorro' : 'incremento'} de ${a.e.seguimientoMoneda === 'USD' && a.e.seguimientoMontoUsd ? fu(a.e.seguimientoMontoUsd) : fm(a.e.seguimientoMonto)}`,
+      side: `${chip('pendiente', a.qPlazo === 0 ? 'Vence hoy' : `Vence en ${a.qPlazo} ${a.qPlazo === 1 ? 'día' : 'días'}`)}${a.posible ? `<small class="muted">+${fm(a.posible)} comisión</small>` : ''}`}))});
+  const desde7 = addDays(t0, -7);
+  const fal = S.E.filter(e => e.estado === 'final' && e.fallaAsesor === 'si' && e.fecha >= desde7 && e.fecha <= t0).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  B.push({key: 'fallas', tono: 'muted', urgente: false, em: '🧑‍💼', titulo: 'Fallas de asesores de ventas (últimos 7 días)', ok: 'Sin fallas de asesores esta semana',
+    desc: 'Errores en el cierre que detectó el equipo de onboarding. Sirven para hablar con cada asesor de ventas.',
+    go: 'Ver en el panel', items: fal.map(e => ({id: e.id, main: e.asesor || 'Asesor sin cargar', sub: `${esc(e.cliente || '—')} · ${fdc(e.fecha)} · ${esc(((e.fallaTipos || []).join(', ') || e.fallaDetalle || '').slice(0, 80))}`, side: chip('falla', 'Falla')}))});
+  const viejo = addDays(t0, -2);
+  const borr = S.E.filter(e => e.estado !== 'final' && (e.actualizado || e.creado || '').slice(0, 10) <= viejo).sort((a, b) => (a.actualizado || '').localeCompare(b.actualizado || ''));
+  B.push({key: 'borr', tono: 'muted', urgente: false, em: '📝', titulo: 'Borradores olvidados', ok: 'Sin borradores olvidados',
+    desc: 'Entrevistas que quedaron a medias hace más de 2 días. Preguntar si hay que terminarlas o borrarlas.',
+    go: 'Ver borradores', items: borr.map(e => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · guardado el ${fd((e.actualizado || '').slice(0, 10))}`, side: chip('borrador')}))});
+  return B;
+}
+function diaLargo(f) { const [y, m, d] = f.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-AR', {weekday: 'long', day: 'numeric', month: 'long'}); }
+function renderInicio() {
+  const out = $('#ini-out');
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
+  const t0 = hoy();
+  $('#ini-sub').textContent = `Lo que necesita tu atención hoy, ${diaLargo(t0)}.`;
+  const B = bloquesInicio(); const con = B.filter(b => b.items.length), sin = B.filter(b => !b.items.length);
+  const urg = con.filter(b => b.urgente).reduce((a, b) => a + b.items.length, 0);
+  const mes = t0.slice(0, 7); const m = metricas(S.E, mes + '-01', t0);
+  let html = urg ? '' : `<div class="ini-ok"><span class="big" aria-hidden="true">🎉</span><div><h3>Todo al día</h3><p>No hay entrevistas por revisar, seguimientos atrasados ni pactos por vencer.</p></div></div>`;
+  html += `<section class="card ini-mes"><div class="card-h"><h3><span class="emo" aria-hidden="true">📆</span> ${esc(mesLabel(mes))} hasta hoy</h3><button class="linkbtn" type="button" data-tabgo="panel">Ver el panel completo</button></div>
+    <div class="calc"><div><small>Entrevistas</small><b>${m.n}</b><small>Finalizadas</small></div><div><small>Sin errores</small><b>${m.pctOk == null ? '—' : Math.round(m.pctOk) + '%'}</b><small>Del checklist</small></div><div><small>Incremento + ahorro</small><b>${fm(m.inc + m.aho)}</b><small>Dentro del plazo</small></div><div><small>Comisiones</small><b>${fm(m.com)}</b><small>Del equipo</small></div></div></section>`;
+  if (con.length) html += `<div class="ini-grid">${con.map(b => `<section class="card todo t-${b.tono}">
+      <div class="todo-h"><span class="todo-n">${b.items.length}</span><div><h3><span class="emo" aria-hidden="true">${b.em}</span> ${esc(b.titulo)}</h3><p>${b.desc}</p></div></div>
+      <ul class="slist">${b.items.slice(0, 5).map(it => `<li class="clk" data-id="${esc(it.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(it.main)}</b><small>${it.sub}</small></div><div class="s-side">${it.side}</div></li>`).join('')}</ul>
+      <div class="todo-f">${b.items.length > 5 ? `<span class="note">Y ${b.items.length - 5} más.</span>` : '<span></span>'}<button class="btn btn-sm" type="button" data-inigo="${b.key}">${b.go} →</button></div>
+    </section>`).join('')}</div>`;
+  if (sin.length) html += `<div class="aldia"><span class="eyebrow">Al día</span>${sin.map(b => chip('ok', b.ok)).join('')}</div>`;
+  out.innerHTML = html;
+}
+function irDesdeInicio(k) {
+  if (k === 'rev' || k === 'borr') { const est = k === 'rev' ? 'pendiente' : 'borrador'; S.f.ent = {...S.f.ent, est, per: '', esp: '', q: ''}; $('#fe_est').value = est; $('#fe_q').value = ''; setTab('entrevistas'); return; }
+  if (k === 'seg' || k === 'vence') { S.f.av = {esp: '', tipo: ''}; $('#fa_tipo').value = ''; setTab('avisos'); return; }
+  if (k === 'fallas') { setTab('panel'); return; }
+}
+
 /* ---------- Vista: Ajustes ---------- */
 function renderAjustes() {
   const v = $('#v-ajustes');
   if (v.innerHTML && (S.ajDirty || v.contains(document.activeElement))) return;
   const a = S.aj;
   v.innerHTML = `
-    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">⚙️</span> Ajustes</h2><p>Parámetros de comisión y listas que usa el equipo. Solo la responsable los modifica.</p></div></div>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">⚙️</span> Ajustes<button type="button" class="qm" data-help="ajustes" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p>Parámetros de comisión y listas que usa el equipo. Solo la responsable los modifica.</p></div></div>
     <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💰</span> Comisión</h3></div>
       <div class="grid-f">
         <div class="field"><label for="a_pct">Porcentaje de comisión</label><input type="text" id="a_pct" inputmode="numeric" class="money" value="${esc(a.pct)}"><span class="hint">Sobre el incremento de cuota y el ahorro.</span></div>
@@ -1909,8 +2148,14 @@ function bindGeneral() {
     $$('input[name="tema"]').forEach(r => r.addEventListener('change', () => { const v = r.value; if (v === 'oscuro') document.documentElement.setAttribute('data-tema', 'oscuro'); else document.documentElement.removeAttribute('data-tema'); try { localStorage.setItem('onb_tema', v); } catch {} requestAnimationFrame(ajustarKpis); })); }
   $('#menuClose').addEventListener('click', cerrarMenu);
   $('#menuScrim').addEventListener('click', cerrarMenu);
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMenu(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { cerrarMenu(); cerrarAyuda(); } });
+  window.addEventListener('scroll', posAyuda, {passive: true});
+  window.addEventListener('resize', posAyuda);
+  $('#drawer').addEventListener('scroll', posAyuda, {passive: true, capture: true});
   document.addEventListener('click', ev => {
+    const hp = ev.target.closest('[data-help]'); if (hp) { ev.preventDefault(); abrirAyuda(hp); return; }
+    if (!ev.target.closest('#helpPop')) cerrarAyuda();
+    const ig = ev.target.closest('[data-inigo]'); if (ig) { irDesdeInicio(ig.dataset.inigo); return; }
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
     const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     if (ev.target.closest('[data-pick]')) { cerrarMenu(); abrirPicker(true); return; }
@@ -1921,14 +2166,14 @@ function bindGeneral() {
     const cu = ev.target.closest('[data-cumplir]'); if (cu) { cumplirAviso(cu.dataset.cumplir); return; }
     const rs = ev.target.closest('[data-resolver]'); if (rs) { rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
     const vr = ev.target.closest('[data-ver]'); if (vr) { abrirDetalle(vr.dataset.ver); return; }
-    const row = ev.target.closest('.erow, tr.clk, li.clk'); if (row && !row.closest('#drawer')) { abrirDetalle(row.dataset.id); return; }
+    const row = ev.target.closest('.erow, tr.clk, li.clk'); if (row && !row.closest('#drawer')) { abrirDetalle(row.dataset.id, null, !!row.closest('#com-out')); return; }
     if (ev.target.closest('#kpiRev')) { S.f.ent = {...S.f.ent, est: 'pendiente', per: '', esp: $('#fp_esp').value}; $('#fe_est').value = 'pendiente'; setTab('entrevistas'); return; }
     if (ev.target.closest('#btnAj')) guardarAjustes();
     if (ev.target.closest('#btnPin')) cambiarPin();
     if (ev.target.closest('#btnDolar')) guardarDolar();
     if (ev.target.closest('#btnCsv')) exportarCsv();
   });
-  document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('tr.clk, li.clk')) { ev.preventDefault(); abrirDetalle(ev.target.dataset.id); } });
+  document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('tr.clk, li.clk')) { ev.preventDefault(); abrirDetalle(ev.target.dataset.id, null, !!ev.target.closest('#com-out')); } });
   $('#v-ajustes').addEventListener('input', ev => { if (ev.target.id?.startsWith('a_pin') || ev.target.id?.startsWith('a_d')) return; S.ajDirty = true; $('#ajMsg').textContent = 'Cambios sin guardar.'; });
   $('#v-ajustes').addEventListener('focusout', ev => { if (ev.target.id === 'a_min' || ev.target.id === 'a_tope' || ev.target.id === 'a_metaMonto') ev.target.value = fmtIn(num(ev.target.value)); });
   $('#fe_q').addEventListener('input', ev => { S.f.ent.q = ev.target.value; renderEntrevistas(); });
@@ -2050,12 +2295,14 @@ function elegir(n) {
   if (!S.editId) fillEsp(nom);
   if (ADMIN_TABS.includes(S.tab) && !esResp()) setTab('cargar', true);
   renderAll(); programarBorrador();
+  if (n === RESP && esResp()) { S.inicioVisto = true; setTab('inicio', true); }
   toast(n === RESP ? 'Viendo todo el equipo.' : `Hola, ${n}. Se cargaron tus entrevistas.`);
 }
 function revisarIdentidad() {
   if (!S.conectado || !S.ajCargado || !S.pinCargado) return;
   pintarQuien();
   if (!identidadValida()) { if ($('#picker').hidden) abrirPicker(false); }
+  else if (esResp() && !S.inicioVisto) { S.inicioVisto = true; if (S.tab === 'cargar' && !S.editId && firmaForm() === S.formBase) setTab('inicio', true); }
 }
 function vacioIdentidad() {
   return `<div class="empty"><h3>Falta elegir quién eres</h3><p>Elige tu nombre de asesor OB para ver tus entrevistas y tus comisiones.</p><button class="btn btn-primary" type="button" data-pick="1">Elegir asesor OB</button></div>`;
