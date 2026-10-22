@@ -550,6 +550,7 @@ tr.ref td .chip{font-style:normal}
 .helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .helppop[hidden]{display:none}
 .nw{white-space:nowrap}
+.gest-tip{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.5;color:var(--ink)}
 .helppop b{color:inherit}
 
 /* Celular: más aire, nada encimado */
@@ -933,8 +934,9 @@ function construirForm() {
         </div>
         <div class="calc" id="calcBox"></div>
         <p class="plazo" id="plazoTxt"></p>
-        <div class="gest">
-          <div class="q-row"><div><b><span class="emo" aria-hidden="true">➕</span> Incrementos o ahorros posteriores</b><p class="note">Lo que el cliente sume después de la entrevista. Comisiona solo si ocurre dentro del plazo. En un incremento, cargar cuánto aumentó la cuota.</p></div><button class="btn btn-sm" type="button" id="btnAddGest">Agregar gestión</button></div>
+        <p class="note gest-tip" id="gestTip">💡 Si el cliente <b>promete</b> subir la cuota o dejar un ahorro más adelante, cargarlo abajo en <b>Seguimiento</b>. Cuando pague, se registra desde <b>Avisos → Cargar</b> y se suma a la comisión.</p>
+        <div class="gest" id="gestBox">
+          <div class="q-row"><div><b><span class="emo" aria-hidden="true">💵</span> Pagos recibidos después de la entrevista</b><p class="note" id="gestNote">Cuando el cliente paga algo después de la entrevista (por ejemplo, lo que prometió en el seguimiento), cargarlo acá con la fecha real del pago. En un incremento, cargar cuánto subió la cuota.</p></div><button class="btn btn-sm" type="button" id="btnAddGest">Agregar pago</button></div>
           <div id="gestList" class="view" style="gap:8px"></div>
         </div>
       </section>
@@ -945,7 +947,7 @@ function construirForm() {
           <div class="key"><span class="ans no">No</span><span>No lo hice. La entrevista queda «con falla».</span></div>
           <div class="key"><span class="ans na">N/A</span><span>No corresponde en esta entrevista.</span></div>
         </div>
-        <div class="banner warn" id="ckLock" hidden style="margin-top:12px">Esta entrevista ya está finalizada: las respuestas del checklist y la falla del asesor solo las puede cambiar la responsable. Se pueden editar los datos del cliente, los montos, las gestiones y el seguimiento.</div>
+        <div class="banner warn" id="ckLock" hidden style="margin-top:12px">Esta entrevista ya está finalizada: las respuestas del checklist y la falla del asesor solo las puede cambiar la responsable. Se pueden editar los datos del cliente, los montos, los pagos posteriores y el seguimiento.</div>
         <label class="toggle" for="optHints"><input type="checkbox" id="optHints"> Mostrar la explicación debajo de cada paso</label>
       </section>
       ${secs}
@@ -1071,19 +1073,22 @@ function recalcG(g) {
   else { g.montoUsd = 0; g.cot = 0; }
 }
 function convTxt(g) { return g.moneda === 'USD' ? (g.cot ? `= ${fm(g.monto)}` : '<span style="color:var(--bad)">Sin cotización</span>') : ''; }
+const verPosteriores = () => S.editOrig?.estado === 'final' || S.gest.length > 0;
 function renderGest() {
   const lim = $('#f_fecha').value ? addMonths($('#f_fecha').value, S.editOrig?.plazoMeses ?? S.aj.plazoMeses) : '';
   const base = $('#f_fecha').value;
+  const ver = verPosteriores(); $('#gestBox').hidden = !ver; $('#gestTip').hidden = ver;
+  if (ver && lim) $('#gestNote').innerHTML = `Cuando el cliente paga algo después de la entrevista (por ejemplo, lo que prometió en el seguimiento), cargarlo acá con la fecha real del pago. Comisiona si paga hasta el <b>${fd(lim)}</b>. En un incremento, cargar cuánto subió la cuota.`;
   $('#gestList').innerHTML = S.gest.length ? S.gest.map(g => {
     const dentro = g.fecha && lim && g.fecha >= base && g.fecha <= lim;
     return `<div class="g-row" data-gid="${esc(g.id)}">
       <select id="g_${esc(g.id)}_tipo" aria-label="Tipo de gestión" data-k="tipo"><option value="incremento"${g.tipo !== 'ahorro' ? ' selected' : ''}>Incremento de cuota</option><option value="ahorro"${g.tipo === 'ahorro' ? ' selected' : ''}>Ahorro</option></select>
-      <input type="date" id="g_${esc(g.id)}_fecha" aria-label="Fecha de la gestión" data-k="fecha" max="${hoy()}" value="${esc(g.fecha || '')}">
+      <input type="date" id="g_${esc(g.id)}_fecha" aria-label="Fecha de la gestión" data-k="fecha" min="${esc(base)}" max="${hoy()}" value="${esc(g.fecha || '')}">
       <select id="g_${esc(g.id)}_moneda" aria-label="Moneda" data-k="moneda"><option value="ARS"${g.moneda !== 'USD' ? ' selected' : ''}>$</option><option value="USD"${g.moneda === 'USD' ? ' selected' : ''}>US$</option></select>
       <input type="text" class="money" inputmode="numeric" id="g_${esc(g.id)}_monto" aria-label="Monto" placeholder="Monto" data-k="monto" value="${esc(fmtIn(g.moneda === 'USD' ? g.montoUsd : g.monto))}">
       <input type="text" class="g-nota" id="g_${esc(g.id)}_nota" aria-label="Nota" placeholder="Nota (opcional)" data-k="nota" value="${esc(g.nota || '')}">
       <div class="row" style="gap:8px;flex-wrap:nowrap">${g.pacto ? `<span class="g-st" style="color:var(--accent)">Acordado ${fdc(g.fechaAcuerdo)}</span>` : ''}<span class="g-st" id="g_${esc(g.id)}_conv">${convTxt(g)}</span><span class="g-st ${g.fecha ? (dentro ? 'in' : 'out') : ''}" id="g_${esc(g.id)}_st">${g.fecha ? (dentro ? 'En plazo' : 'Fuera de plazo') : ''}</span><button class="btn btn-sm" type="button" data-del="${esc(g.id)}">Quitar</button></div>
-    </div>`; }).join('') : `<p class="note">Sin gestiones posteriores.</p>`;
+    </div>`; }).join('') : `<p class="note">Todavía no se cargaron pagos posteriores.</p>`;
 }
 
 function actualizarForm() {
@@ -1110,7 +1115,7 @@ function actualizarForm() {
   $('#calcBox').innerHTML = `
     <div><small>Incremento de cuota</small><b>${fm(inc)}</b><small>${d.cuotaAsesor ? (d.cuotaMoneda === 'USD' ? `${fu(d.cuotaAsesorUsd)} → ${fu(d.cuotaFinalUsd || d.cuotaAsesorUsd)}` : `${fm(d.cuotaAsesor)} → ${fm(d.cuotaFinal || d.cuotaAsesor)}`) : 'Cargar las cuotas'}</small></div>
     <div><small>Ahorro en la entrevista</small><b>${fm(d.ahorro)}</b><small>Aporte por única vez</small></div>
-    <div><small>Gestiones posteriores</small><b>${fm(postOk)}</b><small>${post.length ? `${post.filter(i => i.dentro).length} de ${post.length} en plazo` : 'Ninguna'}</small></div>
+    ${verPosteriores() ? `<div><small>Pagos posteriores</small><b>${fm(postOk)}</b><small>${post.length ? `${post.filter(i => i.dentro).length} de ${post.length} en plazo` : 'Ninguno todavía'}</small></div>` : ''}
     <div class="hl"><small>Comisión estimada (${c.pct}%)</small><b>${fm(c.total)}</b><small>${c.topeAlcanzado ? `Llegó al tope de ${fm(c.tope)}` : c.tope ? `Tope por cliente: ${fm(c.tope)}` : 'Sujeta a revisión'}</small></div>`;
   $('#montosSub').textContent = `El asesor OB comisiona el ${c.pct}% de lo que aumenta la cuota pactada por el asesor y del ahorro que deja el cliente, dentro de ${(S.editOrig?.plazoMeses ?? S.aj.plazoMeses) === 1 ? 'un mes' : (S.editOrig?.plazoMeses ?? S.aj.plazoMeses) + ' meses'} desde la entrevista${c.tope ? `, con un máximo de ${fm(c.tope)} por cliente` : ''}.`;
   if (c.limite) { const q = diffDays(hoy(), c.limite); $('#plazoTxt').innerHTML = q >= 0 ? `Plazo para sumar incremento o ahorro: hasta el <b>${fd(c.limite)}</b> · quedan ${q} ${q === 1 ? 'día' : 'días'}.` : `El plazo para sumar incremento o ahorro venció el <b>${fd(c.limite)}</b>.`; } else $('#plazoTxt').textContent = '';
@@ -1504,7 +1509,7 @@ function renderDetalle() {
         <div class="row"><button class="btn btn-primary btn-sm" id="drRev" type="button">Guardar revisión</button>${e.revision?.fecha ? `<span class="note">Última revisión: ${fd(e.revision.fecha.slice(0, 10))}</span>` : ''}</div>`
       : `<div>${chip(rv)}</div>${e.revision?.nota ? `<p class="pre">${esc(e.revision.nota)}</p>` : `<p class="note">${rv === 'pendiente' ? 'La responsable todavía no la revisó.' : 'Sin nota.'}</p>`}`}
     </section>` : ''}
-    ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o sumar gestión' : 'Continuar borrador'}</button>${esResp() || e.estado !== 'final' ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar${e.estado !== 'final' ? ' borrador' : ''}</button>` : ''}</div>
+    ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o cargar un pago' : 'Continuar borrador'}</button>${esResp() || e.estado !== 'final' ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar${e.estado !== 'final' ? ' borrador' : ''}</button>` : ''}</div>
     <div class="confirm" id="drConfirm" hidden><span>¿Eliminar esta entrevista? No se puede deshacer.</span><button class="btn btn-sm btn-danger" id="drDelYes" type="button">Sí, eliminar</button><button class="btn btn-sm" id="drDelNo" type="button">Cancelar</button></div>` : ''}
     <p class="note">Cargada el ${fd((e.creado || '').slice(0, 10))}${e.actualizado && e.actualizado !== e.creado ? ` · última modificación ${fd(e.actualizado.slice(0, 10))}` : ''}.</p>
   </div>`;
