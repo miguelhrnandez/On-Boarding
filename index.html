@@ -552,6 +552,82 @@ tr.ref td .chip{font-style:normal}
 .helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .helppop[hidden]{display:none}
 .nw{white-space:nowrap}
+/* Tutorial del semáforo */
+.tuto{width:min(520px,calc(100% - 32px));max-height:min(88vh,760px);gap:14px}
+.tuto-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tuto-step{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:650}
+.tuto h2{font-size:21px}
+.tuto-body{display:flex;flex-direction:column;gap:12px;font-size:14.5px;line-height:1.5}
+.tuto-body p{margin:0}
+.tuto-col{display:flex;flex-direction:column;gap:8px}
+.tuto-col>div{display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:10px 12px}
+.tuto-col .c-verde{background:var(--ok-soft)}.tuto-col .c-amarillo{background:var(--warn-soft)}.tuto-col .c-rojo{background:var(--bad-soft)}
+.tuto-col i{width:18px;height:18px;border-radius:50%;flex:none;margin-top:2px}
+.tuto-col b{display:block}
+.tuto-col small{color:var(--muted);font-size:13px;display:block}
+.tuto-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tuto-tbl td{padding:6px 0;border-top:1px solid var(--line)}
+.tuto-tbl td:last-child{text-align:right;font-family:var(--f-mono);white-space:nowrap;padding-left:10px}
+.tuto-tbl tr:first-child td{border-top:0}
+.tuto-ej{background:var(--sunk);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tuto-ej ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.tuto-ej .res{font-weight:700}
+.tuto-dots{display:flex;gap:6px;justify-content:center}
+.tuto-dots span{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.tuto-dots span.on{background:var(--accent);width:22px;border-radius:4px}
+.tuto-nav{display:flex;justify-content:space-between;gap:8px}
+.tuto-nav .btn{min-height:44px;flex:1}
+.tuto-nav .btn:only-child{flex:1}
+/* Semáforo del cliente */
+.sem{display:flex;flex-direction:column;gap:12px}
+.sem-g{display:flex;flex-direction:column;align-items:center;color:var(--ink)}
+.sem-g svg{width:min(280px,100%);height:auto}
+.sem-pct{font:800 34px/1.1 var(--f-display);margin-top:-4px}
+.sem-lbl{font:800 18px/1.25 var(--f-display);text-align:center}
+.sem-verde .sem-pct{color:var(--ok)}.sem-amarillo .sem-pct{color:var(--warn)}.sem-rojo .sem-pct{color:var(--bad)}
+.sem-gd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sem-gd>div{border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.sem-gd small{font-size:12.5px;font-weight:650}
+.sem-gd b{font:600 20px var(--f-mono)}
+.sem-gd .g{background:var(--ok-soft);color:var(--ok)}.sem-gd .d{background:var(--bad-soft);color:var(--bad)}
+.sem-falta{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.sem-falta ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.sem-x{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4}
+.sem-x svg{flex:none;margin-top:1px;color:var(--bad)}
+.sem-x .p{font:600 13px var(--f-mono);color:var(--bad);margin-left:auto;white-space:nowrap;padding-left:6px}
+.sem-tip{border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.45}
+.sem-tip b{font-size:13px}
+.sem-verde .sem-tip{background:var(--ok-soft)}.sem-amarillo .sem-tip{background:var(--warn-soft)}.sem-rojo .sem-tip{background:var(--bad-soft)}
+.sem-alerta,.sem-force{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.45;margin:0}
+.sem-alerta{display:flex;gap:8px;align-items:flex-start}
+.sem-empty{font-size:14px;color:var(--muted);background:var(--sunk);border-radius:10px;padding:12px}
+.sem-hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.sem-hist li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.sem-hist li>span{display:flex;flex-direction:column}
+.sem-hist small{color:var(--muted);font-size:13px}
+.sem-hist i,.sem-leg i{width:12px;height:12px;border-radius:50%;flex:none;display:inline-block;margin-top:4px}
+.sem-hist li.proy i{background:none!important;border:2px dashed var(--muted)}
+.d-verde{background:#1B7A4A}.d-amarillo{background:#F2B705}.d-rojo{background:#C9404A}
+.sem-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--sunk)}
+.sem-bar span{display:block}
+.sem-bar .b-verde{background:#1B7A4A}.sem-bar .b-amarillo{background:#F2B705}.sem-bar .b-rojo{background:#C9404A}
+.sem-leg{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:13.5px;margin-top:8px}
+.sem-leg span{display:flex;gap:6px;align-items:center}
+.sem-leg i{margin-top:0}
+.sem-asesores{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.sem-asesores .sa-h{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px;flex-wrap:wrap}
+.sem-asesores .sa-h span{color:var(--muted)}
+.sem-asesores .sem-bar{height:10px}
+.sem-top{background:var(--sunk);border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.45;margin:12px 0 0}
+.perfil-q{display:flex;flex-direction:column;gap:10px}
+.perfil-q .q-row{padding-top:10px;border-top:1px solid var(--line)}
+.dr-head{flex-wrap:wrap}
+.dr-head>div:first-child{flex:1 1 0}
+.dr-tabs{flex:0 0 auto;width:calc(100% + 40px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:2px -20px -16px;border-top:1px solid var(--line)}
+@media (max-width:560px){.perfil-q .q-row{flex-direction:column;align-items:stretch;gap:8px}.perfil-q .seg{grid-auto-columns:1fr}}
+.dr-tabs button{appearance:none;background:none;border:0;border-bottom:3px solid transparent;height:46px;font:600 14.5px var(--f-body);color:var(--muted);cursor:pointer}
+.dr-tabs button[aria-selected="true"]{border-bottom-color:var(--accent);color:var(--accent);font-weight:700}
+.ar-ask{font-size:13px;font-weight:650;align-self:center}
 .st-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .st-wrap small{color:var(--muted);font-size:12px;max-width:220px}
 .prev{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -656,6 +732,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span><span class="emo" aria-hidden="true">💰</span> Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
     <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
+    <li><button class="tab" type="button" data-tuto="1"><span><span class="emo" aria-hidden="true">🚦</span> Cómo funciona el semáforo</span><small>Tutorial de 4 pasos</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="inicio" id="t-inicio" type="button" hidden></button></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
@@ -685,6 +762,7 @@ tr.ref td .chip{font-style:normal}
       <div class="field"><label for="fe_est">Estado</label><select id="fe_est">
         <option value="">Todos</option><option value="ok">Sin errores</option><option value="falla">Con falla</option><option value="borrador">Borradores</option><option value="pendiente">Por revisar</option><option value="aprobada">Aprobadas</option><option value="observada">Observadas</option>
       </select></div>
+      <div class="field"><label for="fe_sem">Semáforo</label><select id="fe_sem"><option value="">Todos</option><option value="verde">🟢 Verde</option><option value="amarillo">🟡 Amarillo</option><option value="rojo">🔴 Rojo</option></select></div>
     </div>
     <div id="ent-out"></div>
   </section>
@@ -729,6 +807,8 @@ tr.ref td .chip{font-style:normal}
 
 <div class="scrim" id="scrim" hidden></div>
 <div class="scrim" id="pickScrim" hidden></div>
+<div class="scrim" id="tutoScrim" hidden></div>
+<div class="picker tuto" id="tuto" hidden role="dialog" aria-modal="true" aria-labelledby="tutoTitle"></div>
 <div class="picker" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pickTitle">
   <div><h2 id="pickTitle">👋 ¿Qué asesor OB eres?</h2><p>Se cargan tus entrevistas, tus datos y tus comisiones.</p></div>
   <div class="pick-list" id="pickList"></div>
@@ -796,7 +876,7 @@ const SECCIONES = [
 const ITEMS = SECCIONES.flatMap((s,si) => s.items.map(([id,t]) => ({id, t, s:s.id, sn:si+1})));
 const ITEM = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 const FALLA_TIPOS = ['Promesa incorrecta','Datos incompletos','Condiciones mal informadas','Error en monto o cuota','Otro'];
-const DEF_AJ = {pct:20, minimo:150000, plazoMeses:1, tope:1000000, metaEnt:0, metaMonto:0, equipo:[], asesores:[], sucursales:['Liniers']};
+const DEF_AJ = {pct:20, minimo:150000, plazoMeses:1, tope:1000000, metaEnt:0, metaMonto:0, equipo:[], asesores:[], sucursales:['Liniers'], semEsc:[200000, 500000, 1000000]};
 
 /* ---------- Utilidades ---------- */
 const $ = (s, r=document) => r.querySelector(s);
@@ -1015,6 +1095,37 @@ function construirForm() {
         </div>
         <div class="field" style="margin-top:14px"><label for="f_obs">Observaciones</label><textarea id="f_obs"></textarea></div>
       </section>
+      <section class="card" id="sec-perfil">
+        <div class="card-h"><h2><span class="secnum">8</span>Cómo quedó el cliente</h2><p>Responde sobre el cliente, no sobre ti: esta sección no cuenta como error de tu checklist.</p></div>
+        <div class="perfil-q">
+        <div class="q-row"><span id="lbl_p_part">¿Participó durante la entrevista?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_p_part">
+            <input type="radio" name="p_part" id="p_part_si" value="si"><label class="si" for="p_part_si">Sí</label>
+            <input type="radio" name="p_part" id="p_part_poco" value="poco"><label class="pe" for="p_part_poco">Poco</label>
+            <input type="radio" name="p_part" id="p_part_no" value="no"><label class="no" for="p_part_no">No</label>
+          </div></div>
+        <div class="q-row"><span id="lbl_p_interes">¿Se mostró interesado en conocer la empresa?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_p_interes">
+            <input type="radio" name="p_interes" id="p_interes_si" value="si"><label class="si" for="p_interes_si">Sí</label>
+            <input type="radio" name="p_interes" id="p_interes_poco" value="poco"><label class="pe" for="p_interes_poco">Poco</label>
+            <input type="radio" name="p_interes" id="p_interes_no" value="no"><label class="no" for="p_interes_no">No</label>
+          </div></div>
+        <div class="q-row"><span id="lbl_p_doc">¿Trajo toda la documentación?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_p_doc">
+            <input type="radio" name="p_doc" id="p_doc_si" value="si"><label class="si" for="p_doc_si">Sí</label>
+            <input type="radio" name="p_doc" id="p_doc_no" value="no"><label class="no" for="p_doc_no">No</label>
+          </div></div>
+        <div class="q-row"><span id="lbl_p_depto">¿Fue al departamento modelo?</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl_p_depto">
+            <input type="radio" name="p_depto" id="p_depto_si" value="si"><label class="si" for="p_depto_si">Sí</label>
+            <input type="radio" name="p_depto" id="p_depto_no" value="no"><label class="no" for="p_depto_no">No</label>
+          </div></div>
+        </div>
+      </section>
+      <section class="card" id="sec-sem">
+        <div class="card-h"><h2><span class="emo" aria-hidden="true">🚦</span> Semáforo del cliente${qm('semaforo')}</h2><span class="chip chip-muted"><i></i>Se calcula solo</span></div>
+        <div id="semBox"></div>
+      </section>
     </div>
     <aside class="form-side">
       <div class="side-card">
@@ -1028,7 +1139,7 @@ function construirForm() {
       </div>
     </aside>
   </div>`;
-  $('#sideSecs').innerHTML = SECCIONES.map((s, si) => `<li><button type="button" data-go="sec-${s.id}"><span>${si+1}. ${esc(s.titulo)}</span><span class="count" id="sc_${s.id}">0/${s.items.length}</span></button></li>`).join('');
+  $('#sideSecs').innerHTML = SECCIONES.map((s, si) => `<li><button type="button" data-go="sec-${s.id}"><span>${si+1}. ${esc(s.titulo)}</span><span class="count" id="sc_${s.id}">0/${s.items.length}</span></button></li>`).join('') + `<li><button type="button" data-go="sec-perfil"><span>8. Cómo quedó el cliente</span><span class="count" id="sc_perfil">0/4</span></button></li>`;
 }
 
 function cuotasDeForm() {
@@ -1087,6 +1198,7 @@ function leerForm() {
     seguimientoAcuerdo: $('#f_segAcuerdo').value,
     seguimientoTipo: $('input[name="f_segTipo"]:checked')?.value || '', ...segMontoDeForm(),
     observaciones: $('#f_obs').value.trim(),
+    perfil: {part: $('input[name="p_part"]:checked')?.value || '', interes: $('input[name="p_interes"]:checked')?.value || '', doc: $('input[name="p_doc"]:checked')?.value || '', depto: $('input[name="p_depto"]:checked')?.value || ''},
   };
 }
 
@@ -1104,6 +1216,7 @@ function cargarForm(d) {
   $('#f_segDet').value = d.seguimientoDetalle || ''; $('#f_segFecha').value = d.seguimientoFecha || '';
   $$('input[name="f_segTipo"]').forEach(r => { r.checked = d.seguimientoTipo === r.value; }); $$('input[name="f_segMon"]').forEach(r => { r.checked = r.value === (d.seguimientoMoneda === 'USD' ? 'USD' : 'ARS'); }); $('#f_segMonto').value = fmtIn(d.seguimientoMoneda === 'USD' ? d.seguimientoMontoUsd : d.seguimientoMoneda === 'MIX' ? d.seguimientoArs : d.seguimientoMonto); ponerMix('seg', 'f_segMonto', d.seguimientoMoneda === 'MIX' ? d.seguimientoMontoUsd : 0); $('#f_segAcuerdo').value = d.seguimientoAcuerdo || '';
   $('#f_obs').value = d.observaciones || '';
+  for (const k of ['part', 'interes', 'doc', 'depto']) $$(`input[name="p_${k}"]`).forEach(r => { r.checked = d.perfil?.[k] === r.value; });
   mostrarErrores([]);
   renderGest(); actualizarForm();
   S.formBase = firmaForm();
@@ -1211,7 +1324,9 @@ function actualizarForm() {
   const editFinal = S.editOrig?.estado === 'final';
   const lockCk = editFinal && !esResp();
   $('#ckLock').hidden = !lockCk; document.body.classList.toggle('ck-lock', lockCk);
-  for (const el of $$('.ck-list input, #sec-asesor input, #sec-asesor textarea')) el.disabled = lockCk;
+  for (const el of $$('.ck-list input, #sec-asesor input, #sec-asesor textarea, #sec-perfil input')) el.disabled = lockCk;
+  { const base = {...(S.editOrig || {}), ...d, semEsc: S.editOrig?.semEsc, pct: S.editOrig?.pct, plazoMeses: S.editOrig?.plazoMeses, tope: S.editOrig?.tope}; const sm = semaforo(base); $('#sc_perfil').textContent = `${['part', 'interes', 'doc', 'depto'].filter(k => d.perfil?.[k]).length}/4`;
+    $('#semBox').innerHTML = sm ? semaforoHtml(sm) : `<p class="sem-empty">Cuando respondas las 4 preguntas de «Cómo quedó el cliente», acá aparece el semáforo con su porcentaje y lo que le faltó.</p>`; }
   $('#btnDraft').hidden = editFinal; $('#btnDraft2').hidden = editFinal;
   $('#btnFinal').textContent = editFinal ? 'Guardar cambios' : 'Finalizar entrevista';
   $('#btnFinal2').textContent = editFinal ? 'Guardar' : 'Finalizar';
@@ -1245,6 +1360,7 @@ function validar(d, final) {
     if (!d.fallaAsesor) err.push(['sec-asesor', 'Indicar si hubo una falla del asesor.']);
     if (d.fallaAsesor === 'si' && !d.fallaDetalle) err.push(['f_fallaDet', 'Describir la falla del asesor.']);
     if (!d.seguimiento) err.push(['sec-seg', 'Indicar si queda algo para seguimiento.']);
+    if (!perfilOk(d.perfil) && (S.editOrig?.estado !== 'final' || esResp() && Object.values(d.perfil || {}).some(Boolean))) err.push(['sec-perfil', 'Responder las 4 preguntas de «Cómo quedó el cliente» (sección 8).']);
     if (d.seguimiento === 'si' && !d.seguimientoTipo) err.push(['f_segTipo_ahorro', 'Indicar qué se pactó para el seguimiento.']);
     if (d.seguimiento === 'si' && ['ahorro', 'incremento'].includes(d.seguimientoTipo) && !d.seguimientoMonto) err.push(['f_segMonto', 'Falta el monto pactado.']);
     if (d.seguimiento === 'si' && !d.seguimientoDetalle) err.push(['f_segDet', 'Describir qué queda pendiente.']);
@@ -1304,6 +1420,7 @@ async function guardar(final) {
   if ((final || yaFinal) && !d.cuotaFinal) { d.cuotaFinal = d.cuotaAsesor; if (d.cuotaMoneda !== 'ARS') d.cuotaFinalUsd = d.cuotaAsesorUsd; if (d.cuotaMoneda === 'MIX') d.cuotaFinalArs = d.cuotaAsesorArs; }
   const rec = {...d,
     estado: (final || yaFinal) ? 'final' : 'borrador', mes: d.fecha.slice(0, 7),
+    semEsc: prev?.semEsc ?? clone(S.aj.semEsc || DEF_AJ.semEsc),
     pct: prev?.pct ?? S.aj.pct, plazoMeses: prev?.plazoMeses ?? S.aj.plazoMeses, tope: prev?.tope ?? S.aj.tope ?? DEF_AJ.tope,
     creado: prev?.creado || now, creadoPor: prev?.creadoPor ?? S.uid ?? null,
     actualizado: now, actualizadoPor: S.uid ?? null,
@@ -1319,7 +1436,9 @@ async function guardar(final) {
       if (firmaPago(o) === firmaPago(g)) return o.rev ? {...base, rev: o.rev} : base;
       return {...base, rev: {estado: 'pendiente', nota: o.rev && o.rev.estado !== 'pendiente' ? 'Pago modificado después de la revisión.' : (o.rev?.nota || ''), fecha: now, por: S.uid ?? null}}; }); }
   if (yaFinal && !esResp() && prev) { rec.checklist = clone(prev.checklist || {}); rec.fallaAsesor = prev.fallaAsesor || ''; rec.fallaTipos = clone(prev.fallaTipos || []); rec.fallaDetalle = prev.fallaDetalle || ''; }
-  if (S.resolverAlGuardar && S.resolverAlGuardar === S.editId && d.gestiones.some(g => (S.resolverGids || []).includes(g.id) && g.monto > 0)) { rec.seguimientoResuelto = true; rec.seguimientoResueltoFecha = hoy(); }
+  const resueltoAhora = !!(S.resolverAlGuardar && S.resolverAlGuardar === S.editId && d.gestiones.some(g => (S.resolverGids || []).includes(g.id) && g.monto > 0));
+  if (resueltoAhora) { rec.seguimientoResuelto = true; rec.seguimientoResueltoFecha = hoy(); }
+  rec.seguimientoCumplio = rec.seguimientoResuelto ? (resueltoAhora ? true : (prev?.seguimientoCumplio ?? null)) : null;
   rec.seguimientoResueltoFecha = rec.seguimientoResuelto ? (rec.seguimientoResueltoFecha || prev?.seguimientoResueltoFecha || hoy()) : null;
   S.saving = true; actualizarForm();
   try {
@@ -1344,7 +1463,7 @@ async function guardar(final) {
 let tDraft = 0;
 function guardarBorradorLocal() {}
 function programarBorrador() {}
-const firmaForm = () => { try { const d = leerForm(); return JSON.stringify([d.cliente, d.dni, d.telefono, d.contrato, d.asesor, d.cuotaAsesorUsd || d.cuotaAsesor, d.cuotaAsesorArs || 0, d.cuotaFinalArs || 0, d.cuotaFinalUsd || d.cuotaFinal, d.ahorroUsd || d.ahorro, d.ahorroArs || 0, d.seguimientoArs || 0, d.checklist, d.fallaAsesor, d.fallaTipos, d.fallaDetalle, d.seguimiento, d.seguimientoTipo, d.seguimientoMontoUsd || d.seguimientoMonto, d.seguimientoFecha, d.seguimientoDetalle, d.observaciones, (d.gestiones || []).map(g => [g.tipo, g.fecha, g.monto, g.montoUsd, g.nota])]); } catch { return ''; } };
+const firmaForm = () => { try { const d = leerForm(); return JSON.stringify([d.perfil, d.cliente, d.dni, d.telefono, d.contrato, d.asesor, d.cuotaAsesorUsd || d.cuotaAsesor, d.cuotaAsesorArs || 0, d.cuotaFinalArs || 0, d.cuotaFinalUsd || d.cuotaFinal, d.ahorroUsd || d.ahorro, d.ahorroArs || 0, d.seguimientoArs || 0, d.checklist, d.fallaAsesor, d.fallaTipos, d.fallaDetalle, d.seguimiento, d.seguimientoTipo, d.seguimientoMontoUsd || d.seguimientoMonto, d.seguimientoFecha, d.seguimientoDetalle, d.observaciones, (d.gestiones || []).map(g => [g.tipo, g.fecha, g.monto, g.montoUsd, g.nota])]); } catch { return ''; } };
 
 function editar(e) {
   S.editId = e.id; S.editOrig = clone(e);
@@ -1486,6 +1605,7 @@ function renderEntrevistas() {
     if (e.estado !== 'final' && f.est !== 'borrador') return false;
     if (f.esp && norm(e.especialista) !== norm(f.esp)) return false;
     if (f.per && !(e.fecha || '').startsWith(f.per)) return false;
+    if (f.sem && (e.estado !== 'final' || semaforo(e)?.color !== f.sem)) return false;
     if (f.est) {
       if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final') return false; if (revEst(e) !== f.est && !(f.est !== 'aprobada' && pagosEstado(e, f.est).length)) return false; }
       else if (estList(e) !== f.est) return false;
@@ -1502,7 +1622,7 @@ function renderEntrevistas() {
       <span class="e-date">${fdc(e.fecha)}</span>
       <span class="e-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${e.dni ? 'DNI ' + esc(e.dni) + ' · ' : ''}Asesor: ${esc(e.asesor || '—')}</small></span>
       <span class="e-esp"><b style="font-weight:500">${esc(e.especialista || '—')}</b><small>${esc(e.sucursal || '')}</small></span>
-      <span class="e-chips chips">${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${pagosPend(e).length ? chip('pendiente', pagosPend(e).length === 1 ? 'Pago por aprobar' : `${pagosPend(e).length} pagos por aprobar`) : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
+      <span class="e-chips chips">${e.estado === 'final' ? semChip(semaforo(e)) : ''}${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${pagosPend(e).length ? chip('pendiente', pagosPend(e).length === 1 ? 'Pago por aprobar' : `${pagosPend(e).length} pagos por aprobar`) : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
       <span class="e-money"><b>${fm(c.total)}</b><small>${c.items.length ? `sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'sin incremento'}</small></span>
     </button>`; }).join('')}</div>`;
 }
@@ -1512,14 +1632,14 @@ function vacioSinDb() {
 
 /* ---------- Detalle ---------- */
 function abrirDetalle(id, fallback, verCalculo) {
-  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; cerrarAyuda();
+  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; S.drTab = 'datos'; S.drAsk = null; cerrarAyuda();
   renderDetalle();
   $('#drawer').hidden = false; $('#scrim').hidden = false;
   document.body.style.overflow = 'hidden';
   setTimeout(() => $('#drClose')?.focus(), 30);
 }
 function cerrarDetalle() {
-  S.obsPago = null; S.detalle = null; S.detalleFallback = null;
+  S.drAsk = null; S.obsPago = null; S.detalle = null; S.detalleFallback = null;
   $('#drawer').hidden = true; $('#scrim').hidden = true; $('#drawer').innerHTML = '';
   document.body.style.overflow = '';
 }
@@ -1548,10 +1668,12 @@ function renderDetalle() {
   $('#drawer').innerHTML = `
   <div class="dr-head">
     <div style="min-width:0"><span class="eyebrow">Entrevista del ${fd(e.fecha)}${e.estado !== 'final' ? ' · borrador' : ''}</span><h2>${esc(e.cliente || 'Sin nombre')}</h2>
-      <div class="chips">${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv, rv === 'aprobada' ? 'Entrevista aprobada' : null) : ''}${pagosPend(e).length ? chip('pendiente', 'Pago por aprobar') : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.seguimiento === 'si' && !e.seguimientoResuelto ? chip('pendiente', 'Seguimiento pendiente') : ''}</div></div>
+      <div class="chips">${semChip(semaforo(e))}${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv, rv === 'aprobada' ? 'Entrevista aprobada' : null) : ''}${pagosPend(e).length ? chip('pendiente', 'Pago por aprobar') : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.seguimiento === 'si' && !e.seguimientoResuelto ? chip('pendiente', 'Seguimiento pendiente') : ''}</div></div>
     <button class="btn btn-sm" id="drClose" type="button">Cerrar</button>
+    <div class="dr-tabs" role="tablist" aria-label="Secciones de la entrevista"><button type="button" role="tab" data-drtab="datos" aria-selected="${S.drTab !== 'sem'}">Checklist y datos</button><button type="button" role="tab" data-drtab="sem" aria-selected="${S.drTab === 'sem'}">🚦 Semáforo</button></div>
   </div>
   <div class="dr-body">
+    ${S.drTab === 'sem' ? semPane(e) : ''}<div class="view"${S.drTab === 'sem' ? ' hidden' : ''} style="gap:14px">
     <section class="dcard"><dl class="kv">
       <div><dt>Asesor OB</dt><dd>${esc(e.especialista || '—')}</dd></div>
       <div><dt>Asesor de ventas</dt><dd>${esc(e.asesor || '—')}</dd></div>
@@ -1580,7 +1702,7 @@ function renderDetalle() {
     </section>
     <section class="dcard"><h3><span class="emo" aria-hidden="true">📌</span> Seguimiento</h3>
       ${e.seguimiento === 'si' ? `${e.seguimientoTipo && e.seguimientoTipo !== 'otro' ? `<div class="av-m"><span class="chip chip-acc"><i></i>${e.seguimientoTipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado'}</span><b>${segMontoTxt(e)}</b></div>` : ''}<p class="pre">${esc(e.seguimientoDetalle || '')}</p><p class="note">${e.seguimientoFecha ? 'Retomar el ' + fd(e.seguimientoFecha) + '. ' : ''}${e.seguimientoResuelto ? 'Resuelto' + (e.seguimientoResueltoFecha ? ' el ' + fd(e.seguimientoResueltoFecha) : '') + '.' : ''}</p>
-        ${puedeEsc && S.E.some(x => x.id === e.id) ? (e.seguimientoResuelto ? `<div class="row">${chip('aprobada', 'Resuelto')}<button class="btn btn-sm" id="drReabrir" type="button">Volver a pendiente</button></div>` : `<div><button class="btn btn-sm" id="drResolver" type="button">Marcar seguimiento como resuelto</button></div>`) : ''}` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
+        ${puedeEsc && S.E.some(x => x.id === e.id) ? (e.seguimientoResuelto ? `<div class="row">${e.seguimientoCumplio === false ? chip('falla', 'No cumplió lo pactado') : chip('aprobada', 'Resuelto')}<button class="btn btn-sm" id="drReabrir" type="button">Volver a pendiente</button></div>` : S.drAsk === e.id ? `<div class="prev"><span class="ar-ask">¿El cliente cumplió lo pactado?</span><button class="btn btn-sm btn-primary" id="drCumpSi" type="button">Sí, cargar el pago</button><button class="btn btn-sm" id="drCumpNo" type="button">No cumplió</button><button class="btn btn-sm" id="drCumpCancel" type="button">Cancelar</button></div>` : `<div><button class="btn btn-sm" id="drResolver" type="button">Marcar seguimiento como resuelto</button></div>`) : ''}` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
     ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
     ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la entrevista</h3>${(e.gestiones || []).some(g => (g.monto || 0) > 0) ? '<p class="note">Cubre el checklist y lo logrado el día de la entrevista. Los pagos posteriores se aprueban uno por uno en la tabla de montos.</p>' : ''}
@@ -1596,7 +1718,7 @@ function renderDetalle() {
     ${puedeEsc && S.E.some(x => x.id === e.id) ? `<div class="dr-actions"><button class="btn btn-primary" id="drEdit" type="button">${e.estado === 'final' ? 'Editar o cargar un pago' : 'Continuar borrador'}</button>${esResp() || e.estado !== 'final' ? `<button class="btn btn-danger" id="drDel" type="button">Eliminar${e.estado !== 'final' ? ' borrador' : ''}</button>` : ''}</div>
     <div class="confirm" id="drConfirm" hidden><span>¿Eliminar esta entrevista? No se puede deshacer.</span><button class="btn btn-sm btn-danger" id="drDelYes" type="button">Sí, eliminar</button><button class="btn btn-sm" id="drDelNo" type="button">Cancelar</button></div>` : ''}
     <p class="note">Cargada el ${fd((e.creado || '').slice(0, 10))}${e.actualizado && e.actualizado !== e.creado ? ` · última modificación ${fd(e.actualizado.slice(0, 10))}` : ''}.</p>
-  </div>`;
+  </div></div>`;
   etiquetar($('#drawer'));
 }
 function bindDetalle() {
@@ -1604,6 +1726,7 @@ function bindDetalle() {
   $('#drawer').addEventListener('toggle', ev => { if (ev.target.classList?.contains('how')) S.howOpen = ev.target.open; }, true);
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#drawer').hidden) cerrarDetalle(); });
   $('#drawer').addEventListener('click', async ev => {
+    const dt = ev.target.closest('[data-drtab]'); if (dt) { S.drTab = dt.dataset.drtab; renderDetalle(); $('#drawer').scrollTop = 0; return; }
     const po = ev.target.closest('[data-pagoobs]'); if (po) { S.obsPago = po.dataset.pagoobs; renderDetalle(); setTimeout(() => document.getElementById('pn_' + S.obsPago)?.focus(), 30); return; }
     if (ev.target.closest('[data-pagocancel]')) { S.obsPago = null; renderDetalle(); return; }
     const pr = ev.target.closest('[data-pagorev]'); if (pr) {
@@ -1627,7 +1750,11 @@ function bindDetalle() {
     if (id === 'drDelNo') { $('#drConfirm').hidden = true; return; }
     try {
       if (id === 'drDelYes') { await conReintento(() => ref.delete()); cerrarDetalle(); toast('Entrevista eliminada.'); if (S.editId === e.id) vaciarForm(); return; }
-      if (id === 'drReabrir') { await conReintento(() => ref.update({seguimientoResuelto: false, seguimientoResueltoFecha: null})); toast('El seguimiento volvió a Avisos.'); return; }
+      if (id === 'drReabrir') { await conReintento(() => ref.update({seguimientoResuelto: false, seguimientoResueltoFecha: null, seguimientoCumplio: null})); toast('El seguimiento volvió a Avisos.'); return; }
+      if (id === 'drResolver' && segConMonto(e)) { S.drAsk = e.id; renderDetalle(); return; }
+      if (id === 'drCumpCancel') { S.drAsk = null; renderDetalle(); return; }
+      if (id === 'drCumpSi') { S.drAsk = null; cumplirAviso(e.id); return; }
+      if (id === 'drCumpNo') { S.drAsk = null; await conReintento(() => ref.update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy(), seguimientoCumplio: false})); toast('Seguimiento cerrado como no cumplido. El semáforo del cliente bajó.'); return; }
       if (id === 'drResolver') { await conReintento(() => ref.update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy()})); toast('Seguimiento resuelto.'); return; }
       if (id === 'drRev') {
         const estado = $('input[name="rv"]:checked')?.value || 'pendiente';
@@ -1704,8 +1831,8 @@ async function exportarCsv() {
   const rows = filasComision(mes, esp);
   const ST = {pendiente: 'Por revisar', aprobada: 'Aprobada', observada: 'Observada', fuera: 'Fuera de plazo', borrador: 'Borrador', pago_pendiente: 'Pactado, falta el pago'};
   const q = v => { const s = String(v ?? ''); return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
-  const lines = [['Asesor OB','Sucursal','Fecha acuerdo','Fecha pago','Cliente','DNI','Asesor','Concepto','Monto (pesos)','Moneda','Monto en dólares','Cotización dólar Spazios','Porcentaje','Comisión','Estado','Fecha entrevista','Vence plazo'].join(';')];
-  for (const r of rows) lines.push([r.e.especialista, r.e.sucursal, fd(r.it.acuerdo || r.it.fecha), r.it.pendiente ? '' : fd(r.it.fecha), r.e.cliente, r.e.dni, r.e.asesor, r.it.concepto, r.it.monto, r.it.moneda === 'MIX' ? `Pesos (${r.it.ars}) y dólares` : r.it.moneda === 'USD' ? 'Dólares' : 'Pesos', r.it.moneda !== 'ARS' && r.it.usd ? r.it.usd : '', r.it.moneda !== 'ARS' && r.it.usd ? COT.format(r.it.cot || 0) : '', r.pct + '%', r.it.comision, ST[r.st] || r.st, fd(r.e.fecha), fd(r.lim)].map(q).join(';'));
+  const lines = [['Asesor OB','Sucursal','Fecha acuerdo','Fecha pago','Cliente','DNI','Asesor','Concepto','Monto (pesos)','Moneda','Monto en dólares','Cotización dólar Spazios','Porcentaje','Comisión','Estado','Fecha entrevista','Vence plazo','Semáforo','Semáforo %'].join(';')];
+  for (const r of rows) lines.push([r.e.especialista, r.e.sucursal, fd(r.it.acuerdo || r.it.fecha), r.it.pendiente ? '' : fd(r.it.fecha), r.e.cliente, r.e.dni, r.e.asesor, r.it.concepto, r.it.monto, r.it.moneda === 'MIX' ? `Pesos (${r.it.ars}) y dólares` : r.it.moneda === 'USD' ? 'Dólares' : 'Pesos', r.it.moneda !== 'ARS' && r.it.usd ? r.it.usd : '', r.it.moneda !== 'ARS' && r.it.usd ? COT.format(r.it.cot || 0) : '', r.pct + '%', r.it.comision, ST[r.st] || r.st, fd(r.e.fecha), fd(r.lim), (() => { const sm = semaforo(r.e); return sm ? SEM_COL[sm.color][1] : ''; })(), semaforo(r.e)?.pct ?? ''].map(q).join(';'));
   try { await S.dl.save({filename: `comisiones-onboarding-${mes}${esp ? '-' + norm(esp).replace(/[^a-z0-9ñáéíóú]+/g, '-') : ''}.csv`, data: '﻿' + lines.join('\r\n')}); toast('Archivo guardado.'); }
   catch (e) { if (e?.code === 'declined') return; toast(e?.code === 'rate_limited' ? 'Ya hay una descarga esperando confirmación.' : 'No se pudo descargar el archivo en esta vista.', 'bad'); }
 }
@@ -1760,7 +1887,7 @@ function renderAvisos() {
       <div class="ar-what"><span class="chip ${tipo === 'otro' ? 'chip-muted' : 'chip-acc'}"><i></i>${tipo === 'ahorro' ? 'Ahorro' : tipo === 'incremento' ? 'Incremento' : 'Pendiente'}</span>${a.conMonto ? (e.seguimientoMoneda !== 'ARS' && e.seguimientoMontoUsd ? `<b class="mono">${segMontoTxt(e)}</b><small>≈ ${fm(a.c.pactados[0]?.monto || e.seguimientoMonto)}</small>` : `<b class="mono">${fm(e.seguimientoMonto)}</b>`) : ''}${a.posible ? `<small>+${fm(a.posible)} comisión</small>` : a.conMonto && a.c.topeAlcanzado ? '<small>Ya en el tope</small>' : ''}</div>
       <div class="ar-date"><b class="mono"${a.fueraPlazo ? ' style="color:var(--bad)" title="La fecha pactada es posterior al vencimiento del plazo"' : ''}>${e.seguimientoFecha ? fd(e.seguimientoFecha) : '—'}</b><small${a.qPlazo !== null && a.qPlazo < 0 ? ' style="color:var(--bad)"' : ''}>${plazo}</small></div>
       <div class="ar-det" title="${esc(det)}">${esc(det) || '<span class="muted">—</span>'}</div>
-      <div class="ar-act">${S.canWrite && S.db ? `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(e.id)}">Resuelto</button>` : ''}<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button></div>
+      <div class="ar-act" style="flex-wrap:wrap">${S.canWrite && S.db ? (S.avAsk === e.id ? `<span class="ar-ask">¿Cumplió lo pactado?</span><button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Sí, cargar el pago</button><button class="btn btn-sm" type="button" data-nocumplio="${esc(e.id)}">No cumplió</button><button class="btn btn-sm" type="button" data-askcancel="1">Cancelar</button>` : `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(e.id)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(e.id)}">Resuelto</button><button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`) : `<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`}</div>
     </div>`; }).join('')}</div>`;
   const obsP = S.E.filter(e => !esp || norm(e.especialista) === norm(esp)).flatMap(e => pagosEstado(e, 'observada').map(it => ({e, it})));
   if (obsP.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💵</span> Pagos observados por la responsable</h3><p>Pagos posteriores que tienen algo para corregir antes de aprobar su comisión.</p></div><ul class="slist">${obsP.map(({e, it}) => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(it.concepto)} del ${fdc(it.fecha)} · ${esc(it.revNota || 'Sin nota')}</small></div><div class="s-side">${chip('observada', 'Pago observado')}</div></li>`).join('')}</ul></section>`;
@@ -1781,6 +1908,10 @@ function cumplirAviso(id) {
   renderGest(); actualizarForm(); guardarBorradorLocal();
   setTimeout(() => irA(`g_${gidN}_monto`), 80);
   toast('Cargar la fecha real del pago y el monto, y tocar «Guardar cambios». La comisión cuenta en el mes del pago.');
+}
+async function noCumplio(id) {
+  try { await conReintento(() => S.db.collection('entrevistas').doc(id).update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy(), seguimientoCumplio: false})); S.avAsk = null; toast('Seguimiento cerrado como no cumplido. El semáforo del cliente bajó.'); }
+  catch (e) { errorEscritura(e); }
 }
 async function resolverAviso(id) {
   try { await conReintento(() => S.db.collection('entrevistas').doc(id).update({seguimientoResuelto: true, seguimientoResueltoFecha: hoy()})); toast('Seguimiento resuelto.'); }
@@ -1932,6 +2063,20 @@ function renderPanel() {
     ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td><div class="meter"><div class="m-bar"><span style="width:${x.ent ? Math.round(x.ok / x.ent * 100) : 0}%"></span></div><span class="m-v">${pctTxt(x.ok, x.ent)}</span></div></td><td class="n">${x.nos}</td><td class="n">${pctTxt(x.res, x.ent)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.com)}</b></td></tr>`).join('')}
     </tbody></table></div></section>`;
 
+  // Semáforo de los clientes
+  { const cs = fin.map(e => ({e, s: semaforo(e)})).filter(x => x.s);
+    if (cs.length) {
+      const tot = cs.length, n = (l, k) => l.filter(x => x.s.color === k).length;
+      const bar = l => `<div class="sem-bar" role="img" aria-label="${n(l, 'verde')} verdes, ${n(l, 'amarillo')} amarillos, ${n(l, 'rojo')} rojos">${['verde', 'amarillo', 'rojo'].map(k => n(l, k) ? `<span class="b-${k}" style="width:${n(l, k) / l.length * 100}%"></span>` : '').join('')}</div>`;
+      const gk = new Map(); for (const x of cs) { const k = norm(x.e.especialista) || '—'; if (!gk.has(k)) gk.set(k, {n: x.e.especialista || '—', l: []}); gk.get(k).l.push(x); }
+      const cnt = {}; for (const x of cs) for (const f of x.s.falta) cnt[f.k] = (cnt[f.k] || 0) + 1;
+      const NOMF = {monto: 'no incrementar ni dejar ahorro, o dejar poco', part: 'poca participación', info: 'información incorrecta del asesor', doc: 'documentación incompleta', interes: 'poco interés en la empresa', depto: 'no ir al departamento modelo', seg: 'no cumplir lo pactado'};
+      const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      html += `<section class="card"><div class="card-h"><h3>${E('🚦')}Semáforo de los clientes${qm('semaforo')}</h3><p>${tot} ${tot === 1 ? 'cliente' : 'clientes'} con semáforo en el período · promedio ${Math.round(prom(cs.map(x => x.s.pct)))}%.</p></div>
+        ${bar(cs)}<div class="sem-leg"><span><i class="d-verde"></i><b>${n(cs, 'verde')}</b> ${n(cs, 'verde') === 1 ? 'verde' : 'verdes'} · ${pctTxt(n(cs, 'verde'), tot)}</span><span><i class="d-amarillo"></i><b>${n(cs, 'amarillo')}</b> ${n(cs, 'amarillo') === 1 ? 'amarillo' : 'amarillos'} · ${pctTxt(n(cs, 'amarillo'), tot)}</span><span><i class="d-rojo"></i><b>${n(cs, 'rojo')}</b> ${n(cs, 'rojo') === 1 ? 'rojo' : 'rojos'} · ${pctTxt(n(cs, 'rojo'), tot)}</span></div>
+        ${!personal && gk.size > 1 ? `<div class="sem-asesores">${[...gk.values()].sort((a, b) => prom(b.l.map(x => x.s.pct)) - prom(a.l.map(x => x.s.pct))).map(g => `<div><div class="sa-h"><b>${esc(g.n)}</b><span>${g.l.length} ${g.l.length === 1 ? 'cliente' : 'clientes'} · promedio ${Math.round(prom(g.l.map(x => x.s.pct)))}%</span></div>${bar(g.l)}</div>`).join('')}</div>` : ''}
+        ${top.length ? `<p class="sem-top"><b>Lo que más baja el color:</b> ${top.map(([k, v]) => `${NOMF[k]} (${v})`).join(', ')}.</p>` : ''}</section>`;
+    } }
   // Metas del mes
   if (!vistaEq && per !== '3m' && (S.aj.metaEnt || S.aj.metaMonto)) {
     for (const n of equipo()) if (!esp || norm(n) === norm(esp)) G(n);
@@ -2037,6 +2182,146 @@ function renderPanel() {
 }
 
 
+
+
+/* ---------- Tutorial del semáforo ---------- */
+const TUTO_V = 'semaforo-1', TUTO_N = 4;
+function tutoPasos() {
+  const e3 = semEsc(null), pm = v => puntosMonto(v, e3);
+  const ej0 = 100 - (25 - pm(100000)) - 10 - 10, ej1 = Math.min(100, 100 - (25 - pm(400000)) - 10 - 10 + 10);
+  const col = p => p >= 75 ? ['verde', 'verde 🟢'] : p >= 45 ? ['amarillo', 'amarillo 🟡'] : ['rojo', 'rojo 🔴'];
+  return [
+    {t: '🚦 Nuevo: el semáforo del cliente', h: `<p>Al terminar cada checklist, el sistema muestra <b>cómo quedó el cliente</b> con un color y un porcentaje de gusto y disgusto. Sirve para saber a quién hay que acompañar más en el seguimiento.</p>
+      <div class="tuto-col">
+        <div class="c-verde"><i class="d-verde"></i><span><b>Verde · Cliente enfocado</b><small>75% o más. Participativo, dejó ahorro o incrementó, documentación completa.</small></span></div>
+        <div class="c-amarillo"><i class="d-amarillo"></i><span><b>Amarillo · Le falta fidelización</b><small>De 45% a 74%. No fue al departamento modelo, le faltó documentación o dejó poco.</small></span></div>
+        <div class="c-rojo"><i class="d-rojo"></i><span><b>Rojo · Necesita atención de retención</b><small>Menos de 45%. Información incorrecta del asesor, sin incremento ni ahorro, poco participativo.</small></span></div>
+      </div>`},
+    {t: '📝 Cómo se calcula', h: `<p>Tú solo respondes la nueva sección <b>8 · Cómo quedó el cliente</b> (4 preguntas). Lo demás sale solo del checklist. El cliente arranca con <b>100 puntos</b> y se le resta lo que le faltó:</p>
+      <table class="tuto-tbl"><tbody>
+        <tr><td>💰 Incremento + ahorro</td><td>hasta 25</td></tr>
+        <tr><td>🙋 Participó en la entrevista</td><td>20</td></tr>
+        <tr><td>✅ El asesor le informó bien</td><td>15</td></tr>
+        <tr><td>📄 Trajo toda la documentación</td><td>15</td></tr>
+        <tr><td>🏢 Interés en conocer la empresa</td><td>15</td></tr>
+        <tr><td>🏠 Fue al departamento modelo</td><td>10</td></tr>
+      </tbody></table>
+      <p><b>El incremento + ahorro suma por escalones:</b> hasta ${fm(e3[0])} suma 6 · hasta ${fm(e3[1])} suma 12 · hasta ${fm(e3[2])} suma 19 · más de ${fm(e3[2])} suma los 25.</p>
+      <p class="muted" style="font-size:13.5px">Si hubo falla del asesor y el cliente no dejó nada, queda en rojo igual. El semáforo no se puede cambiar a mano.</p>`},
+    {t: '📈 Cómo suma puntos después', h: `<p>El semáforo <b>no queda fijo</b>: durante el mes se actualiza solo con lo que pasa con el cliente.</p>
+      <div class="tuto-col">
+        <div class="c-verde"><span aria-hidden="true">💵</span><span><b>Pagos después de la entrevista</b><small>Lo que el cliente paga después se suma a su incremento + ahorro y puede subir de escalón.</small></span></div>
+        <div class="c-verde"><span aria-hidden="true">✅</span><span><b>Cumple lo pactado en el seguimiento: +10</b><small>Al tocar «Resuelto», el sistema pregunta si cumplió. «Sí, cargar el pago» suma.</small></span></div>
+        <div class="c-rojo"><span aria-hidden="true">❌</span><span><b>No cumple o se vence el plazo: −10</b><small>«No cumplió», o el mes termina sin que pague.</small></span></div>
+      </div>
+      <div class="tuto-ej"><b>Ejemplo</b><ol>
+        <li>En la entrevista, Laura sube la cuota ${fm(100000)}, participa poco y no va al departamento modelo: <b>${ej0}% · ${col(ej0)[1]}</b>. Pacta un ahorro de ${fm(300000)}.</li>
+        <li>A la semana trae el ahorro. Entre incremento y ahorro ya suma ${fm(400000)}: pasa de ${pm(100000)} a ${pm(400000)} puntos (${pm(400000) - pm(100000) >= 0 ? '+' : ''}${pm(400000) - pm(100000)}).</li>
+        <li>Como cumplió lo pactado, suma +10.</li>
+      </ol><span class="res">Resultado: ${ej1}% · ${col(ej1)[1]}</span></div>`},
+    {t: '👀 Dónde lo ves', h: `<div class="tuto-col">
+        <div class="c-amarillo"><span aria-hidden="true">🗂️</span><span><b>En cada cliente</b><small>Al abrir una entrevista hay dos pestañas: «Checklist y datos» y «🚦 Semáforo», con lo que le faltó, qué reforzar y cómo fue cambiando.</small></span></div>
+        <div class="c-amarillo"><span aria-hidden="true">🔎</span><span><b>En Entrevistas</b><small>Cada cliente muestra su color, y se puede filtrar por verde, amarillo o rojo.</small></span></div>
+        <div class="c-amarillo"><span aria-hidden="true">🏠</span><span><b>La responsable</b><small>Ve los clientes en rojo en «Para revisar hoy» y el semáforo del equipo en el Panel.</small></span></div>
+      </div>
+      <p>💡 <b>Tip:</b> en «Para el seguimiento» el semáforo te sugiere qué hacer con cada cliente para que suba de color.</p>
+      <p class="muted" style="font-size:13.5px">Puedes volver a ver este tutorial desde el menú: «🚦 Cómo funciona el semáforo».</p>`},
+  ];
+}
+function renderTuto() {
+  const ps = tutoPasos(), i = S.tuto, p = ps[i];
+  $('#tuto').innerHTML = `<div class="tuto-top"><span class="tuto-step">Paso ${i + 1} de ${ps.length}</span><button class="btn btn-sm" type="button" data-tutogo="fin">${i === ps.length - 1 ? 'Cerrar' : 'Saltar'}</button></div>
+    <h2 id="tutoTitle">${p.t}</h2><div class="tuto-body">${p.h}</div>
+    <div class="tuto-dots" aria-hidden="true">${ps.map((_, k) => `<span class="${k === i ? 'on' : ''}"></span>`).join('')}</div>
+    <div class="tuto-nav">${i > 0 ? `<button class="btn" type="button" data-tutogo="-1">Anterior</button>` : ''}${i < ps.length - 1 ? `<button class="btn btn-primary" type="button" data-tutogo="1">Siguiente</button>` : `<button class="btn btn-primary" type="button" data-tutogo="fin">¡Entendido!</button>`}</div>`;
+  $('#tuto').scrollTop = 0;
+  setTimeout(() => $('#tuto .tuto-nav .btn-primary')?.focus(), 30);
+}
+function abrirTuto(i) { $('#toast').hidden = true; S.tuto = i || 0; renderTuto(); $('#tuto').hidden = false; $('#tutoScrim').hidden = false; }
+function cerrarTuto() { $('#tuto').hidden = true; $('#tutoScrim').hidden = true; lsSet('onb_tuto', TUTO_V); }
+function tutoPrimeraVez() { if (lsGet('onb_tuto', '') === TUTO_V || !$('#tuto').hidden || !$('#picker').hidden || !identidadValida()) return; abrirTuto(0); }
+
+/* ---------- Semáforo del cliente ---------- */
+const SEM_PTS = [6, 12, 19];
+const SEM_COL = {verde: ['ok', 'Verde', 'Cliente enfocado'], amarillo: ['warn', 'Amarillo', 'Le falta fidelización'], rojo: ['bad', 'Rojo', 'Necesita atención de retención']};
+const SEM_ACC = {monto: 'Ofrecerle subir la cuota o dejar un ahorro antes de que venza el plazo.', part: 'Llamarlo para resolver dudas y reforzar lo que entendió del plan.', info: 'Corregir con el cliente la información que le dio el asesor.', doc: 'Pedirle la documentación que falta.', interes: 'Contarle más sobre la empresa, sus proyectos y los beneficios.', depto: 'Invitarlo a visitar el departamento modelo.', seg: 'Contactarlo por lo que pactó y no cumplió.'};
+const perfilOk = p => !!(p && p.part && p.interes && p.doc && p.depto);
+const semEsc = e => { const v = (e?.semEsc || S.aj.semEsc || DEF_AJ.semEsc).map(Number); return v.length === 3 && v[0] > 0 && v[1] > v[0] && v[2] > v[1] ? v : DEF_AJ.semEsc; };
+function puntosMonto(t, esc) { if (!(t > 0)) return 0; for (let i = 0; i < esc.length; i++) if (t <= esc[i]) return SEM_PTS[i]; return 25; }
+const segConMonto = e => e.seguimiento === 'si' && ['ahorro', 'incremento'].includes(e.seguimientoTipo) && (e.seguimientoMonto || 0) > 0;
+function segEstado(e, c) {
+  if (!segConMonto(e)) return null;
+  if (e.seguimientoResuelto) { const cu = e.seguimientoCumplio ?? (c.items.some(i => i.pacto && i.dentro) ? true : null); return cu === true ? 'cumplio' : cu === false ? 'no' : null; }
+  if (e.estado === 'final' && c.limite && hoy() > c.limite) return 'vencido';
+  return 'pendiente';
+}
+function semCalc(e, monto, seg) {
+  const p = e.perfil, esc = semEsc(e), falta = [];
+  const pm = puntosMonto(monto, esc);
+  if (pm < 25) falta.push({k: 'monto', t: pm ? `Dejó ${fm(monto)} entre incremento y ahorro: para el máximo tiene que superar ${fm(esc[2])}` : 'No incrementó la cuota ni dejó ahorro', pts: 25 - pm});
+  const PART = {si: 20, poco: 10, no: 0}, INT = {si: 15, poco: 8, no: 0};
+  if (p.part !== 'si') falta.push({k: 'part', t: p.part === 'poco' ? 'Participó poco durante la entrevista' : 'No participó durante la entrevista', pts: 20 - (PART[p.part] ?? 0)});
+  if (e.fallaAsesor === 'si') falta.push({k: 'info', t: 'El asesor de ventas le dio información incorrecta o incompleta', pts: 15});
+  if (p.doc !== 'si') falta.push({k: 'doc', t: 'No trajo toda la documentación', pts: 15});
+  if (p.interes !== 'si') falta.push({k: 'interes', t: p.interes === 'poco' ? 'Mostró poco interés en conocer la empresa' : 'No mostró interés en conocer la empresa', pts: 15 - (INT[p.interes] ?? 0)});
+  if (p.depto !== 'si') falta.push({k: 'depto', t: 'No fue al departamento modelo', pts: 10});
+  let pct = 100 - falta.reduce((a, f) => a + f.pts, 0);
+  if (seg === 'cumplio') pct += 10;
+  if (seg === 'no' || seg === 'vencido') { pct -= 10; falta.push({k: 'seg', t: seg === 'vencido' ? 'Se venció el plazo sin cumplir lo pactado en el seguimiento' : 'No cumplió lo pactado en el seguimiento', pts: 10}); }
+  pct = Math.max(0, Math.min(100, pct));
+  const forzado = e.fallaAsesor === 'si' && !(monto > 0);
+  const color = forzado || pct < 45 ? 'rojo' : pct < 75 ? 'amarillo' : 'verde';
+  return {pct, color, falta, forzado, monto, pm};
+}
+function semaforo(e) {
+  if (!e || !perfilOk(e.perfil)) return null;
+  const c = comision(e);
+  const monto = c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0);
+  const seg = segEstado(e, c);
+  return {...semCalc(e, monto, seg), seg, c};
+}
+const semChip = sm => sm ? `<span class="chip chip-${SEM_COL[sm.color][0]}" title="Semáforo del cliente"><i></i>${SEM_COL[sm.color][1]} ${sm.pct}%</span>` : '';
+function semGauge(pct) {
+  const a = Math.PI * (1 - pct / 100), x = (150 + 95 * Math.cos(a)).toFixed(1), y = (150 - 95 * Math.sin(a)).toFixed(1);
+  return `<svg viewBox="0 0 300 170" width="280" height="159" role="img" aria-label="Medidor del semáforo en ${pct} por ciento"><path d="M30 150 A120 120 0 0 1 129.5 31.8" fill="none" stroke="#C9404A" stroke-width="22"/><path d="M133 31.4 A120 120 0 0 1 233.2 63.5" fill="none" stroke="#F2B705" stroke-width="22"/><path d="M236.4 66.8 A120 120 0 0 1 270 150" fill="none" stroke="#1B7A4A" stroke-width="22"/><line x1="150" y1="150" x2="${x}" y2="${y}" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><circle cx="150" cy="150" r="10" fill="currentColor"/></svg>`;
+}
+function semaforoHtml(sm) {
+  const [, nom, desc] = SEM_COL[sm.color];
+  const X = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+  const falta = [...sm.falta].sort((a, b) => b.pts - a.pts);
+  const acc = falta.slice(0, 3).map(f => SEM_ACC[f.k]).filter(Boolean);
+  return `<div class="sem sem-${sm.color}">
+    <div class="sem-g">${semGauge(sm.pct)}<span class="sem-pct">${sm.pct}%</span><span class="sem-lbl">${nom} · ${desc}</span></div>
+    <div class="sem-gd"><div class="g"><small>Gusto</small><b>${sm.pct}%</b></div><div class="d"><small>Disgusto</small><b>${100 - sm.pct}%</b></div></div>
+    ${sm.forzado ? `<p class="sem-force">Queda en rojo porque hubo una falla del asesor y el cliente no incrementó ni dejó ahorro.</p>` : ''}
+    <div class="sem-falta"><b>Lo que le faltó</b>${falta.length ? `<ul>${falta.map(f => `<li class="sem-x">${X}<span>${esc(f.t)}</span><span class="p">−${f.pts}</span></li>`).join('')}</ul><small class="muted">Lo que no aparece en esta lista, el cliente lo cumplió.</small>` : `<p class="note">No le faltó nada: cumplió todo. 🎉</p>`}</div>
+    ${acc.length ? `<div class="sem-tip"><b>Para el seguimiento</b><span>${acc.join(' ')}</span></div>` : ''}
+    <button class="linkbtn" type="button" data-tuto="1" style="align-self:flex-start;font-size:13.5px">¿Cómo funciona el semáforo?</button>
+    ${sm.color === 'rojo' ? `<div class="sem-alerta"><span aria-hidden="true">🔔</span><span><b>Cliente para retención.</b> La responsable lo ve en «Para revisar hoy» mientras dure el mes.</span></div>` : ''}
+  </div>`;
+}
+function semHistoria(e) {
+  const sm = semaforo(e); if (!sm) return [];
+  const c = sm.c, ev = [];
+  let m = c.items.filter(i => i.dentro && !i.gid).reduce((a, i) => a + i.monto, 0);
+  ev.push({f: (e.finalizado || '').slice(0, 10) || e.fecha, t: e.estado === 'final' ? 'Al finalizar la entrevista' : 'En la entrevista (borrador)', ...semCalc(e, m, null)});
+  for (const it of c.items.filter(i => i.dentro && i.gid).sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''))) { m += it.monto; ev.push({f: it.fecha, t: `${it.concepto}: ${fm(it.monto)}`, ...semCalc(e, m, null)}); }
+  if (sm.seg === 'cumplio' || sm.seg === 'no') ev.push({f: e.seguimientoResueltoFecha || '', t: sm.seg === 'cumplio' ? 'Cumplió lo pactado en el seguimiento (+10)' : 'No cumplió lo pactado en el seguimiento (−10)', ...semCalc(e, m, sm.seg)});
+  if (sm.seg === 'vencido') ev.push({f: c.limite, t: 'Venció el plazo sin cumplir lo pactado (−10)', ...semCalc(e, m, 'vencido')});
+  if (sm.seg === 'pendiente') { const pa = c.pactados[0]; ev.push({proy: true, f: e.seguimientoFecha || '', si: semCalc(e, m + (pa?.dentro ? pa.monto : 0), 'cumplio'), no: semCalc(e, m, 'vencido')}); }
+  return ev;
+}
+function semPane(e) {
+  const sm = semaforo(e);
+  if (!sm) return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🚦</span> Semáforo del cliente</h3><p class="note">${e.estado === 'final' ? 'Esta entrevista se cargó antes de que existiera el semáforo: no tiene respondida la sección «Cómo quedó el cliente».' + (esResp() ? ' La responsable la puede completar desde «Editar o cargar un pago».' : '') : 'Se calcula cuando se responde la sección 8 del checklist, «Cómo quedó el cliente».'}</p></section>`;
+  const h = semHistoria(e), cn = k => SEM_COL[k][1].toLowerCase();
+  return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🚦</span> Semáforo del cliente${qm('semaforo')}</h3>${semaforoHtml(sm)}</section>
+    <section class="dcard"><h3><span class="emo" aria-hidden="true">🕓</span> Cómo fue cambiando</h3><ul class="sem-hist">${h.map(x => x.proy
+      ? `<li class="proy"><i></i><span><b>Seguimiento pactado${x.f ? ' para el ' + fdc(x.f) : ''}</b><small>Si cumple, sube a ${cn(x.si.color)} · ${x.si.pct}%. Si no cumple o se vence, baja a ${cn(x.no.color)} · ${x.no.pct}%.</small></span></li>`
+      : `<li><i class="d-${x.color}"></i><span><b>${SEM_COL[x.color][1]} · ${x.pct}%</b><small>${x.f ? fdc(x.f) + ' · ' : ''}${esc(x.t)}</small></span></li>`).join('')}</ul></section>
+    <p class="note" style="text-align:center">El semáforo sale de las respuestas del checklist y no se puede cambiar a mano.</p>`;
+}
+
 /* ---------- Ayuda ❓ ---------- */
 const qm = k => `<button type="button" class="qm" data-help="${k}" aria-label="¿Qué es esto?" aria-expanded="false">?</button>`;
 const plazoTxt = () => (S.aj.plazoMeses || 1) === 1 ? 'un mes' : `${S.aj.plazoMeses} meses`;
@@ -2055,6 +2340,7 @@ const HELP = {
   comMes: () => 'Suma de la comisión del mes, esté aprobada o no. Cuenta en el mes en que el cliente pagó. No incluye borradores ni pactos que todavía no se pagaron.',
   pactRef: () => 'Lo que se cobraría si los clientes que pactaron un pago lo hacen dentro del plazo. <b>Es solo de referencia</b>: se suma a la comisión recién cuando se carga el pago.',
   fuera: () => `Incrementos o ahorros que el cliente pagó después del plazo de ${plazoTxt()}. Se registran, pero no generan comisión.`,
+  semaforo: () => 'Cómo quedó el cliente después de la entrevista. Sale solo de las respuestas: incremento + ahorro (hasta 25 puntos según el monto), participación (20), información correcta del asesor (15), documentación (15), interés en la empresa (15) y departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no. <b>Verde</b> 75% o más, <b>amarillo</b> 45 a 74%, <b>rojo</b> menos de 45%. No se puede cambiar a mano.',
   posible: () => 'Comisión que se sumaría si cada cliente paga lo que pactó antes de que venza su plazo.',
 };
 function abrirAyuda(btn) {
@@ -2120,6 +2406,10 @@ function bloquesInicio() {
   B.push({key: 'pagos', tono: 'warn', urgente: true, em: '💵', titulo: 'Pagos posteriores para aprobar', ok: 'Sin pagos por aprobar',
     desc: 'Lo que el cliente pagó después de la entrevista, por ejemplo lo pactado en el seguimiento. Abrir la entrevista y tocar <b>Aprobar</b> en ese pago: su comisión pasa a aprobada sin tocar el resto.',
     go: 'Ver todos', items: pp.map(({e, it}) => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · ${esc(it.concepto.toLowerCase())} pagado el ${fdc(it.fecha)} · ${it.moneda === 'MIX' ? esc(mixTxt(it.ars, it.usd)) : it.moneda === 'USD' && it.usd ? fu(it.usd) : fm(it.monto)}`, side: `${chip('pendiente', 'Por aprobar')}<small class="muted">Comisión ${fm(it.comision)}</small>`}))});
+  const rojos = S.E.filter(e => e.estado === 'final').map(e => ({e, s: semaforo(e)})).filter(x => x.s && x.s.color === 'rojo' && x.s.c.limite && x.s.c.limite >= t0).sort((a, b) => (b.e.fecha || '').localeCompare(a.e.fecha || ''));
+  B.push({key: 'rojos', tono: 'bad', urgente: true, em: '🚦', titulo: 'Clientes en rojo para retención', ok: 'Ningún cliente en rojo',
+    desc: 'Clientes que quedaron con el semáforo en rojo y todavía están dentro del mes. Conviene llamarlos para reforzar el plan antes de que se enfríen.',
+    go: 'Ver todos', items: rojos.map(({e, s}) => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · ${fdc(e.fecha)} · ${esc(([...s.falta].sort((a, b) => b.pts - a.pts)[0]?.t || '').slice(0, 70))}`, side: semChip(s)}))});
   const av = avisosDe('');
   const seg = av.filter(a => a.est === 'atrasado' || a.est === 'hoy');
   B.push({key: 'seg', tono: 'bad', urgente: true, em: '⏰', titulo: 'Seguimientos atrasados o para hoy', ok: 'Ningún seguimiento atrasado',
@@ -2165,9 +2455,10 @@ function renderInicio() {
   out.innerHTML = html;
 }
 function irDesdeInicio(k) {
-  if (k === 'rev' || k === 'borr' || k === 'pagos') { const est = k === 'borr' ? 'borrador' : 'pendiente'; S.f.ent = {...S.f.ent, est, per: '', esp: '', q: ''}; $('#fe_est').value = est; $('#fe_q').value = ''; setTab('entrevistas'); return; }
+  if (k === 'rev' || k === 'borr' || k === 'pagos') { const est = k === 'borr' ? 'borrador' : 'pendiente'; S.f.ent = {...S.f.ent, est, per: '', esp: '', q: '', sem: ''}; $('#fe_sem').value = ''; $('#fe_est').value = est; $('#fe_q').value = ''; setTab('entrevistas'); return; }
   if (k === 'seg' || k === 'vence') { S.f.av = {esp: '', tipo: ''}; $('#fa_tipo').value = ''; setTab('avisos'); return; }
   if (k === 'fallas') { setTab('panel'); return; }
+  if (k === 'rojos') { S.f.ent = {...S.f.ent, est: '', per: '', esp: '', q: '', sem: 'rojo'}; $('#fe_est').value = ''; $('#fe_q').value = ''; $('#fe_sem').value = 'rojo'; setTab('entrevistas'); return; }
 }
 
 /* ---------- Vista: Ajustes ---------- */
@@ -2198,6 +2489,14 @@ function renderAjustes() {
         <div class="field"><label for="a_metaMonto">Incremento + ahorro por mes</label><input type="text" id="a_metaMonto" inputmode="numeric" class="money" value="${esc(fmtIn(a.metaMonto))}" placeholder="0"><span class="hint">Suma de incrementos de cuota y ahorros cobrados en el mes.</span></div>
       </div>
     </section>
+    <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🚦</span> Semáforo del cliente</h3><p>Cuánto suma lo que deja el cliente entre incremento y ahorro (hasta 25 de 100 puntos). Cada entrevista guarda los montos vigentes cuando se finaliza.</p></div>
+      ${(() => { const e3 = (a.semEsc || DEF_AJ.semEsc); return `<div class="grid-f">
+        <div class="field"><label for="a_sem1">Hasta este monto suma 6 puntos</label><input type="text" id="a_sem1" inputmode="numeric" class="money" value="${esc(fmtIn(e3[0]))}"></div>
+        <div class="field"><label for="a_sem2">Hasta este monto suma 12 puntos</label><input type="text" id="a_sem2" inputmode="numeric" class="money" value="${esc(fmtIn(e3[1]))}"></div>
+        <div class="field"><label for="a_sem3">Hasta este monto suma 19 puntos</label><input type="text" id="a_sem3" inputmode="numeric" class="money" value="${esc(fmtIn(e3[2]))}"><span class="hint">Más que esto suma los 25 puntos.</span></div>
+      </div>`; })()}
+      <div class="rule" style="margin-top:14px"><b>Cómo se calcula</b><span>Incremento + ahorro (hasta 25) · participación (20) · información correcta del asesor (15) · documentación completa (15) · interés en la empresa (15) · departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no. Verde: 75% o más · Amarillo: 45 a 74% · Rojo: menos de 45%, o falla del asesor sin incremento ni ahorro.</span></div>
+    </section>
     <div class="aj-grid">
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea></section>
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🧑‍💼</span> Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
@@ -2223,7 +2522,8 @@ async function guardarDolar() {
 async function guardarAjustes() {
   const lines = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean);
   const pct = Math.min(100, num($('#a_pct').value));
-  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), actualizado: new Date().toISOString()};
+  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), semEsc: [num($('#a_sem1').value), num($('#a_sem2').value), num($('#a_sem3').value)], actualizado: new Date().toISOString()};
+  if (!(data.semEsc[0] > 0 && data.semEsc[1] > data.semEsc[0] && data.semEsc[2] > data.semEsc[1])) { toast('Los montos del semáforo tienen que ir de menor a mayor.', 'bad'); $('#a_sem1').focus(); return; }
   try { await conReintento(() => S.db.doc('ajustes/general').set(data)); S.ajDirty = false; toast('Ajustes guardados.'); }
   catch (e) { if (e?.code === 'invalid_argument') toast('Solo una cuenta con permiso de Editor puede cambiar los ajustes.', 'bad'); else errorEscritura(e); }
 }
@@ -2254,7 +2554,7 @@ function renderAll() {
 }
 
 function bindGeneral() {
-  $$('.tab').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  $$('.tab').forEach(b => b.addEventListener('click', () => { if (b.dataset.tab) setTab(b.dataset.tab); }));
   $('#menuBtn').addEventListener('click', abrirMenu);
   { let t = 'claro'; try { t = localStorage.getItem('onb_tema') === 'oscuro' ? 'oscuro' : 'claro'; } catch {} $('#tema_' + t).checked = true;
     $$('input[name="tema"]').forEach(r => r.addEventListener('change', () => { const v = r.value; if (v === 'oscuro') document.documentElement.setAttribute('data-tema', 'oscuro'); else document.documentElement.removeAttribute('data-tema'); try { localStorage.setItem('onb_tema', v); } catch {} requestAnimationFrame(ajustarKpis); })); }
@@ -2267,6 +2567,9 @@ function bindGeneral() {
   document.addEventListener('click', ev => {
     const hp = ev.target.closest('[data-help]'); if (hp) { ev.preventDefault(); abrirAyuda(hp); return; }
     if (!ev.target.closest('#helpPop')) cerrarAyuda();
+    const tu = ev.target.closest('[data-tuto]'); if (tu) { cerrarMenu(); abrirTuto(0); return; }
+    const tn = ev.target.closest('[data-tutogo]'); if (tn) { const v = tn.dataset.tutogo; if (v === 'fin') cerrarTuto(); else { S.tuto = Math.max(0, Math.min(TUTO_N - 1, S.tuto + (+v))); renderTuto(); } return; }
+    if (ev.target.closest('#tutoScrim')) { cerrarTuto(); return; }
     const ig = ev.target.closest('[data-inigo]'); if (ig) { irDesdeInicio(ig.dataset.inigo); return; }
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
     const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
@@ -2275,8 +2578,10 @@ function bindGeneral() {
     const db = ev.target.closest('[data-delb]'); if (db) { const id = db.dataset.delb; $('#db_' + id).innerHTML = `<span class="note" style="white-space:nowrap">¿Eliminar?</span><button class="btn btn-sm btn-danger" type="button" data-delbok="${esc(id)}">Sí, eliminar</button><button class="btn btn-sm" type="button" data-delbno="1">No</button>`; return; }
     const dbo = ev.target.closest('[data-delbok]'); if (dbo) { dbo.disabled = true; (async () => { try { await conReintento(() => S.db.collection('entrevistas').doc(dbo.dataset.delbok).delete()); toast('Borrador eliminado.'); } catch (err) { errorEscritura(err); } })(); return; }
     if (ev.target.closest('[data-delbno]')) { renderEntrevistas(); return; }
-    const cu = ev.target.closest('[data-cumplir]'); if (cu) { cumplirAviso(cu.dataset.cumplir); return; }
-    const rs = ev.target.closest('[data-resolver]'); if (rs) { rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
+    const cu = ev.target.closest('[data-cumplir]'); if (cu) { S.avAsk = null; cumplirAviso(cu.dataset.cumplir); return; }
+    const rs = ev.target.closest('[data-resolver]'); if (rs) { const e = S.E.find(x => x.id === rs.dataset.resolver); if (e && segConMonto(e)) { S.avAsk = e.id; renderAvisos(); return; } rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
+    const nc = ev.target.closest('[data-nocumplio]'); if (nc) { nc.disabled = true; noCumplio(nc.dataset.nocumplio); return; }
+    if (ev.target.closest('[data-askcancel]')) { S.avAsk = null; renderAvisos(); return; }
     const vr = ev.target.closest('[data-ver]'); if (vr) { abrirDetalle(vr.dataset.ver); return; }
     const row = ev.target.closest('.erow, tr.clk, li.clk'); if (row && !row.closest('#drawer')) { abrirDetalle(row.dataset.id, null, !!row.closest('#com-out')); return; }
     if (ev.target.closest('#kpiRev')) { S.f.ent = {...S.f.ent, est: 'pendiente', per: '', esp: $('#fp_esp').value}; $('#fe_est').value = 'pendiente'; setTab('entrevistas'); return; }
@@ -2287,11 +2592,12 @@ function bindGeneral() {
   });
   document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches('tr.clk, li.clk')) { ev.preventDefault(); abrirDetalle(ev.target.dataset.id, null, !!ev.target.closest('#com-out')); } });
   $('#v-ajustes').addEventListener('input', ev => { if (ev.target.id?.startsWith('a_pin') || ev.target.id?.startsWith('a_d')) return; S.ajDirty = true; $('#ajMsg').textContent = 'Cambios sin guardar.'; });
-  $('#v-ajustes').addEventListener('focusout', ev => { if (ev.target.id === 'a_min' || ev.target.id === 'a_tope' || ev.target.id === 'a_metaMonto') ev.target.value = fmtIn(num(ev.target.value)); });
+  $('#v-ajustes').addEventListener('focusout', ev => { if (['a_min', 'a_tope', 'a_metaMonto', 'a_sem1', 'a_sem2', 'a_sem3'].includes(ev.target.id)) ev.target.value = fmtIn(num(ev.target.value)); });
   $('#fe_q').addEventListener('input', ev => { S.f.ent.q = ev.target.value; renderEntrevistas(); });
   $('#fe_esp').addEventListener('change', ev => { S.f.ent.esp = ev.target.value; renderEntrevistas(); });
   $('#fe_per').addEventListener('change', ev => { S.f.ent.per = ev.target.value; renderEntrevistas(); });
   $('#fe_est').addEventListener('change', ev => { S.f.ent.est = ev.target.value; renderEntrevistas(); });
+  $('#fe_sem').addEventListener('change', ev => { S.f.ent.sem = ev.target.value; renderEntrevistas(); });
   $('#fc_mes').addEventListener('change', ev => { S.f.com.mes = ev.target.value; renderComisiones(); });
   $('#fc_esp').addEventListener('change', ev => { S.f.com.esp = ev.target.value; renderComisiones(); });
   $('#fc_pago').addEventListener('change', ev => { S.f.com.pago = ev.target.value; renderComisiones(); });
@@ -2305,6 +2611,7 @@ function bindGeneral() {
   $('#picker').addEventListener('click', ev => { if (ev.target.closest('#pinOk')) confirmarPin(); else if (ev.target.closest('#pinBack')) abrirPicker(identidadValida()); });
   $('#picker').addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target.matches('#pin1,#pin2')) { ev.preventDefault(); confirmarPin(); } });
   $('#pickList').addEventListener('click', ev => { const bt = ev.target.closest('button[data-n]'); if (bt) { if (bt.dataset.n === RESP) vistaPin(); else elegir(bt.dataset.n); } else if (ev.target.closest('[data-tabgo]')) cerrarPicker(); });
+  document.addEventListener('keydown', ev => { if (!$('#tuto').hidden) { if (ev.key === 'Escape') cerrarTuto(); else if (ev.key === 'ArrowRight' && S.tuto < TUTO_N - 1) { S.tuto++; renderTuto(); } else if (ev.key === 'ArrowLeft' && S.tuto > 0) { S.tuto--; renderTuto(); } } });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#picker').hidden && !$('#pickClose').hidden) cerrarPicker(); });
 
 }
@@ -2407,6 +2714,7 @@ function elegir(n) {
   if (!S.editId) fillEsp(nom);
   if (ADMIN_TABS.includes(S.tab) && !esResp()) setTab('cargar', true);
   renderAll(); programarBorrador();
+  setTimeout(tutoPrimeraVez, 400);
   if (n === RESP && esResp()) { S.inicioVisto = true; setTab('inicio', true); }
   toast(n === RESP ? 'Viendo todo el equipo.' : `Hola, ${n}. Se cargaron tus entrevistas.`);
 }
@@ -2414,7 +2722,8 @@ function revisarIdentidad() {
   if (!S.conectado || !S.ajCargado || !S.pinCargado) return;
   pintarQuien();
   if (!identidadValida()) { if ($('#picker').hidden) abrirPicker(false); }
-  else if (esResp() && !S.inicioVisto) { S.inicioVisto = true; if (S.tab === 'cargar' && !S.editId && firmaForm() === S.formBase) setTab('inicio', true); }
+  if (identidadValida()) setTimeout(tutoPrimeraVez, 600);
+  if (!identidadValida()) {} else if (esResp() && !S.inicioVisto) { S.inicioVisto = true; if (S.tab === 'cargar' && !S.editId && firmaForm() === S.formBase) setTab('inicio', true); }
 }
 function vacioIdentidad() {
   return `<div class="empty"><h3>Falta elegir quién eres</h3><p>Elige tu nombre de asesor OB para ver tus entrevistas y tus comisiones.</p><button class="btn btn-primary" type="button" data-pick="1">Elegir asesor OB</button></div>`;
