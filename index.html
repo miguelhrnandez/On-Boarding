@@ -552,6 +552,20 @@ tr.ref td .chip{font-style:normal}
 .helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .helppop[hidden]{display:none}
 .nw{white-space:nowrap}
+/* Estadísticas por semana (prueba) */
+:root{--c-aho:#2F6DB5;--c-inc:#E62D2A}
+:root[data-tema="oscuro"]{--c-aho:#5B93D6;--c-inc:#F0524E}
+.prueba{display:inline-block;font:700 10px/1.7 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:0 7px;margin-left:6px;vertical-align:2px}
+.subtabs button[aria-selected="true"] .prueba{background:var(--warn-soft)}
+.sw-aho{background:var(--c-aho)} .sw-inc{background:var(--c-inc)}
+.wc-seg.aho{background:var(--c-aho)} .wc-seg.inc{background:var(--c-inc)}
+.wc-y.wide{width:54px}
+.wc-val{position:absolute;left:50%;transform:translateX(-50%);font-size:11.5px;font-weight:650;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;pointer-events:none}
+.wc-col:hover .wc-val,.wc-col:focus-visible .wc-val{visibility:hidden}
+.wc-col.fut .wc-x-f{color:var(--muted)}
+.wk-fut td{color:var(--muted)}
+.wk-sub{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.wk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 /* Compromisos del seguimiento */
 .cp{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
 .cp.done{background:var(--sunk)}
@@ -902,6 +916,7 @@ const fm = n => MONEY.format(Math.round(n || 0));
 const COT = new Intl.NumberFormat('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const fu = n => 'US$ ' + NUM.format(Math.round(n || 0));
 function cotDe(f) { if (!f || !S.dolar?.length) return null; let r = null; for (const x of S.dolar) { if (x.fecha <= f) r = x; else break; } return r; }
+function cotPacto(f) { const t = hoy(); return cotDe(f && f <= t ? f : t); }
 function mixTxt(ars, usd, cot) { const p = []; if (ars) p.push(fm(ars)); if (usd) p.push(`${usd < 0 ? '−' : ''}${fu(Math.abs(usd))}${cot ? ' × ' + COT.format(cot) : ''}`); return p.join(' + ').replace('+ −', '− '); }
 function montoHtml(it) { if (it.moneda === 'MIX') return `<span>${fm(it.monto)}<br><small class="muted">${mixTxt(it.ars, it.usd, it.cot)}</small></span>`; return it.moneda === 'USD' && it.usd ? `<span>${fm(it.monto)}<br><small class="muted">${fu(it.usd)} × ${COT.format(it.cot || 0)}</small></span>` : fm(it.monto); }
 const num = v => { const d = String(v ?? '').replace(/[^\d]/g, ''); return d ? parseInt(d, 10) : 0; };
@@ -971,7 +986,7 @@ function comision(e) {
     if (k.resuelto || !compMonto(k)) continue;
     const pf = k.fecha || '';
     const it = {pendiente: true, compId: k.id, concepto: k.tipo === 'ahorro' ? 'Ahorro pactado' : 'Incremento pactado', tipo: k.tipo, fecha: pf, mesCom: pf || e.fecha, acuerdo: k.acuerdo || e.fecha, monto: k.monto, moneda: k.moneda || 'ARS', usd: k.usd || 0, cot: k.cot || 0, ars: k.ars || 0, nota: k.detalle || ''};
-    if (it.moneda !== 'ARS' && it.usd) { const ch = cotDe(hoy()); if (ch) { it.cot = ch.ingreso; it.monto = (it.moneda === 'MIX' ? it.ars : 0) + Math.round(it.usd * ch.ingreso); } }
+    if (it.moneda !== 'ARS' && it.usd) { const ch = cotPacto(pf); if (ch) { it.cotFecha = ch.fecha; it.cot = ch.ingreso; it.monto = (it.moneda === 'MIX' ? it.ars : 0) + Math.round(it.usd * ch.ingreso); } }
     it.dentro = !!(limite && (!pf || pf <= limite) && hoy() <= limite);
     it.bruto = it.dentro ? Math.round(it.monto * pct / 100) : 0;
     it.comision = Math.min(it.bruto, rest); it.recorte = it.comision < it.bruto; rest -= it.comision;
@@ -1008,7 +1023,7 @@ function compDeStored(k) {
 function compAStored(k) {
   const conM = ['ahorro', 'incremento'].includes(k.tipo);
   const ars = !conM ? 0 : k.moneda === 'USD' ? (k.mix ? k.m2 : 0) : k.m1, usd = !conM ? 0 : k.moneda === 'USD' ? k.m1 : (k.mix ? k.m2 : 0);
-  const c = usd ? cotDe(k.acuerdo || $('#f_fecha').value || hoy()) : null;
+  const c = usd ? cotPacto(k.fecha) : null;
   const moneda = ars && usd ? 'MIX' : usd ? 'USD' : 'ARS';
   return {id: k.id, tipo: k.tipo, detalle: (k.detalle || '').trim(), fecha: k.fecha, acuerdo: k.acuerdo || '', monto: ars + (c && usd ? Math.round(usd * c.ingreso) : 0), moneda, ars, usd, cot: c ? c.ingreso : 0, resuelto: !!k.resuelto, resueltoFecha: k.resueltoFecha || null, cumplio: k.cumplio ?? null};
 }
@@ -1043,7 +1058,8 @@ function pintarComps(c) {
   for (const k of S.comps) {
     const h = document.getElementById('cp_' + k.id + '_h'); if (!h) continue;
     const st = compAStored(k);
-    h.textContent = st.monto ? `${st.moneda !== 'ARS' ? `≈ ${fm(st.monto)} en pesos. ` : ''}Si se cumple dentro del plazo, suma ${fm(Math.round(st.monto * pct / 100))} de comisión.` : (k.tipo === 'incremento' ? 'Cuánto va a aumentar la cuota.' : '');
+    const cp = st.usd ? cotPacto(k.fecha) : null;
+    h.textContent = st.usd && !cp ? 'No hay cotización del dólar Spazios cargada.' : st.monto ? `${cp ? `${fu(st.usd)} × ${COT.format(cp.ingreso)} (dólar Spazios del ${fdc(cp.fecha)}) ≈ ${fm(st.monto)}${st.ars ? ` + ${fm(st.ars)}` : ''} en pesos. ` : ''}Si se cumple dentro del plazo, suma ${fm(Math.round(st.monto * pct / 100))} de comisión.` : (k.tipo === 'incremento' ? 'Cuánto va a aumentar la cuota.' : '');
   }
 }
 async function updComp(e, cid, patch) {
@@ -1298,7 +1314,7 @@ function recalcG(g) {
   if (g.moneda === 'USD') { const c = cotDe(g.fecha || hoy()); g.cot = c ? c.ingreso : 0; g.monto = c && g.montoUsd ? Math.round(g.montoUsd * c.ingreso) : 0; }
   else { g.montoUsd = 0; g.cot = 0; }
 }
-function convTxt(g) { return g.moneda === 'USD' ? (g.cot ? `= ${fm(g.monto)}` : '<span style="color:var(--bad)">Sin cotización</span>') : ''; }
+function convTxt(g) { if (g.moneda !== 'USD') return ''; const c = cotDe(g.fecha || hoy()); return g.cot ? `<span title="Dólar Spazios ingreso del ${c ? fd(c.fecha) : '—'}">× ${COT.format(g.cot)} = ${fm(g.monto)}</span>` : '<span style="color:var(--bad)">Sin cotización</span>'; }
 const verPosteriores = () => S.editOrig?.estado === 'final' || S.gest.length > 0;
 function renderGest() {
   const lim = $('#f_fecha').value ? addMonths($('#f_fecha').value, S.editOrig?.plazoMeses ?? S.aj.plazoMeses) : '';
@@ -2058,6 +2074,8 @@ function renderPanel() {
   const {desde, hasta} = rango(per);
   const enPer = f => f && f >= desde && f <= (per === '3m' ? hasta : lastDay(per));
   const base = S.E.filter(e => (!suc || norm(e.sucursal) === norm(suc)) && (!esp || norm(e.especialista) === norm(esp)));
+  out.classList.toggle('didac', personal || S.f.pan.modo === 'sem');
+  if (!personal && S.f.pan.modo === 'sem') { out.innerHTML = panelSubtabs() + semanalHtml(base, per, esp); etiquetar(out); return; }
   const delPer = base.filter(e => enPer(e.fecha));
   const fin = delPer.filter(e => e.estado === 'final');
   const nBorr = delPer.length - fin.length;
@@ -2267,12 +2285,109 @@ function renderPanel() {
   // Seguimientos
   const segs = base.filter(e => e.estado === 'final').flatMap(e => compPend(e).map(k => ({e, k}))).sort((a, b) => (a.k.fecha || '9').localeCompare(b.k.fecha || '9'));
   if (segs.length && !vistaEq) html += `<section class="card"><div class="card-h"><h3>${E('📌')}Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'compromiso' : 'compromisos'} por resolver.</p></div><ul class="slist">${segs.map(({e, k}) => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${TIPO_COMP[k.tipo] || 'Pendiente'}${compMonto(k) ? ' de ' + compMontoTxt(k) : ''}${k.detalle ? ' · ' + esc(k.detalle.slice(0, 100)) : ''}</small></div><div class="s-side">${k.fecha ? `<span class="mono" style="font-size:13px">${fdc(k.fecha)}</span>` : ''}${k.fecha && k.fecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
+  if (!personal) html = panelSubtabs() + html;
   if (personal) html = `<div class="subtabs" role="tablist" aria-label="Vista de estadísticas"><button type="button" role="tab" data-sub="ind" aria-selected="${!vistaEq}">👤 Individual</button><button type="button" role="tab" data-sub="eq" aria-selected="${vistaEq}">👥 Equipo</button></div>` + html;
   out.innerHTML = html; etiquetar(out);
 }
 
 
 
+/* ---------- Panel por semana (prueba) ---------- */
+const panelSubtabs = () => `<div class="subtabs" role="tablist" aria-label="Vista del panel"><button type="button" role="tab" data-psub="res" aria-selected="${S.f.pan.modo !== 'sem'}">📈 Resumen</button><button type="button" role="tab" data-psub="sem" aria-selected="${S.f.pan.modo === 'sem'}">📅 Por semana<span class="prueba">Prueba</span></button></div>`;
+function semanasMes(per) {
+  const fin = lastDay(per);
+  return [['01', '08'], ['09', '15'], ['16', '22'], ['23', fin.slice(8)]].map(([a, b], i) => ({n: i + 1, d0: `${per}-${a}`, d1: `${per}-${b}`, lbl: `${+a} al ${+b}`}));
+}
+const obFallido = e => e.checklist?.v7 === 'no';
+function statsSemana(base, d0, d1) {
+  const inR = f => f && f >= d0 && f <= d1;
+  const obs = base.filter(e => e.estado === 'final' && inR(e.fecha));
+  const fall = obs.filter(obFallido).length;
+  let aho = 0, inc = 0, usd = 0;
+  for (const e of base) {
+    if (e.estado !== 'final') continue;
+    for (const it of comision(e).items) {
+      if (!it.dentro || !inR(it.mesCom || it.fecha)) continue;
+      if (it.tipo === 'ahorro') aho += it.monto; else inc += it.monto;
+      const k = it.cot || cotDe(it.fecha)?.ingreso; if (k) usd += it.monto / k;
+    }
+  }
+  const tiene = (e, t) => comision(e).items.some(i => i.dentro && i.tipo === t);
+  return {ob: obs.length, fall, ok: obs.length - fall, aho, inc, rec: aho + inc, usd, conA: obs.filter(e => tiene(e, 'ahorro')).length, conI: obs.filter(e => tiene(e, 'incremento')).length};
+}
+function niceTop(mx) { if (!(mx > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(mx))); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= mx) return m * p; return 10 * p; }
+const fmCorto = v => v >= 1e6 ? '$ ' + (v / 1e6).toLocaleString('es-AR', {maximumFractionDigits: 1}) + ' M' : v >= 1e3 ? '$ ' + Math.round(v / 1e3) + ' mil' : '$ ' + Math.round(v || 0);
+function graficoSemanas(cols, ser, money, aria) {
+  const tot = c => c.vals.reduce((a, b) => a + b, 0);
+  const mx = Math.max(0, ...cols.map(tot));
+  const top = money ? niceTop(mx) : (mx <= 4 ? Math.max(1, mx) : Math.ceil(mx / 2) * 2);
+  const ticks = !money && top <= 4 ? Array.from({length: top + 1}, (_, i) => i) : [0, top / 2, top];
+  const ft = money ? (v => v ? fmCorto(v) : '0') : String;
+  return `<div class="legend">${ser.map(x => `<span><i class="sw-${x.k}"></i>${x.n}</span>`).join('')}</div>
+    <div class="wc" role="group" aria-label="${esc(aria)}">
+      <div class="wc-y${money ? ' wide' : ''}">${ticks.map(t => `<span style="bottom:${t / top * 100}%">${ft(t)}</span>`).join('')}</div>
+      <div class="wc-plot">${ticks.slice(1).map(t => `<div class="wc-grid" style="bottom:${t / top * 100}%"></div>`).join('')}
+        ${cols.map((c, i) => { const t = tot(c), h = t / top * 100; return `<div class="wc-col${i === 0 ? ' first' : ''}${i === cols.length - 1 ? ' last' : ''}" tabindex="0" aria-label="${esc(c.tip.replace(/<[^>]+>/g, ' '))}">
+          ${c.fut ? `<span class="wc-val" style="bottom:4px">—</span>` : `<span class="wc-val" style="bottom:calc(${h}% + 4px)">${money ? fmCorto(t) : t}</span>`}
+          <div class="wc-stack" style="height:${h}%">${c.vals.map((v, j) => v ? `<div class="wc-seg ${ser[j].k}" style="flex:${v}"></div>` : '').join('')}</div>
+          <div class="wc-tip" style="bottom:calc(${h}% + 8px)">${c.tip}</div>
+        </div>`; }).join('')}
+      </div>
+      <div class="wc-x">${cols.map(c => `<span>${c.lbl}</span>`).join('')}</div>
+    </div>`;
+}
+function semanalHtml(base, per, esp) {
+  const E = em => `<span class="emo" aria-hidden="true">${em}</span> `;
+  if (per === '3m') return `<div class="empty"><h3>Elegir un mes</h3><p>La vista por semana arma la planilla de un mes. Elegir el mes en «Período».</p></div>`;
+  const t0 = hoy();
+  const W = semanasMes(per).map(w => ({...w, ...statsSemana(base, w.d0, w.d1), fut: w.d0 > t0, curso: w.d0 <= t0 && t0 <= w.d1}));
+  const T = statsSemana(base, per + '-01', lastDay(per));
+  const pc = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+  const usdF = v => 'US$ ' + COT.format(v || 0);
+  let html = `<div class="banner warn" style="font-size:13.5px"><b>🧪 Vista de prueba.</b> Arma la planilla semanal con lo que ya se carga en el checklist, sin cargar nada aparte. Semanas: del 1 al 8, 9 al 15, 16 al 22 y 23 a fin de mes. <b>Fallido</b> = el cliente no sigue adelante (paso «El cliente sigue adelante y se va con todo claro» en No).${qm('semanal')}</div>
+  <div class="wk-head"><span class="note">${esc(mesLabel(per))} · ${esp ? esc(esp) : 'todo el equipo'}</span>${S.dl ? '<button class="btn btn-sm" type="button" id="btnCsvSem">Descargar planilla</button>' : ''}</div>
+  <div class="kpis">
+    <div class="kpi"><span class="k-l">${E('💵')}Recaudación total</span><span class="k-v">${fm(T.rec)}</span><span class="k-s">${usdF(T.usd)} al dólar Spazios</span></div>
+    <div class="kpi"><span class="k-l">${E('🐷')}Ahorros</span><span class="k-v">${fm(T.aho)}</span><span class="k-s">${pc(T.aho, T.rec)} de lo recaudado</span></div>
+    <div class="kpi"><span class="k-l">${E('📈')}Incrementos</span><span class="k-v">${fm(T.inc)}</span><span class="k-s">${pc(T.inc, T.rec)} de lo recaudado</span></div>
+    <div class="kpi"><span class="k-l">${E('👥')}Onboardings</span><span class="k-v">${T.ob}</span><span class="k-s">${T.ok} ${T.ok === 1 ? 'exitoso' : 'exitosos'} · ${T.fall} ${T.fall === 1 ? 'fallido' : 'fallidos'}</span></div>
+    <div class="kpi"><span class="k-l">${E('🎯')}Efectividad ahorro</span><span class="k-v">${pc(T.conA, T.ob)}</span><span class="k-s">${T.conA} de ${T.ob} dejaron ahorro</span></div>
+    <div class="kpi"><span class="k-l">${E('🚀')}Efectividad incremento</span><span class="k-v">${pc(T.conI, T.ob)}</span><span class="k-s">${T.conI} de ${T.ob} subieron la cuota</span></div>
+  </div>`;
+  const ef = (a, b) => b ? `<span>${pc(a, b)}<span class="wk-sub">${a} de ${b}</span></span>` : '—';
+  html += `<section class="card"><div class="card-h"><h3>${E('🗓️')}Semana por semana${qm('semanal')}</h3><p>Recaudación = ahorros + incrementos cobrados en esa semana, dentro del plazo. Onboardings y efectividad, por la fecha de la entrevista.</p></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Semana</th><th class="n">Recaudación</th><th class="n">En US$</th><th class="n">Ahorros</th><th class="n">Incrementos</th><th class="n">OB</th><th class="n">Exitosos</th><th class="n">Fallidos</th><th class="n">Efect. ahorro</th><th class="n">Efect. incremento</th></tr></thead><tbody>
+    ${W.map(w => w.fut ? `<tr class="wk-fut"><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}</span></span></td><td colspan="9">Todavía no empezó.</td></tr>` : `<tr><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}${w.curso ? ' · en curso' : ''}</span></span></td><td class="n"><b>${fm(w.rec)}</b></td><td class="n">${COT.format(w.usd)}</td><td class="n">${fm(w.aho)}</td><td class="n">${fm(w.inc)}</td><td class="n">${w.ob}</td><td class="n">${w.ok}</td><td class="n">${w.fall ? `<b style="color:var(--bad)">${w.fall}</b>` : '0'}</td><td class="n">${ef(w.conA, w.ob)}</td><td class="n">${ef(w.conI, w.ob)}</td></tr>`).join('')}
+    </tbody><tfoot><tr><td>Total del mes</td><td class="n">${fm(T.rec)}</td><td class="n">${COT.format(T.usd)}</td><td class="n">${fm(T.aho)}</td><td class="n">${fm(T.inc)}</td><td class="n">${T.ob}</td><td class="n">${T.ok}</td><td class="n">${T.fall}</td><td class="n">${ef(T.conA, T.ob)}</td><td class="n">${ef(T.conI, T.ob)}</td></tr></tfoot></table></div></section>`;
+  const colsR = W.map(w => ({lbl: w.lbl, fut: w.fut, vals: w.fut ? [0, 0] : [w.aho, w.inc], tip: `<b>Semana ${w.n} · ${w.lbl}</b><br>${w.fut ? 'Todavía no empezó' : `Ahorros ${fm(w.aho)} · Incrementos ${fm(w.inc)}<br>Total ${fm(w.rec)}`}`}));
+  const colsO = W.map(w => ({lbl: w.lbl, fut: w.fut, vals: w.fut ? [0, 0] : [w.ok, w.fall], tip: `<b>Semana ${w.n} · ${w.lbl}</b><br>${w.fut ? 'Todavía no empezó' : `${w.ob} onboardings · ${w.ok} exitosos · ${w.fall} fallidos<br>Efectividad: ahorro ${pc(w.conA, w.ob)} · incremento ${pc(w.conI, w.ob)}`}`}));
+  html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('💵')}Recaudación por semana</h3><p>Ahorros e incrementos cobrados en cada semana.</p></div>${graficoSemanas(colsR, [{k: 'aho', n: 'Ahorros'}, {k: 'inc', n: 'Incrementos'}], true, 'Recaudación por semana, separada en ahorros e incrementos')}</section>
+    <section class="card"><div class="card-h"><h3>${E('👥')}Onboardings por semana</h3><p>Entrevistas finalizadas en cada semana.</p></div>${graficoSemanas(colsO, [{k: 'ok', n: 'Exitosos'}, {k: 'bad', n: 'Fallidos'}], false, 'Onboardings por semana, separados en exitosos y fallidos')}</section></div>`;
+  if (!esp) {
+    const g = new Map();
+    for (const e of base) { const k = norm(e.especialista) || '—'; if (!g.has(k)) g.set(k, {n: e.especialista || '—', l: []}); g.get(k).l.push(e); }
+    const filas = [...g.values()].map(x => ({n: x.n, ...statsSemana(x.l, per + '-01', lastDay(per))})).filter(x => x.ob || x.rec).sort((a, b) => b.rec - a.rec || b.ob - a.ob);
+    if (filas.length) html += `<section class="card"><div class="card-h"><h3>${E('🧑‍💼')}Por asesor OB · ${esc(mesLabel(per))}</h3><p>La misma planilla, una fila por asesor OB. Elegir un asesor en «Asesor OB» para ver sus semanas.</p></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Recaudación</th><th class="n">Ahorros</th><th class="n">Incrementos</th><th class="n">OB</th><th class="n">Exitosos</th><th class="n">Fallidos</th><th class="n">Efect. ahorro</th><th class="n">Efect. incremento</th></tr></thead><tbody>
+      ${filas.map(x => `<tr><td>${esc(x.n)}</td><td class="n"><b>${fm(x.rec)}</b></td><td class="n">${fm(x.aho)}</td><td class="n">${fm(x.inc)}</td><td class="n">${x.ob}</td><td class="n">${x.ok}</td><td class="n">${x.fall ? `<b style="color:var(--bad)">${x.fall}</b>` : '0'}</td><td class="n">${ef(x.conA, x.ob)}</td><td class="n">${ef(x.conI, x.ob)}</td></tr>`).join('')}
+      </tbody></table></div></section>`;
+  }
+  return html;
+}
+async function exportarSemanal() {
+  if (!S.dl) return;
+  const per = $('#fp_per').value, esp = $('#fp_esp').value, suc = $('#fp_suc').value;
+  if (per === '3m') return;
+  const base = S.E.filter(e => (!suc || norm(e.sucursal) === norm(suc)) && (!esp || norm(e.especialista) === norm(esp)));
+  const q = v => { const s = String(v ?? ''); return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const p = (a, b) => b ? Math.round(a / b * 100) + '%' : '';
+  const fila = (nom, x) => [nom, x.rec, COT.format(x.usd), x.aho, x.inc, x.ob, x.ok, x.fall, `${x.conA}/${x.ob}`, p(x.conA, x.ob), `${x.conI}/${x.ob}`, p(x.conI, x.ob)].map(q).join(';');
+  const L = [`Asesor OB: ${esp || 'Todo el equipo'};${mesLabel(per)}`, ['Semana', 'Total recaudación', 'Recaudación en USD', 'Ahorros', 'Incrementos', 'Total onboardings', 'OB exitosos', 'OB fallidos', 'Efectividad ahorro', '%', 'Efectividad incremento', '%'].join(';')];
+  for (const w of semanasMes(per)) L.push(fila(`${w.n} del ${w.lbl}`, statsSemana(base, w.d0, w.d1)));
+  L.push(fila('Total del mes', statsSemana(base, per + '-01', lastDay(per))));
+  try { await S.dl.save({filename: `onboarding-por-semana-${per}${esp ? '-' + norm(esp).replace(/[^a-z0-9ñáéíóú]+/g, '-') : ''}.csv`, data: '﻿' + L.join('\r\n')}); toast('Archivo guardado.'); }
+  catch (e) { if (e?.code === 'declined') return; toast(e?.code === 'rate_limited' ? 'Ya hay una descarga esperando confirmación.' : 'No se pudo descargar el archivo en esta vista.', 'bad'); }
+}
 
 /* ---------- Tutorial del semáforo ---------- */
 const TUTO_V = 'semaforo-1', TUTO_N = 4;
@@ -2453,6 +2568,7 @@ const HELP = {
   fuera: () => `Incrementos o ahorros que el cliente pagó después del plazo de ${plazoTxt()}. Se registran, pero no generan comisión.`,
   semaforo: () => 'Cómo quedó el cliente después de la entrevista. Sale solo de las respuestas: incremento + ahorro (hasta 25 puntos según el monto), participación (20), información correcta del asesor (15), documentación (15), interés en la empresa (15) y departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no (con varios compromisos, se reparten). <b>Verde</b> 75% o más, <b>amarillo</b> 45 a 74%, <b>rojo</b> menos de 45%. No se puede cambiar a mano.',
   posible: () => 'Comisión que se sumaría si cada cliente paga lo que pactó antes de que venza su plazo.',
+  semanal: () => 'La planilla de la semana, armada sola con el checklist. <b>Recaudación</b>: ahorros + incrementos que el cliente pagó en esa semana, dentro del plazo (en dólares, al dólar Spazios de cada pago). <b>OB</b>: entrevistas finalizadas en la semana. <b>Fallido</b>: el cliente no sigue adelante (paso 2.7 en No). <b>Efectividad</b>: de esos onboardings, cuántos dejaron ahorro o subieron la cuota en el mes.',
 };
 function abrirAyuda(btn) {
   const pop = $('#helpPop');
@@ -2499,8 +2615,8 @@ function desgloseHtml(e, c) {
   const val = c.items.filter(i => i.comision > 0);
   if (c.items.length) L.push(li('💰', `<b>Comisión total: ${fm(c.total)}</b>${val.length > 1 ? `<span class="hw-c">${val.map(i => fm(i.comision)).join(' + ')} = <b>${fm(c.total)}</b></span>` : ''}`, 'hw-tot'));
   if (c.tope) L.push(li('🔒', c.topeAlcanzado ? `Llegó al <b>máximo de ${fm(c.tope)}</b> por cliente: lo que pasa de ese monto no comisiona.` : `El máximo por cliente es ${fm(c.tope)}. Con este cliente todavía se pueden sumar <b>${fm(c.restante)}</b> de comisión.`));
-  for (const pa of c.pactados) L.push(li('🤝', `<b>${esc(pa.concepto)} sin pagar:</b> ${pa.moneda === 'MIX' ? `${fm(pa.ars)} + ${fu(pa.usd)} × dólar Spazios de hoy (${pesos(pa.cot)}) ≈ ${fm(pa.monto)}` : pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} × dólar Spazios de hoy (${pesos(pa.cot)}) ≈ ${fm(pa.monto)}` : fm(pa.monto)}. ${pa.dentro ? `<span class="hw-c">${fm(pa.monto)} × ${pct}% = <b>${fm(pa.bruto)}</b>${pa.recorte ? ` → ${fm(pa.comision)} por el tope` : ''}</span>Es de referencia: se suma cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}`));
-  if ([...c.items, ...c.pactados].some(i => i.moneda !== 'ARS' && i.usd)) L.push(li('💵', 'Lo que se paga en dólares se pasa a pesos con el dólar Spazios ingreso del día del pago. La comisión siempre se cobra en pesos.'));
+  for (const pa of c.pactados) L.push(li('🤝', `<b>${esc(pa.concepto)} sin pagar:</b> ${pa.moneda === 'MIX' ? `${fm(pa.ars)} + ${fu(pa.usd)} × dólar Spazios del ${fd(pa.cotFecha)} (${pesos(pa.cot)}) ≈ ${fm(pa.monto)}` : pa.moneda === 'USD' && pa.usd ? `${fu(pa.usd)} × dólar Spazios del ${fd(pa.cotFecha)} (${pesos(pa.cot)}) ≈ ${fm(pa.monto)}` : fm(pa.monto)}. ${pa.dentro ? `<span class="hw-c">${fm(pa.monto)} × ${pct}% = <b>${fm(pa.bruto)}</b>${pa.recorte ? ` → ${fm(pa.comision)} por el tope` : ''}</span>Es de referencia: se suma cuando el cliente pague, si es hasta el ${fd(c.limite)}.` : 'No va a comisionar: el pago queda fuera del plazo.'}`));
+  if ([...c.items, ...c.pactados].some(i => i.moneda !== 'ARS' && i.usd)) L.push(li('💵', 'Lo que se paga en dólares se pasa a pesos con el dólar Spazios ingreso del día del pago. Lo pactado que todavía no se pagó usa el de la fecha pactada, o el último publicado si esa fecha no llegó. La comisión siempre se cobra en pesos.'));
   return `<details class="how"${S.howOpen ? ' open' : ''}><summary><span><span aria-hidden="true">🧮</span> ¿Cómo se calculó la comisión?</span></summary><ol class="how-l">${L.join('')}</ol></details>`;
 }
 
@@ -2683,6 +2799,8 @@ function bindGeneral() {
     if (ev.target.closest('#tutoScrim')) { cerrarTuto(); return; }
     const ig = ev.target.closest('[data-inigo]'); if (ig) { irDesdeInicio(ig.dataset.inigo); return; }
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
+    const ps = ev.target.closest('[data-psub]'); if (ps) { S.f.pan.modo = ps.dataset.psub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
+    if (ev.target.closest('#btnCsvSem')) { exportarSemanal(); return; }
     const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     if (ev.target.closest('[data-pick]')) { cerrarMenu(); abrirPicker(true); return; }
     const ct = ev.target.closest('[data-cont]'); if (ct) { const e = S.E.find(x => x.id === ct.dataset.cont); if (e) editar(e); return; }
