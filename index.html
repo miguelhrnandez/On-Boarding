@@ -566,6 +566,9 @@ tr.ref td .chip{font-style:normal}
 /* Estadísticas por semana (prueba) */
 :root{--c-aho:#2F6DB5;--c-inc:#E62D2A}
 :root[data-tema="oscuro"]{--c-aho:#5B93D6;--c-inc:#F0524E}
+.ptabs{display:flex;flex-wrap:wrap;border-radius:14px;max-width:100%}
+.ptabs button{white-space:nowrap}
+@media (max-width:560px){.ptabs{display:grid;grid-template-columns:1fr 1fr;width:100%;border-radius:14px}.ptabs button{border-radius:10px;padding:9px 8px}}
 .prueba{display:inline-block;font:700 10px/1.7 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:0 7px;margin-left:6px;vertical-align:2px}
 .subtabs button[aria-selected="true"] .prueba{background:var(--warn-soft)}
 .sw-aho{background:var(--c-aho)} .sw-inc{background:var(--c-inc)}
@@ -577,6 +580,16 @@ tr.ref td .chip{font-style:normal}
 .wk-fut td{color:var(--muted)}
 .wk-sub{display:block;font-size:12px;color:var(--muted);font-weight:500}
 .wk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card-h .row{gap:8px}
+.card-h .subtabs button{padding:6px 14px;font-size:13.5px}
+.wk-mob{display:none}
+@media (max-width:640px){
+  .wk-mob{display:inline}
+  .wk-tbl .wk-row{cursor:pointer}
+  .wk-tbl .wk-row:not(.abierta) .wk-sec{display:none!important}
+  .wk-tbl .wk-row td:first-child::after{content:'▾';margin-left:auto;color:var(--muted);font-size:14px}
+  .wk-tbl .wk-row.abierta td:first-child::after{content:'▴'}
+}
 /* Compromisos del seguimiento */
 .cp{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
 .cp.done{background:var(--sunk)}
@@ -800,7 +813,7 @@ tr.ref td .chip{font-style:normal}
       <div class="field"><label for="fe_esp">Asesor OB</label><select id="fe_esp"></select></div>
       <div class="field"><label for="fe_per">Mes</label><select id="fe_per"></select></div>
       <div class="field"><label for="fe_est">Estado</label><select id="fe_est">
-        <option value="">Todos</option><option value="ok">Sin errores</option><option value="falla">Con falla</option><option value="borrador">Borradores</option><option value="pendiente">Por revisar</option><option value="aprobada">Aprobadas</option><option value="observada">Observadas</option>
+        <option value="">Todos</option><option value="ok">Sin errores</option><option value="falla">Con falla</option><option value="borrador">Borradores</option><option value="pendiente">Por revisar</option><option value="aprobada">Aprobadas</option><option value="observada">Observadas</option><option value="baja">Bajas</option>
       </select></div>
       <div class="field"><label for="fe_sem">Semáforo</label><select id="fe_sem"><option value="">Todos</option><option value="verde">🟢 Verde</option><option value="amarillo">🟡 Amarillo</option><option value="rojo">🔴 Rojo</option></select></div>
     </div>
@@ -1709,7 +1722,8 @@ function renderEntrevistas() {
     if (f.per && !(e.fecha || '').startsWith(f.per)) return false;
     if (f.sem && (e.estado !== 'final' || semaforo(e)?.color !== f.sem)) return false;
     if (f.est) {
-      if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final') return false; if (revEst(e) !== f.est && !(f.est !== 'aprobada' && pagosEstado(e, f.est).length)) return false; }
+      if (f.est === 'baja') { if (!e.baja?.fecha) return false; }
+      else if (['pendiente', 'aprobada', 'observada'].includes(f.est)) { if (e.estado !== 'final') return false; if (revEst(e) !== f.est && !(f.est !== 'aprobada' && pagosEstado(e, f.est).length)) return false; }
       else if (estList(e) !== f.est) return false;
     }
     if (q && !(norm(e.cliente).includes(q) || norm(e.dni).includes(q) || norm(e.asesor).includes(q))) return false;
@@ -1724,7 +1738,7 @@ function renderEntrevistas() {
       <span class="e-date">${fdc(e.fecha)}</span>
       <span class="e-main"><b>${esc(e.cliente || 'Sin nombre')}</b><small>${e.dni ? 'DNI ' + esc(e.dni) + ' · ' : ''}Asesor: ${esc(e.asesor || '—')}</small></span>
       <span class="e-esp"><b style="font-weight:500">${esc(e.especialista || '—')}</b><small>${esc(e.sucursal || '')}</small></span>
-      <span class="e-chips chips">${e.estado === 'final' ? semChip(semaforo(e)) : ''}${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${pagosPend(e).length ? chip('pendiente', pagosPend(e).length === 1 ? 'Pago por aprobar' : `${pagosPend(e).length} pagos por aprobar`) : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}</span>
+      <span class="e-chips chips">${e.estado === 'final' ? semChip(semaforo(e)) : ''}${chip(st, st === 'falla' ? `Con falla (${resultado(e.checklist).nos})` : null)}${e.estado === 'final' ? chip(revEst(e)) : ''}${pagosPend(e).length ? chip('pendiente', pagosPend(e).length === 1 ? 'Pago por aprobar' : `${pagosPend(e).length} pagos por aprobar`) : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.baja?.fecha ? chip('falla', 'Baja') : ''}</span>
       <span class="e-money"><b>${fm(c.total)}</b><small>${c.items.length ? `sobre ${fm(c.items.filter(i => i.dentro).reduce((a, i) => a + i.monto, 0))}` : 'sin incremento'}</small></span>
     </button>`; }).join('')}</div>`;
 }
@@ -1734,7 +1748,7 @@ function vacioSinDb() {
 
 /* ---------- Detalle ---------- */
 function abrirDetalle(id, fallback, verCalculo) {
-  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; S.drTab = 'datos'; S.drAsk = null; cerrarAyuda();
+  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; S.drTab = 'datos'; S.drAsk = null; S.drBaja = false; cerrarAyuda();
   renderDetalle();
   $('#drawer').hidden = false; $('#scrim').hidden = false;
   document.body.style.overflow = 'hidden';
@@ -1770,7 +1784,7 @@ function renderDetalle() {
   $('#drawer').innerHTML = `
   <div class="dr-head">
     <div style="min-width:0"><span class="eyebrow">Entrevista del ${fd(e.fecha)}${e.estado !== 'final' ? ' · borrador' : ''}</span><h2>${esc(e.cliente || 'Sin nombre')}</h2>
-      <div class="chips">${semChip(semaforo(e))}${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv, rv === 'aprobada' ? 'Entrevista aprobada' : null) : ''}${pagosPend(e).length ? chip('pendiente', 'Pago por aprobar') : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${compPend(e).length ? chip('pendiente', compPend(e).length === 1 ? 'Seguimiento pendiente' : `${compPend(e).length} seguimientos pendientes`) : ''}</div></div>
+      <div class="chips">${semChip(semaforo(e))}${chip(st, st === 'falla' ? `Con falla (${r.nos})` : st === 'incompleto' ? `Faltan ${r.pend}` : null)}${e.estado === 'final' ? chip(rv, rv === 'aprobada' ? 'Entrevista aprobada' : null) : ''}${pagosPend(e).length ? chip('pendiente', 'Pago por aprobar') : ''}${pagosEstado(e, 'observada').length ? chip('observada', 'Pago observado') : ''}${e.fallaAsesor === 'si' ? chip('falla', 'Falla del asesor') : ''}${e.baja?.fecha ? chip('falla', `Baja ${fdc(e.baja.fecha)}`) : ''}${compPend(e).length ? chip('pendiente', compPend(e).length === 1 ? 'Seguimiento pendiente' : `${compPend(e).length} seguimientos pendientes`) : ''}</div></div>
     <button class="btn btn-sm" id="drClose" type="button">Cerrar</button>
     <div class="dr-tabs" role="tablist" aria-label="Secciones de la entrevista"><button type="button" role="tab" data-drtab="datos" aria-selected="${S.drTab !== 'sem'}">Checklist y datos</button><button type="button" role="tab" data-drtab="sem" aria-selected="${S.drTab === 'sem'}">🚦 Semáforo</button></div>
   </div>
@@ -1809,6 +1823,7 @@ function renderDetalle() {
         ${puedeEsc && S.E.some(x => x.id === e.id) ? (k.resuelto ? `<div class="row">${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto' + (k.resueltoFecha ? ' el ' + fdc(k.resueltoFecha) : ''))}<button class="btn btn-sm" type="button" data-dreab="${esc(k.id)}">Volver a pendiente</button></div>` : S.drAsk === k.id ? `<div class="prev"><span class="ar-ask">¿El cliente cumplió?</span>${(() => { const r = pagoRapidoDe(e.id + '|' + k.id); return r && !r.sinCot ? `<button class="btn btn-sm btn-primary" type="button" data-dcrap="${esc(k.id)}">Sí, pagó ${r.txt} hoy</button><button class="btn btn-sm" type="button" data-dcsi="${esc(k.id)}">Otro monto o fecha</button>` : `<button class="btn btn-sm btn-primary" type="button" data-dcsi="${esc(k.id)}">Sí, cargar el pago</button>`; })()}<button class="btn btn-sm" type="button" data-dcno="${esc(k.id)}">No cumplió</button><button class="btn btn-sm" type="button" data-dccancel="1">Cancelar</button></div>` : `<div><button class="btn btn-sm" type="button" data-dres="${esc(k.id)}">Marcar como resuelto</button></div>`) : (k.resuelto ? `<div>${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto')}</div>` : '')}
       </div>`).join('')}</div>` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
+    ${e.estado === 'final' ? bajaCard(e, puedeEsc && S.E.some(x => x.id === e.id)) : ''}
     ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
     ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la entrevista</h3>${(e.gestiones || []).some(g => (g.monto || 0) > 0) ? '<p class="note">Cubre el checklist y lo logrado el día de la entrevista. Los pagos posteriores se aprueban uno por uno en la tabla de montos.</p>' : ''}
       ${esResp() && puedeEsc ? `<div class="seg" role="radiogroup" aria-label="Estado de la revisión" style="align-self:flex-start">
@@ -1826,6 +1841,19 @@ function renderDetalle() {
   </div></div>`;
   etiquetar($('#drawer'));
 }
+function bajaCard(e, puede) {
+  const b = e.baja;
+  if (b?.fecha) return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🚪</span> Baja del cliente</h3>
+    <div class="chips">${chip('falla', `Se dio de baja el ${fd(b.fecha)}`)}</div>${b.motivo ? `<p class="pre">${esc(b.motivo)}</p>` : ''}
+    <p class="note">Cuenta como <b>onboarding fallido</b> en la semana de la entrevista. Sus seguimientos pendientes salen de Avisos.</p>
+    ${puede && esResp() ? `<div><button class="btn btn-sm" type="button" data-bajadeshacer="1">Deshacer la baja</button></div>` : ''}</section>`;
+  if (!puede) return '';
+  if (S.drBaja) return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🚪</span> Registrar la baja del cliente</h3>
+    <div class="grid-f"><div class="field"><label for="bj_fecha">Fecha de la baja</label><input type="date" id="bj_fecha" min="${esc(e.fecha)}" max="${hoy()}" value="${hoy()}"></div>
+    <div class="field"><label for="bj_motivo">Motivo (opcional)</label><input type="text" id="bj_motivo" placeholder="Ej.: no pudo pagar la segunda cuota"></div></div>
+    <div class="row"><button class="btn btn-sm btn-primary" type="button" data-bajaok="1">Guardar la baja</button><button class="btn btn-sm" type="button" data-bajano="1">Cancelar</button></div></section>`;
+  return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🚪</span> Baja del cliente</h3><p class="note">Si el cliente se da de baja del plan, registrarlo acá: cuenta como onboarding fallido en la estadística semanal.</p><div><button class="btn btn-sm" type="button" data-bajaabrir="1">Registrar baja</button></div></section>`;
+}
 function bindDetalle() {
   $('#scrim').addEventListener('click', cerrarDetalle);
   $('#drawer').addEventListener('toggle', ev => { if (ev.target.classList?.contains('how')) S.howOpen = ev.target.open; }, true);
@@ -1838,6 +1866,12 @@ function bindDetalle() {
       const b2 = ev.target.closest('[data-dcsi]'); if (b2 && eD) { S.drAsk = null; cumplirAviso(eD.id, b2.dataset.dcsi); return; }
       const b3 = ev.target.closest('[data-dcno]'); if (b3 && eD) { S.drAsk = null; try { await updComp(eD, b3.dataset.dcno, {resuelto: true, resueltoFecha: hoy(), cumplio: false}); toast('Compromiso cerrado como no cumplido. El semáforo del cliente bajó.'); } catch (err) { errorEscritura(err); } return; }
       const b4 = ev.target.closest('[data-dreab]'); if (b4 && eD) { try { await updComp(eD, b4.dataset.dreab, {resuelto: false, resueltoFecha: null, cumplio: null}); toast('El compromiso volvió a Avisos.'); } catch (err) { errorEscritura(err); } return; } }
+    { const eB = S.E.find(x => x.id === S.detalle);
+      if (ev.target.closest('[data-bajaabrir]')) { S.drBaja = true; renderDetalle(); setTimeout(() => $('#bj_fecha')?.focus(), 30); return; }
+      if (ev.target.closest('[data-bajano]')) { S.drBaja = false; renderDetalle(); return; }
+      const bo = ev.target.closest('[data-bajaok]'); if (bo && eB) { const f = $('#bj_fecha').value; if (!f) { toast('Elegir la fecha de la baja.', 'bad'); return; } if (f < eB.fecha || f > hoy()) { toast('La fecha de la baja tiene que ser entre la entrevista y hoy.', 'bad'); return; }
+        bo.disabled = true; try { await conReintento(() => S.db.collection('entrevistas').doc(eB.id).update({baja: {fecha: f, motivo: ($('#bj_motivo').value || '').trim(), registrado: new Date().toISOString(), por: S.uid ?? null}})); S.drBaja = false; toast('Baja registrada. Cuenta como onboarding fallido.'); } catch (err) { bo.disabled = false; errorEscritura(err); } return; }
+      if (ev.target.closest('[data-bajadeshacer]') && eB) { try { await conReintento(() => S.db.collection('entrevistas').doc(eB.id).update({baja: null})); toast('Se deshizo la baja.'); } catch (err) { errorEscritura(err); } return; } }
     const dt = ev.target.closest('[data-drtab]'); if (dt) { S.drTab = dt.dataset.drtab; renderDetalle(); $('#drawer').scrollTop = 0; return; }
     const po = ev.target.closest('[data-pagoobs]'); if (po) { S.obsPago = po.dataset.pagoobs; renderDetalle(); setTimeout(() => document.getElementById('pn_' + S.obsPago)?.focus(), 30); return; }
     if (ev.target.closest('[data-pagocancel]')) { S.obsPago = null; renderDetalle(); return; }
@@ -1953,7 +1987,7 @@ async function exportarCsv() {
 function avisosDe(esp) {
   const t0 = hoy();
   const R = {atrasado: 0, hoy: 1, proximo: 2, sinfecha: 3};
-  return S.E.filter(e => e.estado === 'final' && (!esp || norm(e.especialista) === norm(esp)))
+  return S.E.filter(e => e.estado === 'final' && !e.baja?.fecha && (!esp || norm(e.especialista) === norm(esp)))
     .flatMap(e => {
       const pend = compPend(e); if (!pend.length) return [];
       const c = comision(e);
@@ -2116,6 +2150,7 @@ function renderPanel() {
   const dk0 = (k, pts) => curM ? `<span class="k-d">${delta(curM[k], prevM[k], pts)} vs ${prevLbl}</span>` : '';
   const dk = (k, pts) => dk0(k, pts);
 
+  const Pn = {cal: '', seg: ''}, mv = (k, m) => { if (!personal) { Pn[k] += html.slice(m); html = html.slice(0, m); } };
   let html = `<div class="kpis">
     <div class="kpi"><span class="k-l">${E('📋')}Entrevistas</span><span class="k-v">${fin.length}</span><span class="k-s">${nBorr ? `${nBorr} en borrador` : 'Finalizadas en el período'}</span>${dk('n')}</div>
     <div class="kpi"><span class="k-l">${E('✅')}Sin <span class="nw">errores${qm('sinErrores')}</span></span><span class="k-v">${pctTxt(nOk, fin.length)}</span><span class="k-s">${nOk} de ${fin.length} con checklist completo</span>${dk('pctOk', true)}</div>
@@ -2186,6 +2221,7 @@ function renderPanel() {
     ${arr.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.ent}</td><td><div class="meter"><div class="m-bar"><span style="width:${x.ent ? Math.round(x.ok / x.ent * 100) : 0}%"></span></div><span class="m-v">${pctTxt(x.ok, x.ent)}</span></div></td><td class="n">${x.nos}</td><td class="n">${pctTxt(x.res, x.ent)}</td><td class="n">${fm(x.inc)}</td><td class="n">${fm(x.aho)}</td><td class="n"><b>${fm(x.com)}</b></td></tr>`).join('')}
     </tbody></table></div></section>`;
 
+  const mSem = html.length;
   // Semáforo de los clientes
   { const cs = fin.map(e => ({e, s: semaforo(e)})).filter(x => x.s);
     if (cs.length) {
@@ -2200,6 +2236,7 @@ function renderPanel() {
         ${!personal && gk.size > 1 ? `<div class="sem-asesores">${[...gk.values()].sort((a, b) => prom(b.l.map(x => x.s.pct)) - prom(a.l.map(x => x.s.pct))).map(g => `<div><div class="sa-h"><b>${esc(g.n)}</b><span>${g.l.length} ${g.l.length === 1 ? 'cliente' : 'clientes'} · promedio ${Math.round(prom(g.l.map(x => x.s.pct)))}%</span></div>${bar(g.l)}</div>`).join('')}</div>` : ''}
         ${top.length ? `<p class="sem-top"><b>Lo que más baja el color:</b> ${top.map(([k, v]) => `${NOMF[k]} (${v})`).join(', ')}.</p>` : ''}</section>`;
     } }
+  mv('cal', mSem);
   // Metas del mes
   if (!vistaEq && per !== '3m' && (S.aj.metaEnt || S.aj.metaMonto)) {
     for (const n of equipo()) if (!esp || norm(n) === norm(esp)) G(n);
@@ -2231,6 +2268,7 @@ function renderPanel() {
       ${filasC.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${pctTxt(x.ci, x.n)}</td><td class="n">${fm(x.incProm)}</td><td class="n">${x.ci ? '+' + Math.round(x.subaProm) + '%' : '—'}</td><td class="n">${pctTxt(x.ch, x.n)}</td><td class="n">${fm(x.ahoProm)}</td></tr>`).join('')}
       </tbody></table></div>`}</section>`;
 
+    const mPac = html.length;
     // Efectividad de los pactos (por fecha de acuerdo en el período)
     const pactos = base.filter(e => e.estado === 'final').flatMap(e => { const c = comision(e); return pactosDe(e, c).map(p => ({e, p})); }).filter(x => enPer(x.p.acuerdo));
     if (pactos.length) {
@@ -2250,7 +2288,7 @@ function renderPanel() {
         ${filasP.map(x => `<tr><td>${esc(x.nom)}</td><td class="n">${x.n}</td><td class="n">${x.cob}</td><td class="n">${x.pend}</td><td class="n">${x.perd}</td><td class="n">${pctTxt(x.cob, x.cob + x.perd)}</td><td class="n">${fm(x.mp)}</td><td class="n">${fm(x.mc)}</td></tr>`).join('')}
         </tbody></table></div>`}</section>`;
     }
-
+    mv('seg', mPac);
     // Pasos en No
     const cnt = ITEMS.map(it => ({it, n: fin.filter(e => e.checklist?.[it.id] === 'no').length})).filter(x => x.n).sort((a, b) => b.n - a.n).slice(0, 8);
     const pasos = cnt.length ? `<ul class="bars">${cnt.map(x => `<li><div class="b-t"><span>${x.it.sn}. ${esc(x.it.t)}</span><span>${x.n} · ${pctTxt(x.n, fin.length)}</span></div><div class="m-bar"><span style="width:${Math.round(x.n / fin.length * 100)}%"></span></div></li>`).join('')}</ul>` : `<p class="note">Ningún paso quedó en «No» en este período.</p>`;
@@ -2280,10 +2318,12 @@ function renderPanel() {
       else { x.res++; if (!kc.fecha || !kc.resueltoFecha || kc.resueltoFecha <= kc.fecha) x.aTiempo++; } } }
     const filasD = [...gd.values()].sort((a, b) => b.atr - a.atr || b.pend - a.pend);
     const discHtml = filasD.length ? `<div class="tbl-wrap"><table><thead><tr><th>Asesor OB</th><th class="n">Pendientes</th><th class="n">Atrasados</th><th class="n">Atraso prom.</th><th class="n">Resueltos a tiempo</th></tr></thead><tbody>${filasD.map(x => `<tr><td>${esc(x.n)}</td><td class="n">${x.pend}</td><td class="n">${x.atr ? `<b style="color:var(--bad)">${x.atr}</b>` : '0'}</td><td class="n">${x.atr ? (Math.round(x.dias / x.atr) === 1 ? '1 día' : Math.round(x.dias / x.atr) + ' días') : '—'}</td><td class="n">${pctTxt(x.aTiempo, x.res)}</td></tr>`).join('')}</tbody></table></div>` : `<p class="note">Todavía no hay seguimientos cargados.</p>`;
-    html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('💡')}Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>
-      <section class="card"><div class="card-h"><h3>${E('🧩')}Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section></div>
-      <div class="two"><section class="card"><div class="card-h"><h3>${E('📅')}Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>
-      ${vistaEq ? '' : `<section class="card"><div class="card-h"><h3>${E('⏰')}Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section>`}</div>`;
+    const cPasos = `<section class="card"><div class="card-h"><h3>${E('💡')}Pasos que más quedan en «No»</h3><p>Sobre ${fin.length} ${fin.length === 1 ? 'entrevista finalizada' : 'entrevistas finalizadas'}.</p></div>${pasos}</section>`;
+    const cSec = `<section class="card"><div class="card-h"><h3>${E('🧩')}Cumplimiento por sección</h3><p>Porcentaje de pasos hechos (Sí o N/A) en cada parte del checklist. En rojo, la más floja.</p></div>${secHtml}</section>`;
+    const cChart = `<section class="card"><div class="card-h"><h3>${E('📅')}Entrevistas por semana</h3><p>Semanas que empiezan el lunes indicado.</p></div>${chart}</section>`;
+    const cDisc = `<section class="card"><div class="card-h"><h3>${E('⏰')}Disciplina con los seguimientos</h3><p>Estado actual. «A tiempo» es resuelto hasta la fecha pactada.</p></div>${discHtml}</section>`;
+    if (personal) html += `<div class="two">${cPasos}${cSec}</div><div class="two">${cChart}${vistaEq ? '' : cDisc}</div>`;
+    else Pn.cal += `<div class="two">${cPasos}${cSec}</div>`;
     // Fallas de asesores
     const ga = new Map();
     for (const e of fin) { const k = norm(e.asesor) || '—'; if (!ga.has(k)) ga.set(k, {n: e.asesor || '—', ent: 0, f: 0, tipos: {}}); const x = ga.get(k); x.ent++; if (e.fallaAsesor === 'si') { x.f++; for (const t of e.fallaTipos || []) x.tipos[t] = (x.tipos[t] || 0) + 1; } }
@@ -2294,13 +2334,23 @@ function renderPanel() {
     const t0 = hoy();
     const abiertos = base.filter(e => e.estado === 'final').map(e => ({e, c: comision(e)})).filter(x => x.c.limite && x.c.limite >= t0 && x.e.fecha <= t0).sort((a, b) => a.c.limite.localeCompare(b.c.limite));
     const abHtml = abiertos.length ? `<ul class="slist scroll">${abiertos.map(({e, c}) => { const q = diffDays(t0, c.limite); return `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · cuota actual ${fm(c.cuotaActual)}</small></div><div class="s-side">${q <= 5 ? chip('pendiente', `Vence en ${q} ${q === 1 ? 'día' : 'días'}`) : `<span class="mono" style="font-size:13px">${q} días</span>`}<small class="muted">hasta ${fdc(c.limite)}</small></div></li>`; }).join('')}</ul>` : `<p class="note">No hay clientes con plazo abierto.</p>`;
-    html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('🧑‍💼')}Fallas detectadas en asesores</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>
-      ${vistaEq ? '' : `<section class="card"><div class="card-h"><h3>${E('⏳')}Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section>`}</div>`;
+    const cFal = `<section class="card"><div class="card-h"><h3>${E('🧑‍💼')}Fallas detectadas en asesores de ventas</h3><p>${totF} ${totF === 1 ? 'falla' : 'fallas'} en ${fin.length} entrevistas. Sirve para corregir a cada asesor.</p></div>${fallasHtml}</section>`;
+    const cPlz = `<section class="card"><div class="card-h"><h3>${E('⏳')}Plazos abiertos para incremento o ahorro</h3><p>Clientes que todavía pueden sumar y comisionar. Ordenados por vencimiento.</p></div>${abHtml}</section>`;
+    if (personal) html += `<div class="two">${cFal}${vistaEq ? '' : cPlz}</div>`;
+    else { Pn.cal += cFal; Pn.seg += `<div class="two">${cDisc}${cPlz}</div>`; }
   }
   // Seguimientos
-  const segs = base.filter(e => e.estado === 'final').flatMap(e => compPend(e).map(k => ({e, k}))).sort((a, b) => (a.k.fecha || '9').localeCompare(b.k.fecha || '9'));
+  const segs = base.filter(e => e.estado === 'final' && !e.baja?.fecha).flatMap(e => compPend(e).map(k => ({e, k}))).sort((a, b) => (a.k.fecha || '9').localeCompare(b.k.fecha || '9'));
+  const mSeg = html.length;
   if (segs.length && !vistaEq) html += `<section class="card"><div class="card-h"><h3>${E('📌')}Seguimientos pendientes</h3><p>${segs.length} ${segs.length === 1 ? 'compromiso' : 'compromisos'} por resolver.</p></div><ul class="slist">${segs.map(({e, k}) => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esc(e.especialista || '—')} · ${TIPO_COMP[k.tipo] || 'Pendiente'}${compMonto(k) ? ' de ' + compMontoTxt(k) : ''}${k.detalle ? ' · ' + esc(k.detalle.slice(0, 100)) : ''}</small></div><div class="s-side">${k.fecha ? `<span class="mono" style="font-size:13px">${fdc(k.fecha)}</span>` : ''}${k.fecha && k.fecha < hoy() ? chip('falla', 'Atrasado') : ''}</div></li>`).join('')}</ul></section>`;
-  if (!personal) html = panelSubtabs() + html;
+  mv('seg', mSeg);
+  if (!personal) {
+    const modo = S.f.pan.modo || 'res';
+    const vacio = (t, p) => `<div class="empty"><h3>${t}</h3><p>${p}</p></div>`;
+    if (modo === 'cal') html = Pn.cal || vacio('Sin entrevistas finalizadas en este período', 'Acá se ve qué pasos del checklist quedan en «No», el cumplimiento por sección, las fallas de los asesores de ventas y el semáforo de los clientes.');
+    else if (modo === 'seg') html = Pn.seg || vacio('Sin seguimientos en este período', 'Acá se ve la efectividad de los pactos, la disciplina con los seguimientos, los plazos abiertos y lo pendiente.');
+    html = panelSubtabs() + html;
+  }
   if (personal) html = `<div class="subtabs" role="tablist" aria-label="Vista de estadísticas"><button type="button" role="tab" data-sub="ind" aria-selected="${!vistaEq}">👤 Individual</button><button type="button" role="tab" data-sub="eq" aria-selected="${vistaEq}">👥 Equipo</button></div>` + html;
   out.innerHTML = html; etiquetar(out);
 }
@@ -2353,12 +2403,13 @@ async function pagoRapido(key, btn) {
 }
 
 /* ---------- Panel por semana (prueba) ---------- */
-const panelSubtabs = () => `<div class="subtabs" role="tablist" aria-label="Vista del panel"><button type="button" role="tab" data-psub="res" aria-selected="${S.f.pan.modo !== 'sem'}">📈 Resumen</button><button type="button" role="tab" data-psub="sem" aria-selected="${S.f.pan.modo === 'sem'}">📅 Por semana<span class="prueba">Prueba</span></button></div>`;
+const PAN_TABS = [['res', '📈', 'Resumen'], ['sem', '📅', 'Por semana'], ['cal', '✅', 'Calidad'], ['seg', '🤝', 'Seguimientos']];
+const panelSubtabs = () => { const m = S.f.pan.modo || 'res'; return `<div class="subtabs ptabs" role="tablist" aria-label="Vista del panel">${PAN_TABS.map(([k, em, t]) => `<button type="button" role="tab" data-psub="${k}" aria-selected="${m === k}"><span aria-hidden="true">${em}</span> ${t}</button>`).join('')}</div>`; };
 function semanasMes(per) {
   const fin = lastDay(per);
   return [['01', '08'], ['09', '15'], ['16', '22'], ['23', fin.slice(8)]].map(([a, b], i) => ({n: i + 1, d0: `${per}-${a}`, d1: `${per}-${b}`, lbl: `${+a} al ${+b}`}));
 }
-const obFallido = e => e.checklist?.v7 === 'no';
+const obFallido = e => !!e.baja?.fecha;
 function statsSemana(base, d0, d1) {
   const inR = f => f && f >= d0 && f <= d1;
   const obs = base.filter(e => e.estado === 'final' && inR(e.fecha));
@@ -2404,24 +2455,22 @@ function semanalHtml(base, per, esp) {
   const T = statsSemana(base, per + '-01', lastDay(per));
   const pc = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
   const usdF = v => 'US$ ' + COT.format(v || 0);
-  let html = `<div class="banner warn" style="font-size:13.5px"><b>🧪 Vista de prueba.</b> Arma la planilla semanal con lo que ya se carga en el checklist, sin cargar nada aparte. Semanas: del 1 al 8, 9 al 15, 16 al 22 y 23 a fin de mes. <b>Fallido</b> = el cliente no sigue adelante (paso «El cliente sigue adelante y se va con todo claro» en No).${qm('semanal')}</div>
-  <div class="wk-head"><span class="note">${esc(mesLabel(per))} · ${esp ? esc(esp) : 'todo el equipo'}</span>${S.dl ? '<button class="btn btn-sm" type="button" id="btnCsvSem">Descargar planilla</button>' : ''}</div>
-  <div class="kpis">
-    <div class="kpi"><span class="k-l">${E('💵')}Recaudación total</span><span class="k-v">${fm(T.rec)}</span><span class="k-s">${usdF(T.usd)} al dólar Spazios</span></div>
-    <div class="kpi"><span class="k-l">${E('🐷')}Ahorros</span><span class="k-v">${fm(T.aho)}</span><span class="k-s">${pc(T.aho, T.rec)} de lo recaudado</span></div>
-    <div class="kpi"><span class="k-l">${E('📈')}Incrementos</span><span class="k-v">${fm(T.inc)}</span><span class="k-s">${pc(T.inc, T.rec)} de lo recaudado</span></div>
+  const vista = S.f.pan.wkVista === 'graf' ? 'graf' : 'tabla';
+  let html = `<div class="kpis">
+    <div class="kpi"><span class="k-l">${E('💵')}Recaudación${qm('semanal')}</span><span class="k-v">${fm(T.rec)}</span><span class="k-s">${fm(T.aho)} ahorros · ${fm(T.inc)} incrementos</span></div>
     <div class="kpi"><span class="k-l">${E('👥')}Onboardings</span><span class="k-v">${T.ob}</span><span class="k-s">${T.ok} ${T.ok === 1 ? 'exitoso' : 'exitosos'} · ${T.fall} ${T.fall === 1 ? 'fallido' : 'fallidos'}</span></div>
-    <div class="kpi"><span class="k-l">${E('🎯')}Efectividad ahorro</span><span class="k-v">${pc(T.conA, T.ob)}</span><span class="k-s">${T.conA} de ${T.ob} dejaron ahorro</span></div>
-    <div class="kpi"><span class="k-l">${E('🚀')}Efectividad incremento</span><span class="k-v">${pc(T.conI, T.ob)}</span><span class="k-s">${T.conI} de ${T.ob} subieron la cuota</span></div>
+    <div class="kpi"><span class="k-l">${E('🎯')}Efectividad</span><span class="k-v">${pc(T.conA, T.ob)} · ${pc(T.conI, T.ob)}</span><span class="k-s">Ahorro ${T.conA}/${T.ob} · incremento ${T.conI}/${T.ob}</span></div>
   </div>`;
   const ef = (a, b) => b ? `<span>${pc(a, b)}<span class="wk-sub">${a} de ${b}</span></span>` : '—';
-  html += `<section class="card"><div class="card-h"><h3>${E('🗓️')}Semana por semana${qm('semanal')}</h3><p>Recaudación = ahorros + incrementos cobrados en esa semana, dentro del plazo. Onboardings y efectividad, por la fecha de la entrevista.</p></div>
-    <div class="tbl-wrap"><table><thead><tr><th>Semana</th><th class="n">Recaudación</th><th class="n">En US$</th><th class="n">Ahorros</th><th class="n">Incrementos</th><th class="n">OB</th><th class="n">Exitosos</th><th class="n">Fallidos</th><th class="n">Efect. ahorro</th><th class="n">Efect. incremento</th></tr></thead><tbody>
-    ${W.map(w => w.fut ? `<tr class="wk-fut"><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}</span></span></td><td colspan="9">Todavía no empezó.</td></tr>` : `<tr><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}${w.curso ? ' · en curso' : ''}</span></span></td><td class="n"><b>${fm(w.rec)}</b></td><td class="n">${COT.format(w.usd)}</td><td class="n">${fm(w.aho)}</td><td class="n">${fm(w.inc)}</td><td class="n">${w.ob}</td><td class="n">${w.ok}</td><td class="n">${w.fall ? `<b style="color:var(--bad)">${w.fall}</b>` : '0'}</td><td class="n">${ef(w.conA, w.ob)}</td><td class="n">${ef(w.conI, w.ob)}</td></tr>`).join('')}
-    </tbody><tfoot><tr><td>Total del mes</td><td class="n">${fm(T.rec)}</td><td class="n">${COT.format(T.usd)}</td><td class="n">${fm(T.aho)}</td><td class="n">${fm(T.inc)}</td><td class="n">${T.ob}</td><td class="n">${T.ok}</td><td class="n">${T.fall}</td><td class="n">${ef(T.conA, T.ob)}</td><td class="n">${ef(T.conI, T.ob)}</td></tr></tfoot></table></div></section>`;
+  const tog = `<div class="subtabs" role="tablist" aria-label="Ver como"><button type="button" role="tab" data-wkv="tabla" aria-selected="${vista === 'tabla'}">Tabla</button><button type="button" role="tab" data-wkv="graf" aria-selected="${vista === 'graf'}">Gráfico</button></div>`;
+  const descarga = S.dl ? '<button class="btn btn-sm" type="button" id="btnCsvSem">Descargar planilla</button>' : '';
+  if (vista === 'tabla') html += `<section class="card"><div class="card-h"><h3>${E('🗓️')}Semana por semana</h3><div class="row">${tog}${descarga}</div><p>Semanas del 1 al 8, 9 al 15, 16 al 22 y 23 a fin de mes. <span class="wk-mob">Tocar una semana para ver el detalle.</span></p></div>
+    <div class="tbl-wrap wk-tbl"><table><thead><tr><th>Semana</th><th class="n">Recaudación</th><th class="n wk-sec">En US$</th><th class="n wk-sec">Ahorros</th><th class="n wk-sec">Incrementos</th><th class="n">OB</th><th class="n wk-sec">Exitosos</th><th class="n">Fallidos</th><th class="n">Efect. ahorro</th><th class="n">Efect. incremento</th></tr></thead><tbody>
+    ${W.map(w => w.fut ? `<tr class="wk-fut"><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}</span></span></td><td colspan="9">Todavía no empezó.</td></tr>` : `<tr class="wk-row" tabindex="0" data-wk="${w.n}"><td><span>Semana ${w.n}<span class="wk-sub">${w.lbl}${w.curso ? ' · en curso' : ''}</span></span></td><td class="n"><b>${fm(w.rec)}</b></td><td class="n wk-sec">${COT.format(w.usd)}</td><td class="n wk-sec">${fm(w.aho)}</td><td class="n wk-sec">${fm(w.inc)}</td><td class="n">${w.ob}</td><td class="n wk-sec">${w.ok}</td><td class="n">${w.fall ? `<b style="color:var(--bad)">${w.fall}</b>` : '0'}</td><td class="n">${ef(w.conA, w.ob)}</td><td class="n">${ef(w.conI, w.ob)}</td></tr>`).join('')}
+    </tbody><tfoot><tr class="wk-row" tabindex="0" data-wk="t"><td>Total del mes</td><td class="n">${fm(T.rec)}</td><td class="n wk-sec">${COT.format(T.usd)}</td><td class="n wk-sec">${fm(T.aho)}</td><td class="n wk-sec">${fm(T.inc)}</td><td class="n">${T.ob}</td><td class="n wk-sec">${T.ok}</td><td class="n">${T.fall}</td><td class="n">${ef(T.conA, T.ob)}</td><td class="n">${ef(T.conI, T.ob)}</td></tr></tfoot></table></div></section>`;
   const colsR = W.map(w => ({lbl: w.lbl, fut: w.fut, vals: w.fut ? [0, 0] : [w.aho, w.inc], tip: `<b>Semana ${w.n} · ${w.lbl}</b><br>${w.fut ? 'Todavía no empezó' : `Ahorros ${fm(w.aho)} · Incrementos ${fm(w.inc)}<br>Total ${fm(w.rec)}`}`}));
   const colsO = W.map(w => ({lbl: w.lbl, fut: w.fut, vals: w.fut ? [0, 0] : [w.ok, w.fall], tip: `<b>Semana ${w.n} · ${w.lbl}</b><br>${w.fut ? 'Todavía no empezó' : `${w.ob} onboardings · ${w.ok} exitosos · ${w.fall} fallidos<br>Efectividad: ahorro ${pc(w.conA, w.ob)} · incremento ${pc(w.conI, w.ob)}`}`}));
-  html += `<div class="two"><section class="card"><div class="card-h"><h3>${E('💵')}Recaudación por semana</h3><p>Ahorros e incrementos cobrados en cada semana.</p></div>${graficoSemanas(colsR, [{k: 'aho', n: 'Ahorros'}, {k: 'inc', n: 'Incrementos'}], true, 'Recaudación por semana, separada en ahorros e incrementos')}</section>
+  if (vista === 'graf') html += `<div class="wk-head">${tog}${descarga}</div><div class="two"><section class="card"><div class="card-h"><h3>${E('💵')}Recaudación por semana</h3><p>Ahorros e incrementos cobrados en cada semana.</p></div>${graficoSemanas(colsR, [{k: 'aho', n: 'Ahorros'}, {k: 'inc', n: 'Incrementos'}], true, 'Recaudación por semana, separada en ahorros e incrementos')}</section>
     <section class="card"><div class="card-h"><h3>${E('👥')}Onboardings por semana</h3><p>Entrevistas finalizadas en cada semana.</p></div>${graficoSemanas(colsO, [{k: 'ok', n: 'Exitosos'}, {k: 'bad', n: 'Fallidos'}], false, 'Onboardings por semana, separados en exitosos y fallidos')}</section></div>`;
   if (!esp) {
     const g = new Map();
@@ -2616,7 +2665,7 @@ const HELP = {
   entrevistas: () => 'Todas las entrevistas del equipo. Toca una para ver el checklist, los montos y la comisión. Ahí mismo la responsable la <b>aprueba</b> u <b>observa</b>. Los pagos que el cliente hace después se aprueban aparte, uno por uno, sin tocar lo ya aprobado. Arriba aparecen los borradores sin terminar.',
   comisiones: () => `Lo que cobra cada asesor OB en el mes: el <b>${S.aj.pct}%</b> de lo que subió la cuota y del ahorro, si el cliente paga dentro de ${plazoTxt()} desde la entrevista. Máximo <b>${fm(S.aj.tope)}</b> por cliente. Cuenta en el mes en que el cliente pagó. Toca una fila para ver la cuenta.`,
   avisos: () => 'Cosas que quedaron pendientes con un cliente: un ahorro o un incremento que prometió pagar en una fecha, o algo por resolver. Primero aparecen los atrasados. <b>«Pagó»</b> registra el pago de lo pactado con la fecha de hoy en un toque; si pagó otro monto u otro día, se corrige desde «Otro monto o fecha». <b>«Resuelto»</b> lo saca de la lista.',
-  panel: () => 'Cómo viene el equipo en el período elegido: cuántas entrevistas hizo, si cumplió el checklist, cuánto subieron las cuotas y cuánto se comisiona. Se puede ver un asesor OB o una sucursal. Las flechas comparan con el mes anterior.',
+  panel: () => 'Cómo viene el equipo en el período elegido, en 4 pestañas: <b>Resumen</b> (los números del mes y cada asesor OB), <b>Por semana</b> (la planilla semanal), <b>Calidad</b> (checklist, fallas y semáforo) y <b>Seguimientos</b> (pactos y pendientes). Los filtros de arriba valen para las cuatro. Las flechas comparan con el mes anterior.',
   mias: () => 'Tus resultados personales del período. En «Equipo» ves cómo le va a todo el equipo este mes comparado con el mes anterior.',
   ajustes: () => 'Lo que usa toda la página: porcentaje de comisión, plazo, tope por cliente, metas, la lista de asesores OB, de asesores de ventas y de sucursales, el PIN y el dólar Spazios.',
   sinErrores: () => 'Entrevistas con todos los pasos del checklist en «Sí» o «N/A». Si un solo paso quedó en «No», la entrevista cuenta «con falla».',
@@ -2628,7 +2677,7 @@ const HELP = {
   fuera: () => `Incrementos o ahorros que el cliente pagó después del plazo de ${plazoTxt()}. Se registran, pero no generan comisión.`,
   semaforo: () => 'Cómo quedó el cliente después de la entrevista. Sale solo de las respuestas: incremento + ahorro (hasta 25 puntos según el monto), participación (20), información correcta del asesor (15), documentación (15), interés en la empresa (15) y departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no (con varios compromisos, se reparten). <b>Verde</b> 75% o más, <b>amarillo</b> 45 a 74%, <b>rojo</b> menos de 45%. No se puede cambiar a mano.',
   posible: () => 'Comisión que se sumaría si cada cliente paga lo que pactó antes de que venza su plazo.',
-  semanal: () => 'La planilla de la semana, armada sola con el checklist. <b>Recaudación</b>: ahorros + incrementos que el cliente pagó en esa semana, dentro del plazo (en dólares, al dólar Spazios de cada pago). <b>OB</b>: entrevistas finalizadas en la semana. <b>Fallido</b>: el cliente no sigue adelante (paso 2.7 en No). <b>Efectividad</b>: de esos onboardings, cuántos dejaron ahorro o subieron la cuota en el mes.',
+  semanal: () => 'La planilla de la semana, armada sola con el checklist. <b>Recaudación</b>: ahorros + incrementos que el cliente pagó en esa semana, dentro del plazo (en dólares, al dólar Spazios de cada pago). <b>OB</b>: entrevistas finalizadas en la semana. <b>Fallido</b>: el cliente se dio de baja (se registra desde la entrevista → «Registrar baja»), contado en la semana de la entrevista. <b>Efectividad</b>: de esos onboardings, cuántos dejaron ahorro o subieron la cuota en el mes.',
 };
 function abrirAyuda(btn) {
   const pop = $('#helpPop');
@@ -2693,7 +2742,7 @@ function bloquesInicio() {
   B.push({key: 'pagos', tono: 'warn', urgente: true, em: '💵', titulo: 'Pagos posteriores para aprobar', ok: 'Sin pagos por aprobar',
     desc: 'Lo que el cliente pagó después de la entrevista, por ejemplo lo pactado en el seguimiento. Abrir la entrevista y tocar <b>Aprobar</b> en ese pago: su comisión pasa a aprobada sin tocar el resto.',
     go: 'Ver todos', items: pp.map(({e, it}) => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · ${esc(it.concepto.toLowerCase())} pagado el ${fdc(it.fecha)} · ${it.moneda === 'MIX' ? esc(mixTxt(it.ars, it.usd)) : it.moneda === 'USD' && it.usd ? fu(it.usd) : fm(it.monto)}`, side: `${chip('pendiente', 'Por aprobar')}<small class="muted">Comisión ${fm(it.comision)}</small>`}))});
-  const rojos = S.E.filter(e => e.estado === 'final').map(e => ({e, s: semaforo(e)})).filter(x => x.s && x.s.color === 'rojo' && x.s.c.limite && x.s.c.limite >= t0).sort((a, b) => (b.e.fecha || '').localeCompare(a.e.fecha || ''));
+  const rojos = S.E.filter(e => e.estado === 'final').map(e => ({e, s: semaforo(e)})).filter(x => x.s && x.s.color === 'rojo' && !x.e.baja?.fecha && x.s.c.limite && x.s.c.limite >= t0).sort((a, b) => (b.e.fecha || '').localeCompare(a.e.fecha || ''));
   B.push({key: 'rojos', tono: 'bad', urgente: true, em: '🚦', titulo: 'Clientes en rojo para retención', ok: 'Ningún cliente en rojo',
     desc: 'Clientes que quedaron con el semáforo en rojo y todavía están dentro del mes. Conviene llamarlos para reforzar el plan antes de que se enfríen.',
     go: 'Ver todos', items: rojos.map(({e, s}) => ({id: e.id, main: e.cliente || 'Sin nombre', sub: `${esc(e.especialista || '—')} · ${fdc(e.fecha)} · ${esc(([...s.falta].sort((a, b) => b.pts - a.pts)[0]?.t || '').slice(0, 70))}`, side: semChip(s)}))});
@@ -2860,6 +2909,8 @@ function bindGeneral() {
     if (ev.target.closest('#tutoScrim')) { cerrarTuto(); return; }
     const ig = ev.target.closest('[data-inigo]'); if (ig) { irDesdeInicio(ig.dataset.inigo); return; }
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
+    const wv = ev.target.closest('[data-wkv]'); if (wv) { S.f.pan.wkVista = wv.dataset.wkv; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
+    const wr = ev.target.closest('.wk-row'); if (wr && matchMedia('(max-width:640px)').matches) { wr.classList.toggle('abierta'); return; }
     const ps = ev.target.closest('[data-psub]'); if (ps) { S.f.pan.modo = ps.dataset.psub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     if (ev.target.closest('#btnCsvSem')) { exportarSemanal(); return; }
     const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
