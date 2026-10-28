@@ -785,7 +785,6 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
     <li id="liInstalar" hidden><button class="tab" type="button" data-instalar="1"><span><span class="emo" aria-hidden="true">📲</span> Instalar en el celular</span><small>Abrirla como una app, con su ícono</small></button></li>
-    <li><button class="tab" type="button" data-tuto="1"><span><span class="emo" aria-hidden="true">🚦</span> Cómo funciona el semáforo</span><small>Tutorial de 4 pasos</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="inicio" id="t-inicio" type="button" hidden></button></li>
     <li><button class="tab" data-tab="panel" id="t-panel" type="button" hidden></button></li>
@@ -2553,7 +2552,7 @@ function renderTuto() {
 }
 function abrirTuto(i) { $('#toast').hidden = true; S.tuto = i || 0; renderTuto(); $('#tuto').hidden = false; $('#tutoScrim').hidden = false; }
 function cerrarTuto() { $('#tuto').hidden = true; $('#tutoScrim').hidden = true; lsSet('onb_tuto', TUTO_V); }
-function tutoPrimeraVez() { if (lsGet('onb_tuto', '') === TUTO_V || !$('#tuto').hidden || !$('#picker').hidden || !identidadValida()) return; abrirTuto(0); }
+function tutoPrimeraVez() { return; if (lsGet('onb_tuto', '') === TUTO_V || !$('#tuto').hidden || !$('#picker').hidden || !identidadValida()) return; abrirTuto(0); }
 
 /* ---------- Semáforo del cliente ---------- */
 const SEM_PTS = [6, 12, 19];
@@ -2617,7 +2616,6 @@ function semaforoHtml(sm) {
     ${sm.forzado ? `<p class="sem-force">Queda en rojo porque hubo una falla del asesor y el cliente no incrementó ni dejó ahorro.</p>` : ''}
     <div class="sem-falta"><b>Lo que le faltó</b>${falta.length ? `<ul>${falta.map(f => `<li class="sem-x">${X}<span>${esc(f.t)}</span><span class="p">−${f.pts}</span></li>`).join('')}</ul><small class="muted">Lo que no aparece en esta lista, el cliente lo cumplió.</small>` : `<p class="note">No le faltó nada: cumplió todo. 🎉</p>`}</div>
     ${acc.length ? `<div class="sem-tip"><b>Para el seguimiento</b><span>${acc.join(' ')}</span></div>` : ''}
-    <button class="linkbtn" type="button" data-tuto="1" style="align-self:flex-start;font-size:13.5px">¿Cómo funciona el semáforo?</button>
     ${sm.color === 'rojo' ? `<div class="sem-alerta"><span aria-hidden="true">🔔</span><span><b>Cliente para retención.</b> La responsable lo ve en «Para revisar hoy» mientras dure el mes.</span></div>` : ''}
   </div>`;
 }
