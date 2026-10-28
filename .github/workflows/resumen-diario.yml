@@ -1,0 +1,26 @@
+name: Resumen diario
+
+on:
+  schedule:
+    # Lunes a sábado a las 8:43 hora de Buenos Aires (GitHub usa hora UTC: 11:43)
+    - cron: '43 11 * * 1-6'
+  workflow_dispatch:   # permite mandarlo a mano desde la pestaña Actions
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Instalar el envío de emails
+        run: npm install --no-save --no-package-lock nodemailer@6.9.16
+      - name: Armar y mandar el resumen
+        run: node resumen-diario.mjs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
