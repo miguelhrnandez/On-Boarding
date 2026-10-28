@@ -42,7 +42,7 @@ export function armarResumen(entrevistas, ajustes, t0 = hoy()) {
   B.push({em: '🔍', t: 'Entrevistas para revisar', d: 'Abrirlas y tocar Aprobar u Observar.', items: rev.map(e => [e.cliente || 'Sin nombre', `${e.especialista || '—'} · entrevista del ${fdc(e.fecha)}`])});
   const pagos = fin.flatMap(e => (e.gestiones || []).filter(g => (g.monto || 0) > 0 && g.rev && (g.rev.estado || 'pendiente') === 'pendiente' && g.fecha >= e.fecha && g.fecha <= plazo(e)).map(g => [e.cliente || 'Sin nombre', `${e.especialista || '—'} · ${g.tipo === 'ahorro' ? 'ahorro' : 'incremento'} pagado el ${fdc(g.fecha)} · ${g.moneda === 'USD' && g.montoUsd ? fu(g.montoUsd) : fm(g.monto)}`]));
   B.push({em: '💵', t: 'Pagos posteriores para aprobar', d: 'Lo que el cliente pagó después de la entrevista.', items: pagos});
-  const pend = fin.flatMap(e => comps(e).filter(k => !k.resuelto).map(k => ({e, k, lim: plazo(e)})));
+     const pend = fin.filter(e => !e.baja?.fecha).flatMap(e => comps(e).filter(k => !k.resuelto).map(k => ({e, k, lim: plazo(e)})));
   const seg = pend.filter(x => x.k.fecha && x.k.fecha <= t0).sort((a, b) => a.k.fecha.localeCompare(b.k.fecha));
   B.push({em: '⏰', t: 'Seguimientos atrasados o para hoy', d: 'La fecha que pactó el cliente ya llegó.', items: seg.map(({e, k}) => { const d = diffDays(k.fecha, t0); return [e.cliente || '—', `${e.especialista || '—'} · ${conMonto(k) ? `${TIPO[k.tipo]} de ${montoTxt(k)}` : (k.detalle || 'Pendiente').slice(0, 80)} · ${d ? `atrasado ${d} ${d === 1 ? 'día' : 'días'}` : 'para hoy'}`]; })});
   const vence = pend.filter(x => conMonto(x.k) && !(x.k.fecha && x.k.fecha <= t0) && x.lim && x.lim >= t0 && diffDays(t0, x.lim) <= 7 && !(x.k.fecha && x.k.fecha > x.lim)).sort((a, b) => a.lim.localeCompare(b.lim));
