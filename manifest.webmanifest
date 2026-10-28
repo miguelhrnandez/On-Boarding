@@ -1,0 +1,15 @@
+{
+  "name": "Onboarding PAI · Más Dueños",
+  "short_name": "Onboarding",
+  "description": "Checklist de onboarding, seguimientos y comisiones del equipo de Más Dueños.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F5F6",
+  "theme_color": "#E62D2A",
+  "icons": [
+    {"src": "https://masduenos.com/wp-content/uploads/2025/11/cropped-Recurso-1-md-1-270x270.png", "sizes": "270x270", "type": "image/png", "purpose": "any"}
+  ]
+}
