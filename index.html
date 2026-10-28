@@ -6,6 +6,11 @@
 <link rel="icon" type="image/png" href="https://masduenos.com/wp-content/uploads/2025/11/cropped-Recurso-1-md-1-270x270.png">
 <link rel="apple-touch-icon" href="https://masduenos.com/wp-content/uploads/2025/11/cropped-Recurso-1-md-1-270x270.png">
 <meta name="theme-color" content="#E62D2A">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Onboarding">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Onboarding PAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -552,6 +557,12 @@ tr.ref td .chip{font-style:normal}
 .helppop{position:fixed;z-index:90;width:min(320px,calc(100vw - 24px));background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 .helppop[hidden]{display:none}
 .nw{white-space:nowrap}
+#instScrim{z-index:55}#instDlg{z-index:56}
+.inst-pasos{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:14.5px;line-height:1.45}
+.inst-os{background:var(--sunk);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.inst-os b{font-size:14.5px}
+.ar-act .ar-ask{flex-basis:100%}
+@media (min-width:861px){.ar-act .ar-ask{flex-basis:auto}}
 /* Estadísticas por semana (prueba) */
 :root{--c-aho:#2F6DB5;--c-inc:#E62D2A}
 :root[data-tema="oscuro"]{--c-aho:#5B93D6;--c-inc:#F0524E}
@@ -760,6 +771,7 @@ tr.ref td .chip{font-style:normal}
     <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span><span class="emo" aria-hidden="true">💰</span> Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
     <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
+    <li id="liInstalar" hidden><button class="tab" type="button" data-instalar="1"><span><span class="emo" aria-hidden="true">📲</span> Instalar en el celular</span><small>Abrirla como una app, con su ícono</small></button></li>
     <li><button class="tab" type="button" data-tuto="1"><span><span class="emo" aria-hidden="true">🚦</span> Cómo funciona el semáforo</span><small>Tutorial de 4 pasos</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="inicio" id="t-inicio" type="button" hidden></button></li>
@@ -837,6 +849,8 @@ tr.ref td .chip{font-style:normal}
 <div class="scrim" id="pickScrim" hidden></div>
 <div class="scrim" id="tutoScrim" hidden></div>
 <div class="picker tuto" id="tuto" hidden role="dialog" aria-modal="true" aria-labelledby="tutoTitle"></div>
+<div class="scrim" id="instScrim" hidden></div>
+<div class="picker" id="instDlg" hidden role="dialog" aria-modal="true" aria-labelledby="instTitle"></div>
 <div class="picker" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="pickTitle">
   <div><h2 id="pickTitle">👋 ¿Qué asesor OB eres?</h2><p>Se cargan tus entrevistas, tus datos y tus comisiones.</p></div>
   <div class="pick-list" id="pickList"></div>
@@ -1792,7 +1806,7 @@ function renderDetalle() {
       ${comps(e).length ? `<div class="cpl">${comps(e).map(k => `<div class="cpi">
         <div class="av-m"><span class="chip ${k.tipo === 'otro' ? 'chip-muted' : 'chip-acc'}"><i></i>${TIPO_COMP[k.tipo] || 'Pendiente'}</span>${compMonto(k) ? `<b class="mono">${compMontoTxt(k)}</b>` : ''}${k.fecha ? `<span class="note">para el ${fd(k.fecha)}</span>` : ''}</div>
         ${k.detalle ? `<p class="pre" style="margin:0">${esc(k.detalle)}</p>` : ''}
-        ${puedeEsc && S.E.some(x => x.id === e.id) ? (k.resuelto ? `<div class="row">${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto' + (k.resueltoFecha ? ' el ' + fdc(k.resueltoFecha) : ''))}<button class="btn btn-sm" type="button" data-dreab="${esc(k.id)}">Volver a pendiente</button></div>` : S.drAsk === k.id ? `<div class="prev"><span class="ar-ask">¿El cliente cumplió?</span><button class="btn btn-sm btn-primary" type="button" data-dcsi="${esc(k.id)}">Sí, cargar el pago</button><button class="btn btn-sm" type="button" data-dcno="${esc(k.id)}">No cumplió</button><button class="btn btn-sm" type="button" data-dccancel="1">Cancelar</button></div>` : `<div><button class="btn btn-sm" type="button" data-dres="${esc(k.id)}">Marcar como resuelto</button></div>`) : (k.resuelto ? `<div>${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto')}</div>` : '')}
+        ${puedeEsc && S.E.some(x => x.id === e.id) ? (k.resuelto ? `<div class="row">${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto' + (k.resueltoFecha ? ' el ' + fdc(k.resueltoFecha) : ''))}<button class="btn btn-sm" type="button" data-dreab="${esc(k.id)}">Volver a pendiente</button></div>` : S.drAsk === k.id ? `<div class="prev"><span class="ar-ask">¿El cliente cumplió?</span>${(() => { const r = pagoRapidoDe(e.id + '|' + k.id); return r && !r.sinCot ? `<button class="btn btn-sm btn-primary" type="button" data-dcrap="${esc(k.id)}">Sí, pagó ${r.txt} hoy</button><button class="btn btn-sm" type="button" data-dcsi="${esc(k.id)}">Otro monto o fecha</button>` : `<button class="btn btn-sm btn-primary" type="button" data-dcsi="${esc(k.id)}">Sí, cargar el pago</button>`; })()}<button class="btn btn-sm" type="button" data-dcno="${esc(k.id)}">No cumplió</button><button class="btn btn-sm" type="button" data-dccancel="1">Cancelar</button></div>` : `<div><button class="btn btn-sm" type="button" data-dres="${esc(k.id)}">Marcar como resuelto</button></div>`) : (k.resuelto ? `<div>${k.cumplio === false ? chip('falla', 'No cumplió') : chip('aprobada', 'Resuelto')}</div>` : '')}
       </div>`).join('')}</div>` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
     ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
@@ -1820,6 +1834,7 @@ function bindDetalle() {
     { const eD = S.E.find(x => x.id === S.detalle);
       const b1 = ev.target.closest('[data-dres]'); if (b1 && eD) { const k = comps(eD).find(x => x.id === b1.dataset.dres); if (k && compMonto(k)) { S.drAsk = k.id; renderDetalle(); } else if (k) { try { await updComp(eD, k.id, {resuelto: true, resueltoFecha: hoy(), cumplio: null}); toast('Seguimiento resuelto.'); } catch (err) { errorEscritura(err); } } return; }
       if (ev.target.closest('[data-dccancel]')) { S.drAsk = null; renderDetalle(); return; }
+      const br = ev.target.closest('[data-dcrap]'); if (br && eD) { S.drAsk = null; await pagoRapido(eD.id + '|' + br.dataset.dcrap, br); return; }
       const b2 = ev.target.closest('[data-dcsi]'); if (b2 && eD) { S.drAsk = null; cumplirAviso(eD.id, b2.dataset.dcsi); return; }
       const b3 = ev.target.closest('[data-dcno]'); if (b3 && eD) { S.drAsk = null; try { await updComp(eD, b3.dataset.dcno, {resuelto: true, resueltoFecha: hoy(), cumplio: false}); toast('Compromiso cerrado como no cumplido. El semáforo del cliente bajó.'); } catch (err) { errorEscritura(err); } return; }
       const b4 = ev.target.closest('[data-dreab]'); if (b4 && eD) { try { await updComp(eD, b4.dataset.dreab, {resuelto: false, resueltoFecha: null, cumplio: null}); toast('El compromiso volvió a Avisos.'); } catch (err) { errorEscritura(err); } return; } }
@@ -1988,7 +2003,7 @@ function renderAvisos() {
       <div class="ar-what"><span class="chip ${tipo === 'otro' ? 'chip-muted' : 'chip-acc'}"><i></i>${tipo === 'ahorro' ? 'Ahorro' : tipo === 'incremento' ? 'Incremento' : 'Pendiente'}</span>${a.conMonto ? (k.moneda !== 'ARS' && k.usd ? `<b class="mono">${compMontoTxt(k)}</b><small>≈ ${fm(a.montoPesos)}</small>` : `<b class="mono">${fm(k.monto)}</b>`) : ''}${a.posible ? `<small>+${fm(a.posible)} comisión</small>` : a.conMonto && a.c.topeAlcanzado ? '<small>Ya en el tope</small>' : ''}</div>
       <div class="ar-date"><b class="mono"${a.fueraPlazo ? ' style="color:var(--bad)" title="La fecha pactada es posterior al vencimiento del plazo"' : ''}>${k.fecha ? fd(k.fecha) : '—'}</b><small${a.qPlazo !== null && a.qPlazo < 0 ? ' style="color:var(--bad)"' : ''}>${plazo}</small></div>
       <div class="ar-det" title="${esc(det)}">${esc(det) || '<span class="muted">—</span>'}</div>
-      <div class="ar-act" style="flex-wrap:wrap">${S.canWrite && S.db ? (S.avAsk === a.key ? `<span class="ar-ask">¿Cumplió lo pactado?</span><button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(a.key)}">Sí, cargar el pago</button><button class="btn btn-sm" type="button" data-nocumplio="${esc(a.key)}">No cumplió</button><button class="btn btn-sm" type="button" data-askcancel="1">Cancelar</button>` : `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-cumplir="${esc(a.key)}">Cargar</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(a.key)}">Resuelto</button><button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`) : `<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`}</div>
+      <div class="ar-act" style="flex-wrap:wrap">${S.canWrite && S.db ? (S.avPago === a.key ? (() => { const r = pagoRapidoDe(a.key); return r ? `<span class="ar-ask">¿Pagó ${r.txt} hoy?${r.usd && !r.sinCot ? ` <span class="muted" style="font-weight:500">≈ ${fm(r.total)}</span>` : ''}${r.fuera ? ' <span style="color:var(--bad)">· fuera de plazo</span>' : ''}</span><button class="btn btn-primary btn-sm" type="button" data-pagook="${esc(a.key)}">Sí, guardar</button><button class="btn btn-sm" type="button" data-cumplir="${esc(a.key)}">Otro monto o fecha</button><button class="btn btn-sm" type="button" data-askcancel="1">Cancelar</button>` : ''; })() : S.avAsk === a.key ? `<span class="ar-ask">¿Cumplió lo pactado?</span><button class="btn btn-primary btn-sm" type="button" data-pagoask="${esc(a.key)}">Sí, cumplió</button><button class="btn btn-sm" type="button" data-nocumplio="${esc(a.key)}">No cumplió</button><button class="btn btn-sm" type="button" data-askcancel="1">Cancelar</button>` : `${a.conMonto ? `<button class="btn btn-primary btn-sm" type="button" data-pagoask="${esc(a.key)}">Pagó</button>` : ''}<button class="btn btn-sm" type="button" data-resolver="${esc(a.key)}">Resuelto</button><button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`) : `<button class="btn btn-sm" type="button" data-ver="${esc(e.id)}" aria-label="Ver entrevista">Ver</button>`}</div>
     </div>`; }).join('')}</div>`;
   const obsP = S.E.filter(e => !esp || norm(e.especialista) === norm(esp)).flatMap(e => pagosEstado(e, 'observada').map(it => ({e, it})));
   if (obsP.length) html += `<section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">💵</span> Pagos observados por la responsable</h3><p>Pagos posteriores que tienen algo para corregir antes de aprobar su comisión.</p></div><ul class="slist">${obsP.map(({e, it}) => `<li class="clk" data-id="${esc(e.id)}" tabindex="0" style="cursor:pointer"><div class="s-main"><b>${esc(e.cliente || '—')}</b><small>${esResp() ? esc(e.especialista || '—') + ' · ' : ''}${esc(it.concepto)} del ${fdc(it.fecha)} · ${esc(it.revNota || 'Sin nota')}</small></div><div class="s-side">${chip('observada', 'Pago observado')}</div></li>`).join('')}</ul></section>`;
@@ -2292,6 +2307,51 @@ function renderPanel() {
 
 
 
+/* ---------- Instalar en el celular ---------- */
+let instPrompt = null;
+const esApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function pintarInstalar() { const li = $('#liInstalar'); if (li) li.hidden = esApp(); }
+function abrirInstalar() {
+  cerrarMenu();
+  if (instPrompt) { const p = instPrompt; instPrompt = null; p.prompt(); p.userChoice?.then(r => { if (r?.outcome === 'accepted') toast('📲 Listo: ya la tienes en la pantalla de inicio.'); pintarInstalar(); }).catch(() => {}); return; }
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const ios1 = `<div class="inst-os"><b>📱 iPhone</b><ol class="inst-pasos"><li>Abrir esta página en <b>Safari</b>.</li><li>Tocar el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba).</li><li>Elegir <b>«Agregar a inicio»</b> y tocar <b>Agregar</b>.</li></ol></div>`;
+  const and1 = `<div class="inst-os"><b>🤖 Android</b><ol class="inst-pasos"><li>Abrir esta página en <b>Chrome</b>.</li><li>Tocar el menú <b>⋮</b> de arriba a la derecha.</li><li>Elegir <b>«Instalar app»</b> o <b>«Agregar a la pantalla principal»</b>.</li></ol></div>`;
+  $('#instDlg').innerHTML = `<div><h2 id="instTitle">📲 Instalar en el celular</h2><p>Queda un ícono en la pantalla de inicio y se abre como una app, sin la barra del navegador. Cada persona lo hace una vez en su celular.</p></div>${ios ? ios1 + and1 : and1 + ios1}<p class="note">En la computadora, Chrome muestra un ícono de instalar en la barra de direcciones.</p><button class="btn btn-primary" type="button" id="instClose">Entendido</button>`;
+  $('#instDlg').hidden = false; $('#instScrim').hidden = false;
+  setTimeout(() => $('#instClose')?.focus(), 30);
+}
+function cerrarInstalar() { $('#instDlg').hidden = true; $('#instScrim').hidden = true; }
+window.addEventListener('beforeinstallprompt', ev => { ev.preventDefault(); instPrompt = ev; pintarInstalar(); });
+window.addEventListener('appinstalled', () => { instPrompt = null; pintarInstalar(); });
+if ('serviceWorker' in navigator && location.protocol === 'https:') window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+
+/* ---------- Pago en un toque desde Avisos ---------- */
+function pagoRapidoDe(key) {
+  const [eid, cid] = key.split('|'); const e = S.E.find(x => x.id === eid); if (!e) return null;
+  const k = comps(e).find(x => x.id === cid); if (!k || !compMonto(k) || k.resuelto) return null;
+  const f = hoy(), base = {tipo: k.tipo === 'ahorro' ? 'ahorro' : 'incremento', fecha: f, nota: 'Pago de lo pactado', pacto: true, fechaAcuerdo: k.acuerdo || e.fecha, compId: k.id};
+  const nuevos = k.moneda === 'MIX' ? [{...base, id: gid(), moneda: 'ARS', monto: k.ars || 0}, {...base, id: gid(), moneda: 'USD', montoUsd: k.usd || 0, monto: 0}]
+    : [{...base, id: gid(), moneda: k.moneda === 'USD' ? 'USD' : 'ARS', monto: k.monto || 0, montoUsd: k.usd || 0}];
+  for (const g of nuevos) recalcG(g);
+  const sinCot = nuevos.some(g => g.moneda === 'USD' && !g.cot);
+  const c = comision(e), total = nuevos.reduce((a, g) => a + (g.monto || 0), 0);
+  const txt = k.moneda === 'MIX' ? `${fm(k.ars)} + ${fu(k.usd)}` : k.moneda === 'USD' ? fu(k.usd) : fm(k.monto);
+  return {e, k, nuevos, sinCot, total, txt, fuera: !!(c.limite && f > c.limite), usd: k.moneda !== 'ARS'};
+}
+async function pagoRapido(key, btn) {
+  const r = pagoRapidoDe(key); if (!r) { S.avPago = null; renderAvisos(); return; }
+  if (r.sinCot) { S.avPago = null; cumplirAviso(key); return; }
+  if (btn) btn.disabled = true;
+  const gest = [...(r.e.gestiones || []), ...r.nuevos.map(g => ({id: g.id, tipo: g.tipo, fecha: g.fecha, monto: g.monto || 0, nota: g.nota, moneda: g.moneda, ...(g.moneda === 'USD' ? {montoUsd: g.montoUsd || 0, cot: g.cot || 0} : {}), pacto: true, fechaAcuerdo: g.fechaAcuerdo, compId: g.compId, rev: {estado: 'pendiente', nota: ''}}))];
+  const arr = comps(r.e).map(k => { const {legacy, ...x} = k.id === r.k.id ? {...k, resuelto: true, resueltoFecha: hoy(), cumplio: true} : k; return x; });
+  try {
+    await conReintento(() => S.db.collection('entrevistas').doc(r.e.id).update({gestiones: gest, compromisos: arr, seguimiento: 'si', actualizado: new Date().toISOString(), actualizadoPor: S.uid ?? null}));
+    S.avPago = null; S.avAsk = null;
+    toast(r.fuera ? `Pago guardado (${fm(r.total)}), pero quedó fuera del plazo: no comisiona.` : `✅ Pago guardado: ${fm(r.total)}. Queda para que la responsable lo apruebe.`);
+  } catch (err) { if (btn) btn.disabled = false; errorEscritura(err); }
+}
+
 /* ---------- Panel por semana (prueba) ---------- */
 const panelSubtabs = () => `<div class="subtabs" role="tablist" aria-label="Vista del panel"><button type="button" role="tab" data-psub="res" aria-selected="${S.f.pan.modo !== 'sem'}">📈 Resumen</button><button type="button" role="tab" data-psub="sem" aria-selected="${S.f.pan.modo === 'sem'}">📅 Por semana<span class="prueba">Prueba</span></button></div>`;
 function semanasMes(per) {
@@ -2416,7 +2476,7 @@ function tutoPasos() {
     {t: '📈 Cómo suma puntos después', h: `<p>El semáforo <b>no queda fijo</b>: durante el mes se actualiza solo con lo que pasa con el cliente.</p>
       <div class="tuto-col">
         <div class="c-verde"><span aria-hidden="true">💵</span><span><b>Pagos después de la entrevista</b><small>Lo que el cliente paga después se suma a su incremento + ahorro y puede subir de escalón.</small></span></div>
-        <div class="c-verde"><span aria-hidden="true">✅</span><span><b>Cumple lo pactado en el seguimiento: +10</b><small>Al tocar «Resuelto», el sistema pregunta si cumplió. «Sí, cargar el pago» suma. Si hay varios compromisos, los 10 puntos se reparten entre ellos.</small></span></div>
+        <div class="c-verde"><span aria-hidden="true">✅</span><span><b>Cumple lo pactado en el seguimiento: +10</b><small>Al tocar «Resuelto», el sistema pregunta si cumplió. «Sí, cumplió» registra el pago y suma. Si hay varios compromisos, los 10 puntos se reparten entre ellos.</small></span></div>
         <div class="c-rojo"><span aria-hidden="true">❌</span><span><b>No cumple o se vence el plazo: −10</b><small>«No cumplió», o el mes termina sin que pague. Con dos compromisos, cada uno vale 5.</small></span></div>
       </div>
       <div class="tuto-ej"><b>Ejemplo</b><ol>
@@ -2555,7 +2615,7 @@ const HELP = {
   inicio: () => 'Lo que necesita tu atención hoy, ordenado por urgencia. Cada bloque dice qué hacer. Toca un cliente para abrir su entrevista. Si un bloque no aparece, es porque está al día.',
   entrevistas: () => 'Todas las entrevistas del equipo. Toca una para ver el checklist, los montos y la comisión. Ahí mismo la responsable la <b>aprueba</b> u <b>observa</b>. Los pagos que el cliente hace después se aprueban aparte, uno por uno, sin tocar lo ya aprobado. Arriba aparecen los borradores sin terminar.',
   comisiones: () => `Lo que cobra cada asesor OB en el mes: el <b>${S.aj.pct}%</b> de lo que subió la cuota y del ahorro, si el cliente paga dentro de ${plazoTxt()} desde la entrevista. Máximo <b>${fm(S.aj.tope)}</b> por cliente. Cuenta en el mes en que el cliente pagó. Toca una fila para ver la cuenta.`,
-  avisos: () => 'Cosas que quedaron pendientes con un cliente: un ahorro o un incremento que prometió pagar en una fecha, o algo por resolver. Primero aparecen los atrasados. «Cargar» registra el pago; «Resuelto» lo saca de la lista.',
+  avisos: () => 'Cosas que quedaron pendientes con un cliente: un ahorro o un incremento que prometió pagar en una fecha, o algo por resolver. Primero aparecen los atrasados. <b>«Pagó»</b> registra el pago de lo pactado con la fecha de hoy en un toque; si pagó otro monto u otro día, se corrige desde «Otro monto o fecha». <b>«Resuelto»</b> lo saca de la lista.',
   panel: () => 'Cómo viene el equipo en el período elegido: cuántas entrevistas hizo, si cumplió el checklist, cuánto subieron las cuotas y cuánto se comisiona. Se puede ver un asesor OB o una sucursal. Las flechas comparan con el mes anterior.',
   mias: () => 'Tus resultados personales del período. En «Equipo» ves cómo le va a todo el equipo este mes comparado con el mes anterior.',
   ajustes: () => 'Lo que usa toda la página: porcentaje de comisión, plazo, tope por cliente, metas, la lista de asesores OB, de asesores de ventas y de sucursales, el PIN y el dólar Spazios.',
@@ -2787,7 +2847,8 @@ function bindGeneral() {
     $$('input[name="tema"]').forEach(r => r.addEventListener('change', () => { const v = r.value; if (v === 'oscuro') document.documentElement.setAttribute('data-tema', 'oscuro'); else document.documentElement.removeAttribute('data-tema'); try { localStorage.setItem('onb_tema', v); } catch {} requestAnimationFrame(ajustarKpis); })); }
   $('#menuClose').addEventListener('click', cerrarMenu);
   $('#menuScrim').addEventListener('click', cerrarMenu);
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { cerrarMenu(); cerrarAyuda(); } });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { cerrarMenu(); cerrarAyuda(); cerrarInstalar(); } });
+  pintarInstalar();
   window.addEventListener('scroll', posAyuda, {passive: true});
   window.addEventListener('resize', posAyuda);
   $('#drawer').addEventListener('scroll', posAyuda, {passive: true, capture: true});
@@ -2807,10 +2868,14 @@ function bindGeneral() {
     const db = ev.target.closest('[data-delb]'); if (db) { const id = db.dataset.delb; $('#db_' + id).innerHTML = `<span class="note" style="white-space:nowrap">¿Eliminar?</span><button class="btn btn-sm btn-danger" type="button" data-delbok="${esc(id)}">Sí, eliminar</button><button class="btn btn-sm" type="button" data-delbno="1">No</button>`; return; }
     const dbo = ev.target.closest('[data-delbok]'); if (dbo) { dbo.disabled = true; (async () => { try { await conReintento(() => S.db.collection('entrevistas').doc(dbo.dataset.delbok).delete()); toast('Borrador eliminado.'); } catch (err) { errorEscritura(err); } })(); return; }
     if (ev.target.closest('[data-delbno]')) { renderEntrevistas(); return; }
-    const cu = ev.target.closest('[data-cumplir]'); if (cu) { S.avAsk = null; cumplirAviso(cu.dataset.cumplir); return; }
+    const cu = ev.target.closest('[data-cumplir]'); if (cu) { S.avAsk = null; S.avPago = null; cumplirAviso(cu.dataset.cumplir); return; }
+    const pa = ev.target.closest('[data-pagoask]'); if (pa) { S.avAsk = null; S.avPago = pa.dataset.pagoask; renderAvisos(); setTimeout(() => $(`[data-pagook="${CSS.escape(S.avPago || '')}"]`)?.focus(), 30); return; }
+    const pk = ev.target.closest('[data-pagook]'); if (pk) { pagoRapido(pk.dataset.pagook, pk); return; }
+    if (ev.target.closest('[data-instalar]')) { abrirInstalar(); return; }
+    if (ev.target.closest('#instClose') || ev.target.closest('#instScrim')) { cerrarInstalar(); return; }
     const rs = ev.target.closest('[data-resolver]'); if (rs) { const [eid, cid] = rs.dataset.resolver.split('|'); const e = S.E.find(x => x.id === eid); const k = e && comps(e).find(x => x.id === cid); if (k && compMonto(k)) { S.avAsk = rs.dataset.resolver; renderAvisos(); return; } rs.disabled = true; resolverAviso(rs.dataset.resolver); return; }
     const nc = ev.target.closest('[data-nocumplio]'); if (nc) { nc.disabled = true; noCumplio(nc.dataset.nocumplio); return; }
-    if (ev.target.closest('[data-askcancel]')) { S.avAsk = null; renderAvisos(); return; }
+    if (ev.target.closest('[data-askcancel]')) { S.avAsk = null; S.avPago = null; renderAvisos(); return; }
     const vr = ev.target.closest('[data-ver]'); if (vr) { abrirDetalle(vr.dataset.ver); return; }
     const row = ev.target.closest('.erow, tr.clk, li.clk'); if (row && !row.closest('#drawer')) { abrirDetalle(row.dataset.id, null, !!row.closest('#com-out')); return; }
     if (ev.target.closest('#kpiRev')) { S.f.ent = {...S.f.ent, est: 'pendiente', per: '', esp: $('#fp_esp').value}; $('#fe_est').value = 'pendiente'; setTab('entrevistas'); return; }
