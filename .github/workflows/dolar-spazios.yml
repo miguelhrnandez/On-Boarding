@@ -4,16 +4,16 @@ on:
   schedule:
     # 11:47 y 17:47 hora de Buenos Aires (GitHub usa hora UTC: 14:47 y 20:47)
     - cron: '47 14,20 * * *'
-  workflow_dispatch:
+  workflow_dispatch:   # permite correrlo a mano desde la pestaña Actions
 
 jobs:
   actualizar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
       - name: Leer el dólar de Spazios y guardarlo en Supabase
         run: node dolar-spazios.mjs
         env:
