@@ -893,6 +893,154 @@ th{text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
 .kpi-hero .k-v{text-align:left!important}
 .ini-ok .big{display:none}
 .kv dt{text-transform:none;letter-spacing:0;font-size:12px}
+/* Logros */
+.lg-guia{padding:0;overflow:hidden}
+.lg-guia>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:16px 20px;font-weight:700;font-size:16px}
+.lg-guia>summary::-webkit-details-marker{display:none}
+.lg-guia>summary small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.lg-guia>summary .chev{margin-left:auto;width:20px;height:20px;transition:transform .2s;color:var(--muted);flex:none}
+.lg-guia[open]>summary .chev{transform:rotate(180deg)}
+.lg-guia .gb{padding:0 20px 20px;display:flex;flex-direction:column;gap:18px;font-size:14.5px;line-height:1.55}
+.lg-guia h4{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.lg-guia p{margin:0}
+.lg-pasos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.lg-pasos li{background:var(--sunk);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.lg-pasos li b{font-size:14.5px}
+.lg-pasos li span{color:var(--muted);font-size:13.5px}
+.lg-pasos .n{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;font:700 12.5px var(--f-body);margin-bottom:4px}
+.lg-tips{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.lg-tips li{display:grid;grid-template-columns:minmax(120px,170px) minmax(0,1fr);gap:4px 14px;padding:9px 0;border-top:1px solid var(--line)}
+.lg-tips li:first-child{border-top:0}
+.lg-tips li b{font-size:14px}
+.lg-tips li b small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.lg-tips li span{font-size:13.5px;color:var(--ink-2,var(--ink))}
+@media (max-width:520px){.lg-tips li{grid-template-columns:1fr}}
+.lg-ojo{list-style:disc;margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+/* Medallas ilustradas */
+.medal{display:block;overflow:visible;--fg:#FFF4D6;--fgo:#3A2408}
+.medal .rib{fill:color-mix(in srgb,var(--mc) 78%,#000)}
+.medal .rib2{fill:var(--mc)}
+.medal .rib-st{stroke:#F3CF63;stroke-width:2.2;fill:none;opacity:.9}
+.medal .beads{fill:none;stroke:#7A5200;stroke-width:2.4;stroke-dasharray:.01 4.2;stroke-linecap:round;opacity:.55}
+.medal .cst{fill:none;stroke:#fff;stroke-width:.5;opacity:.28}
+.medal .cst-p{fill:#fff;opacity:.7}
+.medal .banda-p{fill:#A87A10}
+.medal .banda{filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
+.medal .bt{font:800 8.6px var(--f-body,system-ui);letter-spacing:.9px;fill:#4A2F05}
+.medal .lid{fill:none;stroke:#E7B53A;stroke-width:3;stroke-dasharray:2 2.6}
+.medal .corona{fill:url(#lgOro);stroke:#8A5A00;stroke-width:1}
+.medal .shine{opacity:0}
+.zf-f{fill:var(--fg);stroke:var(--fg);stroke-width:2;stroke-linejoin:round}
+.zf-s{fill:none;stroke:var(--fg);stroke-width:5.2;stroke-linecap:round;stroke-linejoin:round}
+.zf-t{fill:none;stroke:var(--fg);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.zf-tail{fill:none;stroke:var(--fg);stroke-width:7.5;stroke-linecap:round;stroke-dasharray:6.5 2.2}
+.zf-o{fill:var(--fgo);stroke:none}
+.zf-o2{fill:var(--fg);stroke:none}
+.zf-d{fill:none;stroke:var(--fgo);stroke-width:2.2;stroke-linecap:round}
+.zf-g{fill:none;stroke:#F3CF63;stroke-width:2.6}
+.zf-face{fill:#F2D7A0;stroke:none}
+.zf-mane{fill:#FFE7A8;stroke:#FFE7A8}
+.medal.ganada .fig{filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.35))}
+.medal.curso .cuerpo{filter:grayscale(.92) brightness(1.05);opacity:.75}
+.medal.perdida .cuerpo{filter:grayscale(1);opacity:.42}
+.medal.futura .cuerpo,.medal.sindatos .cuerpo{filter:grayscale(1);opacity:.2}
+.medal.futura .fig,.medal.sindatos .fig{filter:brightness(0)}
+.medal .arc-bg{fill:none;stroke:var(--line,#ddd);stroke-width:5}
+.medal .arc{fill:none;stroke:#E0A100;stroke-width:5;stroke-linecap:round;transition:stroke-dasharray .8s ease}
+/* interacción */
+.mtilt{transform-style:preserve-3d;transition:transform .25s ease;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.mtilt.on{transition:transform .05s linear}
+@keyframes lgShine{0%{transform:skewX(-18deg) translateX(0);opacity:0}15%{opacity:1}100%{transform:skewX(-18deg) translateX(190px);opacity:0}}
+.mtilt:hover .medal.ganada .shine,.medal.brilla .shine{animation:lgShine 1.1s ease-out}
+@keyframes lgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.lg-hero .mtilt>.medal.ganada{animation:lgFloat 4s ease-in-out infinite}
+@keyframes lgTw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
+.lg-spark{position:absolute;width:12px;height:12px;pointer-events:none;animation:lgTw 2.4s ease-in-out infinite}
+.lg-spark svg{width:100%;height:100%;fill:#F3CF63}
+@media (prefers-reduced-motion:reduce){.mtilt,.mtilt.on{transition:none;transform:none}.medal .shine,.lg-hero .mtilt>.medal.ganada,.lg-spark{animation:none!important}}
+.lg-mb{appearance:none;border:0;background:none;padding:0;margin:0;cursor:pointer;position:relative;display:block;border-radius:24px;color:inherit}
+.lg-mb:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.lg-hero .lg-lema{font-style:italic;color:var(--ink);font-size:15px;margin-top:8px}
+.lg-hero .lg-lema small{display:block;font-style:normal;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.lg-tap{font-size:12.5px;color:var(--muted);margin-top:10px}
+.vit{cursor:pointer}
+.vit:hover{background:var(--sunk)}
+.vit.cur:hover{background:var(--accent-soft)}
+.vit.sd{cursor:default}.vit.sd:hover{background:none}
+.lg-modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:rgba(10,12,16,.62);backdrop-filter:blur(3px)}
+.lg-modal[hidden]{display:none}
+.lg-mbox{position:relative;background:var(--surface);color:var(--ink);border-radius:22px;width:min(440px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:24px 22px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;box-shadow:0 30px 80px rgba(0,0,0,.35);animation:lgIn .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes lgIn{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.lg-mbox h3{font-size:21px;font-weight:800}
+.lg-mbox .eyebrow{margin:0}
+.lg-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;cursor:pointer}
+.lg-flip{perspective:1000px;margin:8px 0 4px;cursor:pointer;border:0;background:none;padding:0;color:inherit}
+.lg-flip:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:20px}
+.lg-flip-in{position:relative;width:210px;height:261px;transition:transform .8s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.lg-flip.vuelta .lg-flip-in{transform:rotateY(180deg)}
+.lg-cara{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.lg-cara.dorso{transform:rotateY(180deg)}
+.lg-mlema{font-style:italic;font-size:15.5px;margin:4px 0 2px}
+.lg-mel{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.lg-mel i{width:10px;height:10px;border-radius:50%;background:var(--mc);display:inline-block}
+.lg-mlist{list-style:none;margin:10px 0 0;padding:0;width:100%;text-align:left;display:flex;flex-direction:column}
+.lg-mlist li{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-top:1px solid var(--line);font-size:14px}
+.lg-mlist li span:first-child::before{content:'○';display:inline-block;width:20px;color:var(--muted)}
+.lg-mlist li.ok span:first-child::before{content:'✓';color:var(--ok);font-weight:800}
+.lg-mlist li .v{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-mlist li .v b{color:var(--ink)}
+.lg-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:22px}
+.lg-conf i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:lgConf 2.6s ease-in forwards}
+@keyframes lgConf{to{transform:translateY(560px) rotate(720deg);opacity:0}}
+.dorso .bk-t{font:700 6.4px var(--f-body,system-ui);letter-spacing:.8px;fill:#5A3A05}
+.dorso .bk-n{font:800 24px var(--f-body,system-ui);fill:#4A2F05}
+.dorso .bk-s{font:700 9px var(--f-body,system-ui);fill:#4A2F05;letter-spacing:1px}
+@media (prefers-reduced-motion:reduce){.lg-flip-in{transition:none}.lg-mbox{animation:none}.lg-conf{display:none}}
+.lg-eq{display:inline-block;font:700 11px var(--f-body);letter-spacing:.04em;text-transform:uppercase;color:#7A5600;background:color-mix(in srgb,#E0A100 18%,var(--surface));border:1px solid color-mix(in srgb,#E0A100 45%,var(--line));border-radius:999px;padding:1px 8px;vertical-align:2px}
+.lg-grp{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
+.lg-grp:first-of-type{margin-top:0}
+.lg-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center}
+.lg-hero h3{font-size:21px;font-weight:800}
+.lg-hero p{color:var(--muted);font-size:14.5px;margin-top:4px;line-height:1.5}
+.lg-hero .lg-st{display:inline-flex;margin-top:10px}
+@media (max-width:560px){.lg-hero{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.stars{display:flex;gap:3px;align-items:center}
+.stars svg{width:15px;height:15px}
+.stars .on{fill:#E0A100;stroke:#B07D00}
+.stars .off{fill:none;stroke:var(--line-strong)}
+.stars .gold{fill:#E0A100;stroke:#8A6300}
+.dsf{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.dsf li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.dsf li:first-child{border-top:0}
+.dsf .ck{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line-strong);color:var(--muted)}
+.dsf li.ok .ck{background:var(--ok);border-color:var(--ok);color:#FFFFFF}
+.dsf .ck svg{width:15px;height:15px}
+.dsf b{font-size:15px;font-weight:600}
+.dsf small{display:block;color:var(--muted);font-size:12.5px}
+.dsf .v{font-size:13.5px;color:var(--muted);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dsf .v b{color:var(--ink);font-size:15px}
+.dsf .bar{grid-column:2 / -1;height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.dsf .bar span{display:block;height:100%;border-radius:3px;background:#E0A100}
+.dsf li.ok .bar span{background:var(--ok)}
+.vitrina{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px 10px}
+@media (max-width:760px){.vitrina{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:420px){.vitrina{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.vit{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;appearance:none;border:0;background:none;font:inherit;color:inherit;padding:6px 2px;border-radius:12px}
+.vit b{font-size:13px;font-weight:600}
+.vit small{font-size:12px;color:var(--muted)}
+.vit.cur{background:var(--accent-soft)}
+.lg-sel{display:flex;gap:8px;flex-wrap:wrap}
+.lg-sel button{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 14px var(--f-body);border-radius:999px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.lg-sel button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.lg-team{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.lg-team .card{display:flex;flex-direction:column;gap:12px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.lg-team .card:hover{border-color:var(--accent)}
+.lg-tm{display:flex;gap:14px;align-items:center}
+.lg-mini{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.lg-gold{display:flex;gap:12px;align-items:center;background:color-mix(in srgb,#E0A100 12%,var(--surface));border:1px solid color-mix(in srgb,#E0A100 40%,var(--line));border-radius:12px;padding:12px 14px;font-size:14px}
+.lg-gold svg{width:26px;height:26px;flex:none}
+.vref{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.vref li{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:14px;border-bottom:1px solid var(--line);padding:6px 0}
 .stack td::before{font-weight:600}
 </style>
 </head>
@@ -928,6 +1076,7 @@ th{text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
     <li><button class="tab" data-tab="comisiones" id="t-comisiones" type="button"><span><span class="emo" aria-hidden="true">💰</span> Comisiones</span><small>Incrementos, ahorros y comisión del mes</small></button></li>
     <li><button class="tab" data-tab="mias" id="t-mias" type="button" hidden><span><span class="emo" aria-hidden="true">📊</span> Mis estadísticas</span><small>Tu desempeño personal</small></button></li>
     <li><button class="tab" data-tab="avisos" id="t-avisos" type="button"><span><span class="emo" aria-hidden="true">🔔</span> Avisos</span><small>Seguimientos y ahorros pactados</small></button></li>
+    <li><button class="tab" data-tab="logros" id="t-logros" type="button"><span><span class="emo" aria-hidden="true">🏅</span> Logros</span><small>La medalla del mes y la vitrina</small></button></li>
     <li id="liInstalar" hidden><button class="tab" type="button" data-instalar="1"><span><span class="emo" aria-hidden="true">📲</span> Instalar en el celular</span><small>Abrirla como una app, con su ícono</small></button></li>
     <li class="menu-sep" id="sepResp" hidden><span class="eyebrow">Responsable</span></li>
     <li><button class="tab" data-tab="inicio" id="t-inicio" type="button" hidden></button></li>
@@ -980,6 +1129,11 @@ th{text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
       <div class="field"><label for="fa_tipo">Tipo</label><select id="fa_tipo"><option value="">Todos</option><option value="ahorro">Ahorro pactado</option><option value="incremento">Incremento pactado</option><option value="otro">Otros pendientes</option></select></div>
     </div>
     <div id="av-out" class="view"></div>
+  </section>
+
+  <section class="view" id="v-logros" hidden>
+    <div class="v-head"><div><h2><span class="emo" aria-hidden="true">🏅</span> Logros<button type="button" class="qm" data-help="logros" aria-label="¿Qué es esto?" aria-expanded="false">?</button></h2><p id="lg-sub">Cada mes hay una medalla nueva: la del signo del mes.</p></div></div>
+    <div id="lg-out" class="view"></div>
   </section>
 
   <section class="view" id="v-panel" hidden>
@@ -1119,7 +1273,7 @@ const S = {ckAbiertas: new Set(), ckEstado: {},
   yo: lsGet('onb_yo', ''),
   tab:'cargar', wantTab:null,
   editId:null, editOrig:null, gest:[],
-  f:{ av:{esp:'', tipo:''}, ent:{q:'', esp:null, per:'', est:''}, pan:{per:'', esp:'', suc:''}, com:{mes:'', esp:'', pago:''} },
+  f:{ lg:{sel:'', anio:''}, av:{esp:'', tipo:''}, ent:{q:'', esp:null, per:'', est:''}, pan:{per:'', esp:'', suc:''}, com:{mes:'', esp:'', pago:''} },
   detalle:null, detalleFallback:null, saving:false, ajDirty:false,
 };
 
@@ -1790,7 +1944,7 @@ function setTab(t, sinScroll) {
   S.tab = t; document.body.dataset.tab = t;
   $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
   { const vid = t === 'mias' ? 'panel' : t; $$('.view[id^="v-"]').forEach(v => { v.hidden = v.id !== 'v-' + vid; }); }
-  $('#barTitle').textContent = {inicio: 'Para revisar hoy', cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', panel: 'Panel', ajustes: 'Ajustes', mias: 'Mis estadísticas'}[t];
+  $('#barTitle').textContent = {inicio: 'Para revisar hoy', cargar: 'Checklist', entrevistas: 'Entrevistas', comisiones: 'Comisiones', avisos: 'Avisos', logros: 'Logros', panel: 'Panel', ajustes: 'Ajustes', mias: 'Mis estadísticas'}[t];
   cerrarMenu(); cerrarAyuda();
   renderVista();
   if (!sinScroll) window.scrollTo({top: 0});
@@ -1831,6 +1985,7 @@ function renderVista() {
   else if (S.tab === 'comisiones') renderComisiones();
   else if (S.tab === 'ajustes') renderAjustes();
   else if (S.tab === 'avisos') renderAvisos();
+  else if (S.tab === 'logros') renderLogros();
 }
 function fillSelect(sel, opts) {
   const v = sel.value;
@@ -1907,7 +2062,7 @@ function vacioSinDb() {
 
 /* ---------- Detalle ---------- */
 function abrirDetalle(id, fallback, verCalculo) {
-  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; S.drTab = 'datos'; S.drAsk = null; S.drBaja = false; cerrarAyuda();
+  S.detalle = id; S.detalleFallback = fallback || null; S.howOpen = !!verCalculo; S.drTab = 'datos'; S.drAsk = null; S.drBaja = false; S.drVenta = false; cerrarAyuda();
   renderDetalle();
   $('#drawer').hidden = false; $('#scrim').hidden = false;
   document.body.style.overflow = 'hidden';
@@ -1983,6 +2138,7 @@ function renderDetalle() {
       </div>`).join('')}</div>` : `<p class="note">${e.seguimiento === 'no' ? 'Sin pendientes.' : 'Sin responder.'}</p>`}
     </section>
     ${e.estado === 'final' ? bajaCard(e, puedeEsc && S.E.some(x => x.id === e.id)) : ''}
+    ${e.estado === 'final' ? ventasCard(e, puedeEsc && S.E.some(x => x.id === e.id)) : ''}
     ${e.observaciones ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🗒️</span> Observaciones</h3><p class="pre">${esc(e.observaciones)}</p></section>` : ''}
     ${e.estado === 'final' ? `<section class="dcard"><h3><span class="emo" aria-hidden="true">🔍</span> Revisión de la entrevista</h3>${(e.gestiones || []).some(g => (g.monto || 0) > 0) ? '<p class="note">Cubre el checklist y lo logrado el día de la entrevista. Los pagos posteriores se aprueban uno por uno en la tabla de montos.</p>' : ''}
       ${esResp() && puedeEsc ? `<div class="seg" role="radiogroup" aria-label="Estado de la revisión" style="align-self:flex-start">
@@ -2026,6 +2182,12 @@ function bindDetalle() {
       const b3 = ev.target.closest('[data-dcno]'); if (b3 && eD) { S.drAsk = null; try { await updComp(eD, b3.dataset.dcno, {resuelto: true, resueltoFecha: hoy(), cumplio: false}); toast('Compromiso cerrado como no cumplido. El semáforo del cliente bajó.'); } catch (err) { errorEscritura(err); } return; }
       const b4 = ev.target.closest('[data-dreab]'); if (b4 && eD) { try { await updComp(eD, b4.dataset.dreab, {resuelto: false, resueltoFecha: null, cumplio: null}); toast('El compromiso volvió a Avisos.'); } catch (err) { errorEscritura(err); } return; } }
     { const eB = S.E.find(x => x.id === S.detalle);
+      if (ev.target.closest('[data-vtabrir]')) { S.drVenta = true; renderDetalle(); setTimeout(() => $('#vt_cli')?.focus(), 30); return; }
+      if (ev.target.closest('[data-vtno]')) { S.drVenta = false; renderDetalle(); return; }
+      const vo = ev.target.closest('[data-vtok]'); if (vo && eB) { const f = $('#vt_fecha').value, m = num($('#vt_monto').value), cl = ($('#vt_cli').value || '').trim();
+        if (!cl) { toast('Escribir el nombre del cliente referido.', 'bad'); $('#vt_cli').focus(); return; } if (!f || f > hoy()) { toast('Elegir la fecha de la venta (hasta hoy).', 'bad'); return; } if (!m) { toast('Escribir el monto de la venta.', 'bad'); $('#vt_monto').focus(); return; }
+        vo.disabled = true; try { await conReintento(() => S.db.collection('entrevistas').doc(eB.id).update({ventasRef: [...(eB.ventasRef || []), {id: gid(), cliente: cl, fecha: f, monto: m, registrado: new Date().toISOString(), por: S.uid ?? null}]})); S.drVenta = false; toast('🌟 Venta por referido registrada. Suma la estrella dorada.'); } catch (err) { vo.disabled = false; errorEscritura(err); } return; }
+      const vd = ev.target.closest('[data-vtdel]'); if (vd && eB) { try { await conReintento(() => S.db.collection('entrevistas').doc(eB.id).update({ventasRef: (eB.ventasRef || []).filter(x => x.id !== vd.dataset.vtdel)})); toast('Se quitó la venta.'); } catch (err) { errorEscritura(err); } return; }
       if (ev.target.closest('[data-bajaabrir]')) { S.drBaja = true; renderDetalle(); setTimeout(() => $('#bj_fecha')?.focus(), 30); return; }
       if (ev.target.closest('[data-bajano]')) { S.drBaja = false; renderDetalle(); return; }
       const bo = ev.target.closest('[data-bajaok]'); if (bo && eB) { const f = $('#bj_fecha').value; if (!f) { toast('Elegir la fecha de la baja.', 'bad'); return; } if (f < eB.fecha || f > hoy()) { toast('La fecha de la baja tiene que ser entre la entrevista y hoy.', 'bad'); return; }
@@ -2581,8 +2743,9 @@ const IC = {
   grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect>',
   up: '<path d="M7 17L17 7M9 7h8v8"></path>',
   star: '<path d="M12 4l2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z"></path>',
+  medal: '<circle cx="12" cy="14.5" r="5.5"></circle><path d="M8.6 10L6 3.5h4l2 4 2-4h4l-2.6 6.5"></path>',
 };
-const EMO = {'📝': 'doc', '🧾': 'doc', '📋': 'doc', '🗒️': 'note', '🗂️': 'folder', '💰': 'money', '💵': 'money', '🐷': 'wallet', '📊': 'bars', '📈': 'chart', '🚀': 'up', '🔔': 'bell', '📲': 'phone', '🏠': 'home', '⚙️': 'gear', '🧭': 'info', '⚠️': 'alert', '📌': 'pin', '🚦': 'sem', '✅': 'check', '🔍': 'search', '🤝': 'swap', '⌛': 'hourglass', '⏳': 'hourglass', '⏰': 'clock', '🕓': 'clock', '📅': 'cal', '🗓️': 'cal', '📆': 'cal', '🔜': 'cal', '👥': 'users', '🧑‍💼': 'user', '👤': 'user', '🚪': 'door', '🔒': 'lock', '🔑': 'lock', '🏢': 'building', '🎯': 'target', '🧮': 'calc', '💡': 'bulb', '🧩': 'grid', '⭐': 'star', '🆕': 'star'};
+const EMO = {'📝': 'doc', '🧾': 'doc', '📋': 'doc', '🗒️': 'note', '🗂️': 'folder', '💰': 'money', '💵': 'money', '🐷': 'wallet', '📊': 'bars', '📈': 'chart', '🚀': 'up', '🔔': 'bell', '📲': 'phone', '🏠': 'home', '⚙️': 'gear', '🧭': 'info', '⚠️': 'alert', '📌': 'pin', '🚦': 'sem', '✅': 'check', '🔍': 'search', '🤝': 'swap', '⌛': 'hourglass', '⏳': 'hourglass', '⏰': 'clock', '🕓': 'clock', '📅': 'cal', '🗓️': 'cal', '📆': 'cal', '🔜': 'cal', '👥': 'users', '🧑‍💼': 'user', '👤': 'user', '🚪': 'door', '🔒': 'lock', '🔑': 'lock', '🏢': 'building', '🎯': 'target', '🧮': 'calc', '💡': 'bulb', '🧩': 'grid', '⭐': 'star', '🆕': 'star', '🏅': 'medal'};
 const svgIc = (n, w) => `<svg class="ic" viewBox="0 0 24 24"${w ? ` width="${w}" height="${w}"` : ''} aria-hidden="true">${IC[n] || ''}</svg>`;
 function iconizar(root) {
   for (const el of root.querySelectorAll('.emo:not([data-ic]), .hm-e:not([data-ic])')) {
@@ -2591,6 +2754,299 @@ function iconizar(root) {
 }
 new MutationObserver(() => iconizar(document.body)).observe(document.body, {childList: true, subtree: true});
 iconizar(document.body);
+
+/* ---------- Logros: la medalla del signo de cada mes ---------- */
+const EM = em => `<span class="emo" aria-hidden="true">${em}</span> `;
+const SIGNOS = [['Capricornio', '♑', 'tierra'], ['Acuario', '♒', 'aire'], ['Piscis', '♓', 'agua'], ['Aries', '♈', 'fuego'], ['Tauro', '♉', 'tierra'], ['Géminis', '♊', 'aire'], ['Cáncer', '♋', 'agua'], ['Leo', '♌', 'fuego'], ['Virgo', '♍', 'tierra'], ['Libra', '♎', 'aire'], ['Escorpio', '♏', 'agua'], ['Sagitario', '♐', 'fuego']];
+const ELEM_COL = {fuego: '#C2410C', tierra: '#4D7C0F', aire: '#1D6FA5', agua: '#6B3FA0'};
+const MEDALLA_MIN = 4;
+const DESAFIOS = [
+  {k: 'cli', n: 'Constante', d: 'Clientes que suben la cuota o dejan ahorro', meta: 10, tip: 'Ofrecer incremento o ahorro en cada entrevista. Cada cliente cuenta una sola vez, aunque haga las dos cosas.'},
+  {k: 'inc', n: 'Sube la cuota', d: 'Incrementos cobrados en el mes', meta: 8, tip: 'Cada incremento cobrado dentro del plazo suma uno. Si el cliente lo deja pactado para otra fecha, cargar el pacto: cuenta cuando paga.'},
+  {k: 'aho', n: 'Ahorrista', d: 'Ahorros cobrados en el mes', meta: 5, tip: 'Cada ahorro cobrado dentro del mes suma uno, sea en pesos o en dólares.'},
+  {k: 'big', n: 'Gran ahorro', d: 'Ahorros de $ 1.000.000 o más', meta: 2, tip: 'Ahorros de $ 1.000.000 o más en un solo pago. Los dólares se pasan a pesos con el dólar Spazios.'},
+  {k: 'rec', n: 'Recaudadora', d: 'Ahorros + incrementos cobrados en el mes', meta: 5000000, money: true, tip: 'Es la suma de todo lo cobrado en el mes entre incrementos y ahorros.'},
+  {k: 'imp', n: 'Impecable', d: 'Entrevistas del mes sin errores (mínimo 3 entrevistas)', meta: 90, pct: ['nImp', 'okImp'], tip: 'Completar el checklist sin errores. Hace falta tener al menos 3 entrevistas en el mes para que cuente.'},
+  {k: 'pal', n: 'Palabra cumplida', d: 'Pactos de seguimiento que el cliente cumplió', meta: 2, tip: 'Pactos de seguimiento que se marcan como cumplidos en el mes: el cliente pagó lo que había prometido.'},
+];
+const DESAFIOS_JEFA = [
+  {k: 'inc', n: 'Sube la cuota', d: 'Tus incrementos cobrados en el mes', meta: 4, tip: 'Tus incrementos cobrados dentro del plazo. La meta es la mitad que la de las asesoras.'},
+  {k: 'rec', n: 'Recaudadora', d: 'Tus ahorros + incrementos cobrados en el mes', meta: 2500000, money: true, tip: 'Lo que cobras tú en el mes entre incrementos y ahorros. La meta es la mitad que la de las asesoras.'},
+  {k: 'imp', n: 'Impecable', d: 'Tus entrevistas del mes sin errores (mínimo 3)', meta: 90, pct: ['nImp', 'okImp'], tip: 'Tus entrevistas del mes con el checklist sin errores. Hace falta tener al menos 3.'},
+  {k: 'eqrec', eq: true, n: 'Equipo recaudador', d: 'Lo cobrado por todo el equipo en el mes', meta: 25000000, money: true, tip: 'Suma lo que cobra todo el equipo en el mes, contando lo tuyo.'},
+  {k: 'eqmed', eq: true, n: 'Equipo con medalla', d: 'Asesoras que ganan la medalla del mes', meta: 1, tip: 'Al menos una asesora gana su medalla. Mirar en Logros qué desafío le falta a cada una y acompañarla.'},
+  {k: 'eqimp', eq: true, n: 'Equipo impecable', d: 'Entrevistas del equipo sin errores (mínimo 3)', meta: 85, pct: ['eqN', 'eqOk'], tip: 'Del total de entrevistas del equipo en el mes, el 85% con el checklist sin errores.'},
+  {k: 'eqpal', eq: true, n: 'Pactos al día', d: 'Pactos cumplidos en todo el equipo', meta: 5, tip: 'Pactos de seguimiento cumplidos en el mes, sumando a todo el equipo.'},
+];
+const signoDe = mes => SIGNOS[+mes.slice(5, 7) - 1];
+function jefaNom() { const eq = equipo(); const j = S.aj.jefa !== undefined ? S.aj.jefa : (eq.find(n => /^iv[oó]n\b/i.test(n)) || ''); return eq.find(n => norm(n) === norm(j)) || ''; }
+const esJefa = n => { const j = jefaNom(); return !!j && norm(n) === norm(j); };
+const desafiosDe = n => esJefa(n) ? DESAFIOS_JEFA : DESAFIOS;
+function datosDe(nom, mes) {
+  const mias = S.E.filter(e => e.estado === 'final' && norm(e.especialista) === norm(nom));
+  let inc = 0, aho = 0, big = 0, rec = 0, pal = 0; const cli = new Set();
+  for (const e of mias) {
+    for (const it of comision(e).items) {
+      if (!it.dentro || !(it.monto > 0) || it.rev === 'observada') continue;
+      if ((it.mesCom || it.fecha || '').slice(0, 7) !== mes) continue;
+      cli.add(e.id); rec += it.monto;
+      if (it.tipo === 'ahorro') { aho++; if (it.monto >= 1000000) big++; } else inc++;
+    }
+    for (const k of comps(e)) if (compMonto(k) && k.resuelto && k.cumplio === true && (k.resueltoFecha || '').slice(0, 7) === mes) pal++;
+  }
+  const delMes = mias.filter(e => (e.fecha || '').slice(0, 7) === mes);
+  const okImp = delMes.filter(e => resultado(e.checklist).est === 'ok').length, nImp = delMes.length;
+  const vref = S.E.filter(e => norm(e.especialista) === norm(nom)).flatMap(e => (e.ventasRef || []).filter(v => (v.fecha || '').slice(0, 7) === mes));
+  return {cli: cli.size, inc, aho, big, rec, pal, nImp, okImp, imp: nImp >= 3 ? Math.round(okImp / nImp * 100) : null, vref};
+}
+function logrosDe(nom, mes) {
+  const jefa = esJefa(nom), ds = jefa ? DESAFIOS_JEFA : DESAFIOS, val = datosDe(nom, mes);
+  if (jefa) {
+    const eq = equipo(), T = eq.map(n => datosDe(n, mes));
+    val.eqrec = T.reduce((a, x) => a + x.rec, 0); val.eqpal = T.reduce((a, x) => a + x.pal, 0);
+    val.eqN = T.reduce((a, x) => a + x.nImp, 0); val.eqOk = T.reduce((a, x) => a + x.okImp, 0);
+    val.eqimp = val.eqN >= 3 ? Math.round(val.eqOk / val.eqN * 100) : null;
+    val.eqmed = eq.filter(n => !esJefa(n) && logrosDe(n, mes).medalla).length;
+  }
+  const hechos = ds.filter(d => val[d.k] != null && val[d.k] >= d.meta).map(d => d.k);
+  return {val, ds, jefa, hechos, medalla: hechos.length >= MEDALLA_MIN, vref: val.vref};
+}
+function primerMes() { let m = ''; for (const e of S.E) if (e.fecha && (!m || e.fecha < m)) m = e.fecha; return (m || hoy()).slice(0, 7); }
+/* ---------- Medallas ilustradas ---------- */
+const ZF = [
+  // 0 Capricornio: cabra con cuernos largos y barba
+  `<path class="zf-f" d="M41 38 Q50 33 59 38 L57 68 Q50 76 43 68 Z"/><path class="zf-s" d="M43 38 C40 24 31 14 19 15 M57 38 C60 24 69 14 81 15"/><path class="zf-t" d="M37 24 l4 -3 M33 19 l4 -4 M63 24 l-4 -3 M67 19 l-4 -4"/><path class="zf-s" d="M41 44 L29 47 L40 52 M59 44 L71 47 L60 52"/><path class="zf-f" d="M45 71 L50 88 L55 71 Z"/><circle class="zf-o" cx="45.5" cy="50" r="2.6"/><circle class="zf-o" cx="54.5" cy="50" r="2.6"/><path class="zf-t" d="M47 63 Q50 65 53 63"/>`,
+  // 1 Acuario: ánfora que vierte olas
+  `<g transform="translate(34 33) rotate(120)"><path class="zf-f" d="M-7 -17 H7 V-13 Q3 -11 4 -7 Q14 -1 12 9 Q10 19 0 19 Q-10 19 -12 9 Q-14 -1 -4 -7 Q-3 -11 -7 -13 Z"/><path class="zf-t" d="M-10 4 H10"/></g><path class="zf-s" d="M49 42 Q58 49 55 60"/><path class="zf-s" d="M16 68 Q24 61 32 68 T48 68 T64 68 T80 68 T92 66"/><path class="zf-s" d="M16 80 Q24 73 32 80 T48 80 T64 80 T80 80 T92 78"/>`,
+  // 2 Piscis: dos peces en círculo
+  `<path class="zf-f" d="M20 34 Q40 17 60 34 Q40 49 20 34 Z"/><path class="zf-f" d="M60 34 L73 24 L71 45 Z"/><circle class="zf-o" cx="28" cy="32" r="2.4"/><path class="zf-f" d="M80 68 Q60 51 40 68 Q60 83 80 68 Z"/><path class="zf-f" d="M40 68 L27 58 L29 79 Z"/><circle class="zf-o" cx="72" cy="66" r="2.4"/><path class="zf-t" d="M22 40 Q8 56 24 72 M78 62 Q92 46 76 30"/>`,
+  // 3 Aries: carnero de frente con cuernos en espiral
+  `<path class="zf-f" d="M38 40 Q50 33 62 40 L58 73 Q50 81 42 73 Z"/><path class="zf-s" d="M40 41 C28 29 13 37 15 52 C17 65 33 65 34 54 C35 46 26 45 25 52"/><path class="zf-s" d="M60 41 C72 29 87 37 85 52 C83 65 67 65 66 54 C65 46 74 45 75 52"/><circle class="zf-o" cx="45" cy="53" r="2.6"/><circle class="zf-o" cx="55" cy="53" r="2.6"/><path class="zf-t" d="M46 68 Q50 72 54 68"/>`,
+  // 4 Tauro: toro con argolla
+  `<path class="zf-f" d="M33 44 Q50 35 67 44 Q69 62 61 76 Q50 84 39 76 Q31 62 33 44 Z"/><path class="zf-s" d="M36 43 C25 41 17 31 20 18 C25 29 32 33 42 37 M64 43 C75 41 83 31 80 18 C75 29 68 33 58 37"/><path class="zf-s" d="M33 48 L22 50 L32 57 M67 48 L78 50 L68 57"/><circle class="zf-o" cx="43" cy="56" r="2.6"/><circle class="zf-o" cx="57" cy="56" r="2.6"/><ellipse class="zf-t" cx="50" cy="71" rx="9" ry="5.5"/><circle class="zf-g" cx="50" cy="80" r="5"/>`,
+  // 5 Géminis: dos figuras de la mano bajo una estrella
+  `<path class="zf-f" d="M50 9 l2.6 5.4 5.9.7 -4.4 4 1.2 5.8 -5.3-2.8 -5.3 2.8 1.2-5.8 -4.4-4 5.9-.7z"/><circle class="zf-f" cx="37" cy="36" r="7.5"/><circle class="zf-f" cx="63" cy="36" r="7.5"/><path class="zf-f" d="M30 47 H44 L47 86 H27 Z"/><path class="zf-f" d="M56 47 H70 L73 86 H53 Z"/><path class="zf-s" d="M44 55 Q50 62 56 55"/>`,
+  // 6 Cáncer: cangrejo
+  `<ellipse class="zf-f" cx="50" cy="58" rx="20" ry="13"/><path class="zf-f" d="M24 36 C14 34 12 22 20 17 L24 26 L28 17 C35 22 32 34 24 36 Z M76 36 C86 34 88 22 80 17 L76 26 L72 17 C65 22 68 34 76 36 Z"/><path class="zf-s" d="M34 50 Q26 45 25 37 M66 50 Q74 45 75 37"/><path class="zf-t" d="M31 60 L20 64 L16 72 M33 66 L24 72 L22 80 M38 70 L33 78 L33 86 M69 60 L80 64 L84 72 M67 66 L76 72 L78 80 M62 70 L67 78 L67 86 M44 47 L42 39 M56 47 L58 39"/><circle class="zf-o2" cx="42" cy="37" r="3"/><circle class="zf-o2" cx="58" cy="37" r="3"/>`,
+  // 7 Leo: león con melena
+  `<path class="zf-f zf-mane" d="__MANE__"/><circle class="zf-face" cx="50" cy="52" r="17"/><circle class="zf-face" cx="38" cy="38" r="5"/><circle class="zf-face" cx="62" cy="38" r="5"/><circle class="zf-o" cx="44" cy="49" r="2.6"/><circle class="zf-o" cx="56" cy="49" r="2.6"/><path class="zf-o" d="M45.5 57 H54.5 L50 62 Z"/><path class="zf-d" d="M50 62 Q46 67 42 65 M50 62 Q54 67 58 65"/>`,
+  // 8 Virgo: espiga de trigo
+  `<path class="zf-s" d="M50 90 L50 22"/>__TRIGO__<path class="zf-f" d="M50 80 Q35 74 28 58 Q41 61 50 72 Z"/><path class="zf-f" d="M50 86 Q64 80 72 66 Q59 68 50 78 Z"/>`,
+  // 9 Libra: balanza
+  `<circle class="zf-f" cx="50" cy="19" r="4.5"/><path class="zf-s" d="M50 23 L50 80 M36 83 H64 M22 33 H78"/><path class="zf-t" d="M26 33 L18 57 M26 33 L34 57 M74 33 L66 57 M74 33 L82 57"/><path class="zf-f" d="M15 57 H37 Q26 71 15 57 Z M63 57 H85 Q74 71 63 57 Z"/>`,
+  // 10 Escorpio: de perfil, con la cola en alto
+  `<path class="zf-tail" d="M60 62 C73 60 81 49 79 37 C77 27 65 23 58 30"/><path class="zf-f" d="M59 28 Q51 31 53 41 Q58 36 61 33 Z"/><path class="zf-t" d="M38 68 L33 79 M45 70 L43 81 M52 70 L53 81 M58 67 L62 77"/><path class="zf-s" d="M33 61 Q24 55 20 47 M33 67 Q24 71 18 71"/><path class="zf-f" d="M20 48 C13 45 12 36 18 33 L21 40 L25 34 C29 39 26 47 20 48 Z M17 72 C10 71 8 62 13 59 L17 65 L20 59 C25 62 23 70 17 72 Z"/><path class="zf-f" d="M28 64 Q45 51 64 61 Q45 76 28 64 Z"/><path class="zf-d" d="M44 58 V70 M52 58 V69"/><circle class="zf-o" cx="33" cy="62" r="1.8"/>`,
+  // 11 Sagitario: arco y flecha
+  `<path class="zf-s" d="M27 42 Q69 31 58 73"/><path class="zf-t" d="M27 42 L58 73"/><path class="zf-s" d="M23 77 L72 28"/><path class="zf-f" d="M80 20 L62 25 L75 38 Z"/><path class="zf-t" d="M24 76 L17 75 M24 76 L25 83 M29 71 L22 70 M29 71 L30 78"/>`,
+];
+(() => { // melena y granos de trigo
+  let m = ''; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2 - Math.PI / 2, r = i % 2 ? 26 : 35; m += (i ? 'L' : 'M') + (50 + r * Math.cos(a)).toFixed(1) + ' ' + (52 + r * Math.sin(a)).toFixed(1) + ' '; }
+  ZF[7] = ZF[7].replace('__MANE__', m + 'Z');
+  let t = ''; for (const y of [32, 43, 54, 65]) t += `<ellipse class="zf-f" cx="43.5" cy="${y}" rx="4.2" ry="8" transform="rotate(-28 43.5 ${y})"/><ellipse class="zf-f" cx="56.5" cy="${y}" rx="4.2" ry="8" transform="rotate(28 56.5 ${y})"/>`;
+  ZF[8] = ZF[8].replace('__TRIGO__', t + '<ellipse class="zf-f" cx="50" cy="21" rx="4.2" ry="8"/>');
+})();
+const LEMAS = ['Paso a paso hasta la cima: la constancia construye.', 'Ideas nuevas para cada cliente.', 'Escuchar de verdad: la empatía también suma.', 'Arrancar con todo: el primer paso es tuyo.', 'Firme y paciente: lo que se siembra se cosecha.', 'La palabra justa en cada charla.', 'Cuidar a cada cliente como a la familia.', 'Brillar con seguridad en cada entrevista.', 'El detalle hace la diferencia.', 'Equilibrio: que cada cliente salga ganando.', 'Ir a fondo en cada seguimiento.', 'Apuntar alto y dar en el blanco.'];
+const ELEM_TXT = {fuego: 'Fuego', tierra: 'Tierra', aire: 'Aire', agua: 'Agua'};
+// estrellas de fondo (constelación) por signo, fijas
+const CONST = SIGNOS.map((_, i) => { let s = (i + 3) * 9301; const r = () => (s = (s * 9301 + 49297) % 233280) / 233280; return Array.from({length: 6}, () => [24 + r() * 72, 56 + r() * 50]); });
+function spriteLogros() {
+  if (document.getElementById('lgSprite')) return;
+  const disc = (id, a, b, c) => `<radialGradient id="${id}" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></radialGradient>`;
+  const d = document.createElement('div');
+  d.innerHTML = `<svg id="lgSprite" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
+    <linearGradient id="lgOro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".28" stop-color="#E7B53A"/><stop offset=".55" stop-color="#9C6B07"/><stop offset=".78" stop-color="#F3CF63"/><stop offset="1" stop-color="#8A5A00"/></linearGradient>
+    <linearGradient id="lgBanda" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE08A"/><stop offset="1" stop-color="#C9961B"/></linearGradient>
+    <linearGradient id="lgBrillo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    ${disc('lgE-fuego', '#FB923C', '#C2410C', '#5A1A06')}${disc('lgE-tierra', '#A3C94A', '#4D7C0F', '#1C2E06')}${disc('lgE-aire', '#5CC2F2', '#1D6FA5', '#0B2C4A')}${disc('lgE-agua', '#A47BE8', '#6B3FA0', '#2A1250')}
+    <clipPath id="lgDisc"><circle cx="60" cy="92" r="41"/></clipPath>
+    ${ZF.map((z, i) => `<symbol id="zf${i}" viewBox="0 0 100 100">${z}</symbol>`).join('')}
+  </defs></svg>`;
+  document.body.appendChild(d.firstElementChild);
+}
+function medallaSvg(mes, est, w, prog, lider) {
+  spriteLogros();
+  const i = +mes.slice(5, 7) - 1, [nom, , el] = SIGNOS[i]; const c = ELEM_COL[el], tit = `Medalla ${lider ? 'de líder ' : ''}de ${nom}`;
+  const lbl = est === 'ganada' ? `${tit}, ganada` : est === 'futura' ? `${tit}, todavía no empezó` : est === 'sindatos' ? `${tit}, sin datos` : `${tit}, sin ganar`;
+  const mini = w < 48;
+  const arco = est === 'curso' ? `<circle class="arc-bg" cx="60" cy="92" r="56"></circle>${prog > 0 ? `<circle class="arc" cx="60" cy="92" r="56" pathLength="100" stroke-dasharray="${Math.max(1, Math.round(Math.min(1, prog) * 100))} 100" transform="rotate(-90 60 92)"></circle>` : ''}` : '';
+  const pts = CONST[i];
+  return `<svg class="medal ${est}${lider ? ' lider' : ''}${mini ? ' mini' : ''}" viewBox="-2 -2 124 154" width="${w}" height="${Math.round(w * 154 / 124)}" role="img" aria-label="${lbl}" style="--mc:${c}">${arco}<g class="cuerpo">
+    <path class="rib" d="M33 0h22l15 44H48z"></path><path class="rib rib2" d="M87 0H65L50 44h22z"></path><path class="rib-st" d="M44 0l13 40M76 0L63 40"></path>
+    <rect x="50" y="37" width="20" height="10" rx="5" fill="url(#lgOro)"></rect>
+    ${lider ? '<circle cx="60" cy="92" r="54" class="lid"></circle>' : ''}
+    <circle cx="60" cy="92" r="50" fill="url(#lgOro)"></circle>
+    ${mini ? '' : '<circle cx="60" cy="92" r="45.5" class="beads"></circle>'}
+    <circle cx="60" cy="92" r="41" fill="url(#lgE-${el})"></circle>
+    <g clip-path="url(#lgDisc)">
+      ${mini ? '' : `<path class="cst" d="M${pts.map(p => p.map(n => n.toFixed(1)).join(' ')).join(' L')}"></path>${pts.map(p => `<circle class="cst-p" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="1.1"></circle>`).join('')}`}
+      <use href="#zf${i}" class="fig" x="29" y="51" width="62" height="62"></use>
+      <rect class="shine" x="-60" y="40" width="40" height="110" fill="url(#lgBrillo)" transform="skewX(-18)"></rect>
+    </g>
+    ${mini ? '' : `<path class="banda-p" d="M14 113 L27 111 L27 129 L14 131 L20 122 Z M106 113 L93 111 L93 129 L106 131 L100 122 Z"></path><path d="M24 112 Q60 104 96 112 V128 Q60 120 24 128 Z" fill="url(#lgBanda)" class="banda"></path><text class="bt" x="60" y="121.5" text-anchor="middle">${nom.toUpperCase()}</text>`}
+    ${lider ? '<path class="corona" d="M49 34 L51 25 L55.5 30 L60 22 L64.5 30 L69 25 L71 34 Z"></path>' : ''}
+  </g></svg>`;
+}
+
+function medallaDorso(mes, L, nom, w) {
+  const i = +mes.slice(5, 7) - 1, [sig, , el] = SIGNOS[i], n = L ? L.hechos.length : 0, tot = L ? L.ds.length : 7;
+  const est = L && L.medalla ? 'ganada' : '';
+  return `<svg class="medal ${est || 'perdida'}" viewBox="-2 -2 124 154" width="${w}" height="${Math.round(w * 154 / 124)}" aria-hidden="true" style="--mc:${ELEM_COL[el]}"><g class="cuerpo">
+    <path class="rib" d="M33 0h22l15 44H48z"></path><path class="rib rib2" d="M87 0H65L50 44h22z"></path><path class="rib-st" d="M44 0l13 40M76 0L63 40"></path>
+    <rect x="50" y="37" width="20" height="10" rx="5" fill="url(#lgOro)"></rect>
+    <circle cx="60" cy="92" r="50" fill="url(#lgOro)"></circle><circle cx="60" cy="92" r="45.5" class="beads"></circle><circle cx="60" cy="92" r="41" fill="url(#lgBanda)"></circle>
+    <circle cx="60" cy="92" r="36" fill="none" stroke="#A87A10" stroke-width=".8" stroke-dasharray="1.5 2"></circle>
+    <text class="bk-t" x="60" y="69" text-anchor="middle">${esc((nom || '').toUpperCase())}</text>
+    <text class="bk-t" x="60" y="78" text-anchor="middle">${MESES[i].toUpperCase()} ${mes.slice(0, 4)}</text>
+    <text class="bk-n" x="60" y="102" text-anchor="middle">${L ? `${n}/${tot}` : '—'}</text>
+    <text class="bk-s" x="60" y="113" text-anchor="middle">${L ? 'DESAFÍOS' : 'PRÓXIMAMENTE'}</text>
+    <text class="bk-t" x="60" y="123" text-anchor="middle">${ELEM_TXT[el].toUpperCase()} · ${sig.toUpperCase()}</text>
+  </g></svg>`;
+}
+function abrirMedalla(nom, mes, fiesta) {
+  spriteLogros();
+  let m = $('#lgModal');
+  if (!m) {
+    m = document.createElement('div'); m.id = 'lgModal'; m.className = 'lg-modal'; m.hidden = true;
+    m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'lgmT');
+    document.body.appendChild(m);
+    m.addEventListener('click', ev => {
+      if (ev.target === m || ev.target.closest('[data-lgcerrar]')) { cerrarMedalla(); return; }
+      if (ev.target.closest('[data-lgflip]')) { const f = m.querySelector('.lg-flip'); f.classList.toggle('vuelta'); f.setAttribute('aria-pressed', f.classList.contains('vuelta')); }
+    });
+    m.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMedalla(); });
+  }
+  const i = +mes.slice(5, 7) - 1, [sig, , el] = SIGNOS[i], mc = hoy().slice(0, 7), fut = mes > mc;
+  const L = fut ? null : logrosDe(nom, mes), lid = esJefa(nom);
+  const est = fut ? 'futura' : L.medalla ? 'ganada' : mes === mc ? 'curso' : 'perdida';
+  const yo = !esResp() && norm(nom) === norm(miNombre());
+  const estado = fut ? `Se juega en ${MESES[i]}.` : L.medalla ? (fiesta ? `${yo ? '¡La ganaste' : '¡Ganada'} con ${L.hechos.length} de ${L.ds.length} desafíos${L.vref.length ? ' y estrella dorada' : ''}!` : `Ganada con ${L.hechos.length} de ${L.ds.length} desafíos${L.vref.length ? ' y estrella dorada' : ''}.`) : mes === mc ? `En juego: ${L.hechos.length} de ${MEDALLA_MIN} desafíos para ganarla.` : `No se ganó: ${L.hechos.length} de ${L.ds.length} desafíos.`;
+  m.innerHTML = `<div class="lg-mbox" style="--mc:${ELEM_COL[el]}">${fiesta ? '<div class="lg-conf" aria-hidden="true"></div>' : ''}
+    <button class="lg-x" type="button" data-lgcerrar aria-label="Cerrar">✕</button>
+    <span class="eyebrow">${MESES[i][0].toUpperCase() + MESES[i].slice(1)} ${mes.slice(0, 4)}${yo ? '' : ' · ' + esc(nom)}</span>
+    <h3 id="lgmT">${fiesta ? `¡Medalla ${lid ? 'de líder ' : ''}de ${sig}!` : `Medalla ${lid ? 'de líder ' : ''}de ${sig}`}</h3>
+    <span class="lg-mel"><i></i>${ELEM_TXT[el]} · ${estado}</span>
+    <button class="lg-flip" type="button" data-lgflip aria-pressed="false" aria-label="Dar vuelta la medalla"><div class="lg-flip-in"><div class="lg-cara mtilt">${medallaSvg(mes, est, 210, L ? L.hechos.length / MEDALLA_MIN : 0, lid)}</div><div class="lg-cara dorso">${medallaDorso(mes, L, nom, 210)}</div></div></button>
+    <p class="lg-mlema">«${LEMAS[i]}»</p><span class="lg-tap">Toca la medalla para darla vuelta.</span>
+    ${L ? `<ul class="lg-mlist">${L.ds.map(d => `<li class="${L.hechos.includes(d.k) ? 'ok' : ''}"><span>${d.n}</span><span class="v">${valTxt(d, L)}</span></li>`).join('')}</ul>` : ''}
+  </div>`;
+  m.hidden = false; S.lgPrevFoco = document.activeElement; document.documentElement.style.overflow = 'hidden';
+  m.querySelector('.lg-x').focus();
+  if (fiesta && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const cols = ['#E0A100', '#F3CF63', ELEM_COL[el], '#E8322F', '#FFFFFF', '#1D6FA5'];
+    m.querySelector('.lg-conf').innerHTML = Array.from({length: 60}, (_, k) => `<i style="left:${Math.random() * 100}%;background:${cols[k % cols.length]};animation-delay:${(Math.random() * .7).toFixed(2)}s;animation-duration:${(2 + Math.random() * 1.4).toFixed(2)}s;transform:rotate(${Math.random() * 360 | 0}deg)"></i>`).join('');
+    const md = m.querySelector('.lg-cara .medal'); md.classList.add('brilla');
+  }
+}
+function cerrarMedalla() { const m = $('#lgModal'); if (!m || m.hidden) return; m.hidden = true; document.documentElement.style.overflow = ''; S.lgPrevFoco?.focus?.(); }
+const CHISPA = '<svg viewBox="0 0 24 24"><path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6z"></path></svg>';
+const chispas = () => [[6, 18, 0], [88, 10, .8], [92, 62, 1.6], [2, 70, 2.1], [70, 92, 1.1]].map(([x, y, d]) => `<span class="lg-spark" aria-hidden="true" style="left:${x}%;top:${y}%;animation-delay:${d}s">${CHISPA}</span>`).join('');
+(() => { // inclinación 3D al pasar el mouse
+  const fino = matchMedia('(hover: hover) and (pointer: fine)');
+  document.addEventListener('pointermove', ev => { if (!fino.matches) return; const t = ev.target.closest?.('.mtilt'); if (!t) return; const r = t.getBoundingClientRect();
+    const x = (ev.clientX - r.left) / r.width - .5, y = (ev.clientY - r.top) / r.height - .5; t.classList.add('on'); t.style.setProperty('--ry', (x * 22).toFixed(1) + 'deg'); t.style.setProperty('--rx', (-y * 22).toFixed(1) + 'deg'); });
+  document.addEventListener('pointerout', ev => { const t = ev.target.closest?.('.mtilt'); if (t && !t.contains(ev.relatedTarget)) { t.classList.remove('on'); t.style.removeProperty('--rx'); t.style.removeProperty('--ry'); } });
+})();
+const ESTRELLA = '<path d="M12 3.2l2.6 5.4 5.9.7-4.4 4 1.2 5.8L12 16.3 6.7 19.1l1.2-5.8-4.4-4 5.9-.7z"></path>';
+const estrellas = (n, oro, tot = DESAFIOS.length) => `<span class="stars" role="img" aria-label="${n} de ${tot} desafíos${oro ? ' y estrella dorada' : ''}">${Array.from({length: tot}, (_, i) => `<svg viewBox="0 0 24 24" aria-hidden="true"><g class="${i < n ? 'on' : 'off'}" stroke-width="1.4">${ESTRELLA}</g></svg>`).join('')}${oro ? `<svg viewBox="0 0 24 24" aria-hidden="true"><g class="gold" stroke-width="1.4">${ESTRELLA}</g></svg>` : ''}</span>`;
+const valTxt = (d, L) => { const v = L.val; if (d.money) return `<b>${fmCorto(v[d.k])}</b> de ${fmCorto(d.meta)}`;
+  if (d.pct) { const [nk, ok] = d.pct; return v[nk] >= 3 ? `<b>${v[d.k]}%</b> · ${v[ok]} de ${v[nk]}` : `<b>${v[nk]}</b> de 3 entrevistas`; }
+  return `<b>${v[d.k]}</b> de ${d.meta}`; };
+const avance = (d, L) => { const v = L.val; if (d.pct) { const [nk] = d.pct; return v[nk] >= 3 ? v[d.k] / d.meta : v[nk] / 3 * 0.5; } return v[d.k] / d.meta; };
+const metaTxt = d => d.money ? fmCorto(d.meta) : d.pct ? d.meta + '% sin errores' : d.meta;
+function vitrinaHtml(nom, anio) {
+  const pm = primerMes(), mc = hoy().slice(0, 7), lid = esJefa(nom);
+  return `<div class="vitrina">${Array.from({length: 12}, (_, i) => { const mes = `${anio}-${pad(i + 1)}`; const [sig] = signoDe(mes);
+    const at = `type="button" data-lgver="${mes}" data-lgnom="${esc(nom)}"`;
+    if (mes > mc) return `<button class="vit mtilt" ${at} aria-label="${sig}: todavía no empezó">${medallaSvg(mes, 'futura', 70, 0, lid)}<b>${sig}</b><small>${MESES[i].slice(0, 3)}</small></button>`;
+    if (mes < pm) return `<div class="vit sd">${medallaSvg(mes, 'sindatos', 70, 0, lid)}<b>${sig}</b><small>Sin datos</small></div>`;
+    const L = logrosDe(nom, mes); const est = L.medalla ? 'ganada' : mes === mc ? 'curso' : 'perdida';
+    return `<button class="vit mtilt${mes === mc ? ' cur' : ''}" ${at}>${medallaSvg(mes, est, 70, L.hechos.length / MEDALLA_MIN, lid)}<b>${sig}</b><small>${MESES[i].slice(0, 3)} · ${L.hechos.length}/${L.ds.length}${L.vref.length ? ' · ★' : ''}</small></button>`; }).join('')}</div>`;
+}
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+const tipsHtml = ds => `<ul class="lg-tips">${ds.map(d => `<li><b>${d.n}<small>${d.eq ? 'Del equipo · ' : ''}Meta: ${metaTxt(d)}</small></b><span>${d.tip}</span></li>`).join('')}</ul>`;
+function guiaLogros(nom) {
+  const k = 'onb_lg_guia_vista', abierta = !lsGet(k, false); lsSet(k, true);
+  const [sig] = signoDe(hoy().slice(0, 7)), jefa = !!nom && esJefa(nom), j = jefaNom();
+  return `<details class="card lg-guia"${abierta ? ' open' : ''}><summary>${EM('📘')}<span>Guía: cómo funcionan los logros<small>Qué hay que hacer para ganar la medalla de cada mes</small></span>${CHEV}</summary><div class="gb">
+    <ol class="lg-pasos">
+      <li><span class="n">1</span><b>Una medalla por mes</b><span>Cada mes tiene la suya, con el signo del zodíaco de ese mes. Este mes es ${sig}.</span></li>
+      <li><span class="n">2</span><b>7 desafíos</b><span>${jefa ? '3 son tuyos y 4 son del equipo. La página los cuenta sola.' : 'Se cumplen con el trabajo de todos los días. La página los cuenta sola.'}</span></li>
+      <li><span class="n">3</span><b>Cumplir ${MEDALLA_MIN} de 7</b><span>Con ${MEDALLA_MIN} desafíos se gana la medalla. Cada desafío cumplido es una estrella.</span></li>
+      <li><span class="n">4</span><b>Queda en la vitrina</b><span>La medalla ganada queda guardada. El día 1 empieza el desafío del mes siguiente.</span></li>
+    </ol>
+    ${jefa ? `<div><h4>Tu medalla de líder</h4><p>Como jefa de Onboarding tienes la <b>medalla de líder</b>, con borde dorado. Las metas personales son la mitad que las de las asesoras y el resto depende del equipo: te conviene ayudar a las chicas a ganar la suya.</p></div>` : ''}
+    <div><h4>Cómo sumar en cada desafío</h4>${tipsHtml(jefa ? DESAFIOS_JEFA : DESAFIOS)}</div>
+    ${!nom && j ? `<div><h4>Medalla de líder · ${esc(j)}</h4><p>La jefa de Onboarding tiene su propia medalla, con borde dorado: 3 desafíos personales con la meta a la mitad y 4 del equipo. También se gana con ${MEDALLA_MIN} de 7.</p>${tipsHtml(DESAFIOS_JEFA)}</div>` : ''}
+    <div><h4>Estrella dorada</h4><p>Es un premio extra por una <b>venta a un cliente que llegó referido</b>. No hace falta para la medalla, pero se luce en la vitrina. Para cargarla: abrir la entrevista del cliente que hizo la referencia, ir a <b>Ventas por referido</b> y tocar <b>Registrar venta por referido</b>.</p></div>
+    <div><h4>Para tener en cuenta</h4><ul class="lg-ojo">
+      <li>Los cobros cuentan en el mes en que se pagan y solo si entran dentro del plazo.</li>
+      <li>Si la responsable observa un cobro, deja de contar hasta que se corrija.</li>
+      <li>Todo sale de lo que se carga en el checklist: cargar los pagos al día hace que el progreso se vea al día.</li>
+      <li>Cuando se cumple un desafío o se gana la medalla, aparece un aviso al entrar a la página.</li>
+    </ul></div>
+  </div></details>`;
+}
+const filaDesafio = (d, L) => { const ok = L.hechos.includes(d.k), a = Math.min(1, avance(d, L)); return `<li class="${ok ? 'ok' : ''}"><span class="ck">${ok ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>' : ''}</span><span><b>${d.n}</b><small>${d.d}</small></span><span class="v">${valTxt(d, L)}</span><span class="bar"><span style="width:${Math.round(a * 100)}%"></span></span></li>`; };
+function logrosPersona(nom, anio) {
+  const mes = hoy().slice(0, 7), [sig] = signoDe(mes), L = logrosDe(nom, mes), tot = L.ds.length;
+  const falta = Math.max(0, MEDALLA_MIN - L.hechos.length), dias = diffDays(hoy(), lastDay(mes));
+  const yo = !esResp(), mesN = MESES[+mes.slice(5) - 1];
+  let h = `<section class="card"><div class="lg-hero"><button type="button" class="lg-mb mtilt" data-lgver="${mes}" data-lgnom="${esc(nom)}" aria-label="Ver la medalla de ${sig} de cerca">${medallaSvg(mes, L.medalla ? 'ganada' : 'curso', 160, L.hechos.length / MEDALLA_MIN, L.jefa)}${L.medalla ? chispas() : ''}</button>
+    <div><span class="eyebrow">${mesN[0].toUpperCase() + mesN.slice(1)} ${mes.slice(0, 4)}${yo ? '' : ' · ' + esc(nom)}</span><h3>Medalla ${L.jefa ? 'de líder ' : ''}de ${sig}</h3>
+    <p>${L.medalla ? `${yo ? '¡La ganaste!' : '¡Ganada!'} ${L.hechos.length} de ${tot} desafíos cumplidos. Cada desafío extra suma una estrella.` : `${yo ? 'Te faltan' : 'Le faltan'} <b>${falta} ${falta === 1 ? 'desafío' : 'desafíos'}</b> para ganarla: hay que cumplir ${MEDALLA_MIN} de ${tot}. ${dias ? `Quedan ${dias} ${dias === 1 ? 'día' : 'días'} del mes.` : 'Hoy es el último día del mes.'}`}</p>
+    <div class="lg-st">${estrellas(L.hechos.length, L.vref.length > 0, tot)}</div>
+    <p class="lg-lema"><small>Lema de ${sig}</small>«${LEMAS[+mes.slice(5, 7) - 1]}»</p></div></div></section>`;
+  if (yo) h += guiaLogros(nom);
+  const lista = ds => `<ul class="dsf">${ds.map(d => filaDesafio(d, L)).join('')}</ul>`;
+  h += `<section class="card"><div class="card-h"><h3>${EM('🎯')}Desafíos de ${mesN}</h3><p>Se calculan solos con lo que se carga en el checklist. Los cobros cuentan en el mes del pago, dentro del plazo.</p></div>
+    ${L.jefa ? `<h4 class="lg-grp">${yo ? 'Tuyos' : 'Personales'} · meta a la mitad</h4>${lista(L.ds.filter(d => !d.eq))}<h4 class="lg-grp">Del equipo</h4>${lista(L.ds.filter(d => d.eq))}` : lista(L.ds)}</section>`;
+  h += `<div class="lg-gold"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="gold" fill="#E0A100" stroke="#8A6300" stroke-width="1.4">${ESTRELLA}</g></svg><span><b>Estrella dorada · Venta por referido.</b> ${L.vref.length ? `${yo ? '¡La tienes!' : '¡Ganada!'} ${L.vref.length} ${L.vref.length === 1 ? 'venta' : 'ventas'} por referido este mes.` : 'Se gana con una venta a un cliente que llegó referido. Se registra desde la entrevista del cliente que lo refirió.'}</span></div>`;
+  const anios = []; for (let y = +primerMes().slice(0, 4); y <= +mes.slice(0, 4); y++) anios.push(y);
+  h += `<section class="card"><div class="card-h"><h3>${EM('🏅')}${yo ? 'Tu vitrina' : 'Vitrina de ' + esc(nom)} ${anio}</h3>${anios.length > 1 ? `<div class="lg-sel">${anios.map(y => `<button type="button" data-lganio="${y}" aria-pressed="${y === anio}">${y}</button>`).join('')}</div>` : ''}<p>Una medalla por mes, con el signo de cada mes. A color, las ganadas. Toca una para verla de cerca.</p></div>${vitrinaHtml(nom, anio)}</section>`;
+  return h;
+}
+function renderLogros() {
+  const out = $('#lg-out');
+  if (S.sinDb) { out.innerHTML = vacioSinDb(); return; }
+  if (!S.cargado) { out.innerHTML = `<div class="empty"><h3>Cargando…</h3></div>`; return; }
+  if (!esResp() && !miNombre()) { out.innerHTML = vacioIdentidad(); return; }
+  const anio = +(S.f.lg.anio || hoy().slice(0, 4)), mes = hoy().slice(0, 7);
+  if (!esResp()) { $('#lg-sub').textContent = `Cada mes hay una medalla nueva: este mes es ${signoDe(mes)[0]}.`; out.innerHTML = logrosPersona(miNombre(), anio);
+    if (S.lgFiesta) { const m = S.lgFiesta; S.lgFiesta = null; setTimeout(() => abrirMedalla(miNombre(), m, true), 300); } return; }
+  const eq = equipo(); const sel = eq.find(n => norm(n) === norm(S.f.lg.sel)) || '';
+  $('#lg-sub').textContent = sel ? `Logros de ${sel}.` : `Medalla de ${signoDe(mes)[0]} de este mes y la vitrina de cada asesor OB.`;
+  let h = `<div class="lg-sel" role="group" aria-label="Ver logros de"><button type="button" data-lgsel="" aria-pressed="${!sel}">Todo el equipo</button>${eq.map(n => `<button type="button" data-lgsel="${esc(n)}" aria-pressed="${norm(n) === norm(sel)}">${avatar(n)}${esc(n)}</button>`).join('')}</div>`;
+  if (sel) h += logrosPersona(sel, anio);
+  else if (!eq.length) h += `<div class="empty"><h3>Sin asesores OB cargados</h3><p>Cargarlos en Ajustes para ver sus logros.</p></div>`;
+  else { const pm = primerMes(); h += `<div class="lg-team">${eq.map(n => { const L = logrosDe(n, mes), lid = L.jefa; const falta = Math.max(0, MEDALLA_MIN - L.hechos.length);
+      return `<button class="card" type="button" data-lgsel="${esc(n)}"><div class="lg-tm">${medallaSvg(mes, L.medalla ? 'ganada' : 'curso', 72, L.hechos.length / MEDALLA_MIN, lid)}<div><b style="font-size:16px">${esc(n)}</b>${lid ? ' <span class="lg-eq">Jefa · líder</span>' : ''}<div class="note">${L.medalla ? `Ganó ${signoDe(mes)[0]}` : `Le ${falta === 1 ? 'falta 1 desafío' : `faltan ${falta} desafíos`}`}</div>${estrellas(L.hechos.length, L.vref.length > 0, L.ds.length)}</div></div>
+        <div class="lg-mini" aria-label="Medallas del año">${Array.from({length: 12}, (_, i) => { const m = `${mes.slice(0, 4)}-${pad(i + 1)}`; const st = m > mes ? 'futura' : m < pm ? 'sindatos' : (logrosDe(n, m).medalla ? 'ganada' : 'perdida'); return medallaSvg(m, st, 22, 0, lid); }).join('')}</div></button>`; }).join('')}</div>`; }
+  if (!sel) h += guiaLogros('');
+  out.innerHTML = h;
+}
+function revisarLogros() {
+  const nom = miNombre(); if (!nom || !S.cargado) return;
+  const mes = hoy().slice(0, 7), L = logrosDe(nom, mes), k = `onb_lg_${norm(nom)}_${mes}`;
+  const prev = lsGet(k, null); lsSet(k, {h: L.hechos, m: L.medalla, o: L.vref.length > 0});
+  if (!prev) return;
+  if (L.medalla && !prev.m) {
+    const ocupada = S.tab !== 'logros' && (!$('#drawer').hidden || document.activeElement?.matches?.('input, textarea, select'));
+    if (ocupada) { S.lgFiesta = mes; setTimeout(() => toast(`🏅 ¡Ganaste la medalla de ${signoDe(mes)[0]}! Mírala en Logros.`), 400); }
+    else setTimeout(() => abrirMedalla(nom, mes, true), 500);
+    return;
+  }
+  const nuevos = L.hechos.filter(x => !(prev.h || []).includes(x));
+  if (nuevos.length) setTimeout(() => toast(`⭐ ¡Desafío cumplido: «${L.ds.find(d => d.k === nuevos[0]).n}»! Llevas ${L.hechos.length} de ${L.ds.length}.`), 400);
+  else if (L.vref.length && !prev.o) setTimeout(() => toast('🌟 ¡Estrella dorada por la venta referida!'), 400);
+}
+function ventasCard(e, puede) {
+  const v = e.ventasRef || [];
+  if (!v.length && !puede) return '';
+  return `<section class="dcard"><h3><span class="emo" aria-hidden="true">🤝</span> Ventas por referido</h3>
+    ${v.length ? `<ul class="vref">${v.map(x => `<li><span><b>${esc(x.cliente || 'Cliente referido')}</b><br><small class="muted">${fd(x.fecha)}</small></span><span class="row" style="gap:8px"><b class="mono">${fm(x.monto)}</b>${puede && esResp() ? `<button class="btn btn-sm btn-ic" type="button" data-vtdel="${esc(x.id)}" aria-label="Quitar esta venta">✕</button>` : ''}</span></li>`).join('')}</ul>` : '<p class="note">Si este cliente refirió a alguien que compró un plan, registrarlo acá: suma la estrella dorada de Logros.</p>'}
+    ${puede ? (S.drVenta ? `<div class="grid-f"><div class="field"><label for="vt_cli">Cliente nuevo (referido)</label><input type="text" id="vt_cli" placeholder="Nombre y apellido"></div><div class="field"><label for="vt_fecha">Fecha de la venta</label><input type="date" id="vt_fecha" max="${hoy()}" value="${hoy()}"></div><div class="field"><label for="vt_monto">Monto de la venta</label><input type="text" id="vt_monto" class="money" inputmode="numeric" placeholder="0"></div></div>
+      <div class="row"><button class="btn btn-sm btn-primary" type="button" data-vtok="1">Guardar la venta</button><button class="btn btn-sm" type="button" data-vtno="1">Cancelar</button></div>` : `<div><button class="btn btn-sm" type="button" data-vtabrir="1">Registrar venta por referido</button></div>`) : ''}</section>`;
+}
 
 /* ---------- Instalar en el celular ---------- */
 let instPrompt = null;
@@ -2948,6 +3404,7 @@ const HELP = {
   fuera: () => `Incrementos o ahorros que el cliente pagó después del plazo de ${plazoTxt()}. Se registran, pero no generan comisión.`,
   semaforo: () => 'Cómo quedó el cliente después de la entrevista. Sale solo de las respuestas: incremento + ahorro (hasta 25 puntos según el monto), participación (20), información correcta del asesor (15), documentación (15), interés en la empresa (15) y departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no (con varios compromisos, se reparten). <b>Verde</b> 75% o más, <b>amarillo</b> 45 a 74%, <b>rojo</b> menos de 45%. No se puede cambiar a mano.',
   posible: () => 'Comisión que se sumaría si cada cliente paga lo que pactó antes de que venza su plazo.',
+  logros: () => `Cada mes hay una medalla nueva, con el signo de ese mes (noviembre es Escorpio). Se gana cumpliendo ${MEDALLA_MIN} de los 7 desafíos del mes; cada desafío cumplido es una estrella. La jefa de Onboarding tiene la medalla de líder: metas personales a la mitad y desafíos del equipo. Se calculan solos: los cobros cuentan en el mes del pago y dentro del plazo. La <b>estrella dorada</b> se suma con una venta por referido. Las medallas ganadas quedan en la vitrina.`,
   semanal: () => 'La planilla de la semana, armada sola con el checklist. <b>Recaudación</b>: ahorros + incrementos que el cliente pagó en esa semana, dentro del plazo (en dólares, al dólar Spazios de cada pago). <b>OB</b>: entrevistas finalizadas en la semana. <b>Fallido</b>: el cliente se dio de baja (se registra desde la entrevista → «Registrar baja»), contado en la semana de la entrevista. <b>Efectividad</b>: de esos onboardings, cuántos dejaron ahorro o subieron la cuota en el mes.',
 };
 function abrirAyuda(btn) {
@@ -3105,7 +3562,8 @@ function renderAjustes() {
       <div class="rule" style="margin-top:14px"><b>Cómo se calcula</b><span>Incremento + ahorro (hasta 25) · participación (20) · información correcta del asesor (15) · documentación completa (15) · interés en la empresa (15) · departamento modelo (10). El seguimiento suma 10 si cumple y resta 10 si no; con varios compromisos, los 10 puntos se reparten. Verde: 75% o más · Amarillo: 45 a 74% · Rojo: menos de 45%, o falla del asesor sin incremento ni ahorro.</span></div>
     </section>
     <div class="aj-grid">
-      <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea></section>
+      <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea>
+        <div class="field" style="margin-top:12px"><label for="a_jefa">Jefa de Onboarding</label><select id="a_jefa"><option value="">Nadie</option>${equipo().map(n => `<option value="${esc(n)}"${norm(n) === norm(jefaNom()) ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select><span class="hint">En Logros tiene la medalla de líder: metas personales a la mitad y desafíos del equipo.</span></div></section>
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🧑‍💼</span> Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🏢</span> Sucursales</h3><p>Una por línea. La primera es la predeterminada.</p></div><textarea id="a_suc" aria-label="Sucursales">${esc((a.sucursales || []).join('\n'))}</textarea></section>
     </div>
@@ -3129,7 +3587,7 @@ async function guardarDolar() {
 async function guardarAjustes() {
   const lines = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean);
   const pct = Math.min(100, num($('#a_pct').value));
-  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), semEsc: [num($('#a_sem1').value), num($('#a_sem2').value), num($('#a_sem3').value)], actualizado: new Date().toISOString()};
+  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), jefa: $('#a_jefa').value, asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), semEsc: [num($('#a_sem1').value), num($('#a_sem2').value), num($('#a_sem3').value)], actualizado: new Date().toISOString()};
   if (!(data.semEsc[0] > 0 && data.semEsc[1] > data.semEsc[0] && data.semEsc[2] > data.semEsc[1])) { toast('Los montos del semáforo tienen que ir de menor a mayor.', 'bad'); $('#a_sem1').focus(); return; }
   try { await conReintento(() => S.db.doc('ajustes/general').set(data)); S.ajDirty = false; toast('Ajustes guardados.'); }
   catch (e) { if (e?.code === 'invalid_argument') toast('Solo una cuenta con permiso de Editor puede cambiar los ajustes.', 'bad'); else errorEscritura(e); }
@@ -3156,7 +3614,7 @@ function pintarDolar() {
 }
 function renderAll() {
   pintarDolar();
-  renderBanner(); renderTabs(); renderFiltros(); renderVista(); actualizarForm();
+  renderBanner(); renderTabs(); renderFiltros(); renderVista(); actualizarForm(); revisarLogros();
   if (S.detalle && !$('#drawer').hidden) { const a = document.activeElement; if (!(a && $('#drawer').contains(a) && a.matches('textarea,input'))) renderDetalle(); }
 }
 
@@ -3183,6 +3641,9 @@ function bindGeneral() {
     const tg = ev.target.closest('[data-tabgo]'); if (tg) { setTab(tg.dataset.tabgo); return; }
     const wv = ev.target.closest('[data-wkv]'); if (wv) { S.f.pan.wkVista = wv.dataset.wkv; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     const wr = ev.target.closest('.wk-row'); if (wr && matchMedia('(max-width:640px)').matches) { wr.classList.toggle('abierta'); return; }
+    const lv = ev.target.closest('[data-lgver]'); if (lv) { abrirMedalla(lv.dataset.lgnom, lv.dataset.lgver); return; }
+    const ls = ev.target.closest('[data-lgsel]'); if (ls) { S.f.lg.sel = ls.dataset.lgsel; renderLogros(); window.scrollTo({top: 0}); return; }
+    const la = ev.target.closest('[data-lganio]'); if (la) { S.f.lg.anio = la.dataset.lganio; renderLogros(); return; }
     const ps = ev.target.closest('[data-psub]'); if (ps) { S.f.pan.modo = ps.dataset.psub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
     if (ev.target.closest('#btnCsvSem')) { exportarSemanal(); return; }
     const sb = ev.target.closest('[data-sub]'); if (sb) { S.f.pan.vista = sb.dataset.sub; renderPanel(); requestAnimationFrame(ajustarKpis); return; }
