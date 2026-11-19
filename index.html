@@ -2780,8 +2780,10 @@ const DESAFIOS_JEFA = [
 ];
 const signoDe = mes => SIGNOS[+mes.slice(5, 7) - 1];
 function jefaNom() { const eq = equipo(); const j = S.aj.jefa !== undefined ? S.aj.jefa : (eq.find(n => /^iv[oó]n\b/i.test(n)) || ''); return eq.find(n => norm(n) === norm(j)) || ''; }
-const esJefa = n => { const j = jefaNom(); return !!j && norm(n) === norm(j); };
-const desafiosDe = n => esJefa(n) ? DESAFIOS_JEFA : DESAFIOS;
+const jefaDesde = () => S.aj.jefaDesde || '2026-09';
+const esJefa = (n, mes = hoy().slice(0, 7)) => { const j = jefaNom(); return !!j && norm(n) === norm(j) && mes >= jefaDesde(); };
+const desafiosDe = (n, mes) => esJefa(n, mes) ? DESAFIOS_JEFA : DESAFIOS;
+function refDe(nom, mes) { const d = S.lgRef?.datos; if (!d) return null; const sa = x => norm(x).normalize('NFD').replace(/[\u0300-\u036f]/g, ''); const k = Object.keys(d).find(x => sa(nom).startsWith(sa(x))); return k ? d[k][mes] || null : null; }
 function datosDe(nom, mes) {
   const mias = S.E.filter(e => e.estado === 'final' && norm(e.especialista) === norm(nom));
   let inc = 0, aho = 0, big = 0, rec = 0, pal = 0; const cli = new Set();
@@ -2797,21 +2799,28 @@ function datosDe(nom, mes) {
   const delMes = mias.filter(e => (e.fecha || '').slice(0, 7) === mes);
   const okImp = delMes.filter(e => resultado(e.checklist).est === 'ok').length, nImp = delMes.length;
   const vref = S.E.filter(e => norm(e.especialista) === norm(nom)).flatMap(e => (e.ventasRef || []).filter(v => (v.fecha || '').slice(0, 7) === mes));
-  return {cli: cli.size, inc, aho, big, rec, pal, nImp, okImp, imp: nImp >= 3 ? Math.round(okImp / nImp * 100) : null, vref};
+  const out = {cli: cli.size, inc, aho, big, rec, pal, nImp, okImp, imp: nImp >= 3 ? Math.round(okImp / nImp * 100) : null, vref};
+  const R = refDe(nom, mes);
+  if (R) { let usa = false; for (const k of ['cli', 'inc', 'aho', 'big', 'rec']) if ((R[k] || 0) > out[k]) { out[k] = R[k]; usa = true; }
+    if ((R.vref || 0) > vref.length) { out.vref = [...vref, ...Array.from({length: R.vref - vref.length}, () => ({cliente: 'Venta (Excel)', fecha: mes + '-01', ref: true}))]; usa = true; }
+    out.ref = usa; }
+  return out;
 }
 function logrosDe(nom, mes) {
-  const jefa = esJefa(nom), ds = jefa ? DESAFIOS_JEFA : DESAFIOS, val = datosDe(nom, mes);
+  const jefa = esJefa(nom, mes), ds = jefa ? DESAFIOS_JEFA : DESAFIOS, val = datosDe(nom, mes);
   if (jefa) {
     const eq = equipo(), T = eq.map(n => datosDe(n, mes));
     val.eqrec = T.reduce((a, x) => a + x.rec, 0); val.eqpal = T.reduce((a, x) => a + x.pal, 0);
     val.eqN = T.reduce((a, x) => a + x.nImp, 0); val.eqOk = T.reduce((a, x) => a + x.okImp, 0);
     val.eqimp = val.eqN >= 3 ? Math.round(val.eqOk / val.eqN * 100) : null;
-    val.eqmed = eq.filter(n => !esJefa(n) && logrosDe(n, mes).medalla).length;
+    val.eqmed = eq.filter(n => !esJefa(n, mes) && logrosDe(n, mes).medalla).length; val.ref = val.ref || T.some(x => x.ref);
   }
   const hechos = ds.filter(d => val[d.k] != null && val[d.k] >= d.meta).map(d => d.k);
-  return {val, ds, jefa, hechos, medalla: hechos.length >= MEDALLA_MIN, vref: val.vref};
+  return {val, ds, jefa, hechos, medalla: hechos.length >= MEDALLA_MIN, vref: val.vref, ref: !!val.ref};
 }
-function primerMes() { let m = ''; for (const e of S.E) if (e.fecha && (!m || e.fecha < m)) m = e.fecha; return (m || hoy()).slice(0, 7); }
+function primerMes() { let m = ''; for (const e of S.E) if (e.fecha && (!m || e.fecha < m)) m = e.fecha;
+  for (const o of Object.values(S.lgRef?.datos || {})) for (const k of Object.keys(o)) if (!m || k < m.slice(0, 7)) m = k + '-01';
+  return (m || hoy()).slice(0, 7); }
 /* ---------- Medallas ilustradas ---------- */
 const ZF = [
   // 0 Capricornio: cabra con cuernos largos y barba
@@ -2916,7 +2925,7 @@ function abrirMedalla(nom, mes, fiesta) {
     m.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarMedalla(); });
   }
   const i = +mes.slice(5, 7) - 1, [sig, , el] = SIGNOS[i], mc = hoy().slice(0, 7), fut = mes > mc;
-  const L = fut ? null : logrosDe(nom, mes), lid = esJefa(nom);
+  const L = fut ? null : logrosDe(nom, mes), lid = esJefa(nom, mes);
   const est = fut ? 'futura' : L.medalla ? 'ganada' : mes === mc ? 'curso' : 'perdida';
   const yo = !esResp() && norm(nom) === norm(miNombre());
   const estado = fut ? `Se juega en ${MESES[i]}.` : L.medalla ? (fiesta ? `${yo ? '¡La ganaste' : '¡Ganada'} con ${L.hechos.length} de ${L.ds.length} desafíos${L.vref.length ? ' y estrella dorada' : ''}!` : `Ganada con ${L.hechos.length} de ${L.ds.length} desafíos${L.vref.length ? ' y estrella dorada' : ''}.`) : mes === mc ? `En juego: ${L.hechos.length} de ${MEDALLA_MIN} desafíos para ganarla.` : `No se ganó: ${L.hechos.length} de ${L.ds.length} desafíos.`;
@@ -2927,6 +2936,7 @@ function abrirMedalla(nom, mes, fiesta) {
     <span class="lg-mel"><i></i>${ELEM_TXT[el]} · ${estado}</span>
     <button class="lg-flip" type="button" data-lgflip aria-pressed="false" aria-label="Dar vuelta la medalla"><div class="lg-flip-in"><div class="lg-cara mtilt">${medallaSvg(mes, est, 210, L ? L.hechos.length / MEDALLA_MIN : 0, lid)}</div><div class="lg-cara dorso">${medallaDorso(mes, L, nom, 210)}</div></div></button>
     <p class="lg-mlema">«${LEMAS[i]}»</p><span class="lg-tap">Toca la medalla para darla vuelta.</span>
+    ${L && L.ref ? '<span class="lg-tap">Incluye cobros del Excel de seguimiento (referencia).</span>' : ''}
     ${L ? `<ul class="lg-mlist">${L.ds.map(d => `<li class="${L.hechos.includes(d.k) ? 'ok' : ''}"><span>${d.n}</span><span class="v">${valTxt(d, L)}</span></li>`).join('')}</ul>` : ''}
   </div>`;
   m.hidden = false; S.lgPrevFoco = document.activeElement; document.documentElement.style.overflow = 'hidden';
@@ -2954,9 +2964,9 @@ const valTxt = (d, L) => { const v = L.val; if (d.money) return `<b>${fmCorto(v[
 const avance = (d, L) => { const v = L.val; if (d.pct) { const [nk] = d.pct; return v[nk] >= 3 ? v[d.k] / d.meta : v[nk] / 3 * 0.5; } return v[d.k] / d.meta; };
 const metaTxt = d => d.money ? fmCorto(d.meta) : d.pct ? d.meta + '% sin errores' : d.meta;
 function vitrinaHtml(nom, anio) {
-  const pm = primerMes(), mc = hoy().slice(0, 7), lid = esJefa(nom);
+  const pm = primerMes(), mc = hoy().slice(0, 7);
   return `<div class="vitrina">${Array.from({length: 12}, (_, i) => { const mes = `${anio}-${pad(i + 1)}`; const [sig] = signoDe(mes);
-    const at = `type="button" data-lgver="${mes}" data-lgnom="${esc(nom)}"`;
+    const at = `type="button" data-lgver="${mes}" data-lgnom="${esc(nom)}"`, lid = esJefa(nom, mes);
     if (mes > mc) return `<button class="vit mtilt" ${at} aria-label="${sig}: todavía no empezó">${medallaSvg(mes, 'futura', 70, 0, lid)}<b>${sig}</b><small>${MESES[i].slice(0, 3)}</small></button>`;
     if (mes < pm) return `<div class="vit sd">${medallaSvg(mes, 'sindatos', 70, 0, lid)}<b>${sig}</b><small>Sin datos</small></div>`;
     const L = logrosDe(nom, mes); const est = L.medalla ? 'ganada' : mes === mc ? 'curso' : 'perdida';
@@ -2998,7 +3008,7 @@ function logrosPersona(nom, anio) {
     <p class="lg-lema"><small>Lema de ${sig}</small>«${LEMAS[+mes.slice(5, 7) - 1]}»</p></div></div></section>`;
   if (yo) h += guiaLogros(nom);
   const lista = ds => `<ul class="dsf">${ds.map(d => filaDesafio(d, L)).join('')}</ul>`;
-  h += `<section class="card"><div class="card-h"><h3>${EM('🎯')}Desafíos de ${mesN}</h3><p>Se calculan solos con lo que se carga en el checklist. Los cobros cuentan en el mes del pago, dentro del plazo.</p></div>
+  h += `<section class="card"><div class="card-h"><h3>${EM('🎯')}Desafíos de ${mesN}</h3><p>Se calculan solos con lo que se carga en el checklist. Los cobros cuentan en el mes del pago, dentro del plazo.${L.ref ? ' <b>Este mes incluye cobros del Excel de seguimiento como referencia.</b>' : ''}</p></div>
     ${L.jefa ? `<h4 class="lg-grp">${yo ? 'Tuyos' : 'Personales'} · meta a la mitad</h4>${lista(L.ds.filter(d => !d.eq))}<h4 class="lg-grp">Del equipo</h4>${lista(L.ds.filter(d => d.eq))}` : lista(L.ds)}</section>`;
   h += `<div class="lg-gold"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="gold" fill="#E0A100" stroke="#8A6300" stroke-width="1.4">${ESTRELLA}</g></svg><span><b>Estrella dorada · Venta por referido.</b> ${L.vref.length ? `${yo ? '¡La tienes!' : '¡Ganada!'} ${L.vref.length} ${L.vref.length === 1 ? 'venta' : 'ventas'} por referido este mes.` : 'Se gana con una venta a un cliente que llegó referido. Se registra desde la entrevista del cliente que lo refirió.'}</span></div>`;
   const anios = []; for (let y = +primerMes().slice(0, 4); y <= +mes.slice(0, 4); y++) anios.push(y);
@@ -3020,7 +3030,7 @@ function renderLogros() {
   else if (!eq.length) h += `<div class="empty"><h3>Sin asesores OB cargados</h3><p>Cargarlos en Ajustes para ver sus logros.</p></div>`;
   else { const pm = primerMes(); h += `<div class="lg-team">${eq.map(n => { const L = logrosDe(n, mes), lid = L.jefa; const falta = Math.max(0, MEDALLA_MIN - L.hechos.length);
       return `<button class="card" type="button" data-lgsel="${esc(n)}"><div class="lg-tm">${medallaSvg(mes, L.medalla ? 'ganada' : 'curso', 72, L.hechos.length / MEDALLA_MIN, lid)}<div><b style="font-size:16px">${esc(n)}</b>${lid ? ' <span class="lg-eq">Jefa · líder</span>' : ''}<div class="note">${L.medalla ? `Ganó ${signoDe(mes)[0]}` : `Le ${falta === 1 ? 'falta 1 desafío' : `faltan ${falta} desafíos`}`}</div>${estrellas(L.hechos.length, L.vref.length > 0, L.ds.length)}</div></div>
-        <div class="lg-mini" aria-label="Medallas del año">${Array.from({length: 12}, (_, i) => { const m = `${mes.slice(0, 4)}-${pad(i + 1)}`; const st = m > mes ? 'futura' : m < pm ? 'sindatos' : (logrosDe(n, m).medalla ? 'ganada' : 'perdida'); return medallaSvg(m, st, 22, 0, lid); }).join('')}</div></button>`; }).join('')}</div>`; }
+        <div class="lg-mini" aria-label="Medallas del año">${Array.from({length: 12}, (_, i) => { const m = `${mes.slice(0, 4)}-${pad(i + 1)}`; const Lm = m > mes || m < pm ? null : logrosDe(n, m); const st = m > mes ? 'futura' : m < pm ? 'sindatos' : (Lm.medalla ? 'ganada' : 'perdida'); return medallaSvg(m, st, 22, 0, esJefa(n, m)); }).join('')}</div></button>`; }).join('')}</div>`; }
   if (!sel) h += guiaLogros('');
   out.innerHTML = h;
 }
@@ -3563,7 +3573,8 @@ function renderAjustes() {
     </section>
     <div class="aj-grid">
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">👥</span> Asesores OB</h3><p>Un nombre por línea. Cada uno elige su nombre al entrar a la página.</p></div><textarea id="a_equipo" aria-label="Asesores OB">${esc((a.equipo || []).join('\n'))}</textarea>
-        <div class="field" style="margin-top:12px"><label for="a_jefa">Jefa de Onboarding</label><select id="a_jefa"><option value="">Nadie</option>${equipo().map(n => `<option value="${esc(n)}"${norm(n) === norm(jefaNom()) ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select><span class="hint">En Logros tiene la medalla de líder: metas personales a la mitad y desafíos del equipo.</span></div></section>
+        <div class="field" style="margin-top:12px"><label for="a_jefa">Jefa de Onboarding</label><select id="a_jefa"><option value="">Nadie</option>${equipo().map(n => `<option value="${esc(n)}"${norm(n) === norm(jefaNom()) ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select><span class="hint">En Logros tiene la medalla de líder: metas personales a la mitad y desafíos del equipo.</span></div>
+        <div class="field" style="margin-top:12px"><label for="a_jefaDesde">Es jefa desde</label><input type="month" id="a_jefaDesde" value="${esc(a.jefaDesde || '2026-09')}"><span class="hint">Los meses anteriores cuenta como asesora.</span></div></section>
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🧑‍💼</span> Asesores de ventas</h3><p>Un nombre por línea.</p></div><textarea id="a_asesores" aria-label="Asesores de ventas">${esc((a.asesores || []).join('\n'))}</textarea></section>
       <section class="card"><div class="card-h"><h3><span class="emo" aria-hidden="true">🏢</span> Sucursales</h3><p>Una por línea. La primera es la predeterminada.</p></div><textarea id="a_suc" aria-label="Sucursales">${esc((a.sucursales || []).join('\n'))}</textarea></section>
     </div>
@@ -3587,7 +3598,7 @@ async function guardarDolar() {
 async function guardarAjustes() {
   const lines = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean);
   const pct = Math.min(100, num($('#a_pct').value));
-  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), jefa: $('#a_jefa').value, asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), semEsc: [num($('#a_sem1').value), num($('#a_sem2').value), num($('#a_sem3').value)], actualizado: new Date().toISOString()};
+  const data = {pct: pct || DEF_AJ.pct, minimo: num($('#a_min').value) || DEF_AJ.minimo, plazoMeses: parseInt($('#a_plazo').value, 10) || 1, tope: num($('#a_tope').value) || DEF_AJ.tope, metaEnt: num($('#a_metaEnt').value), metaMonto: num($('#a_metaMonto').value), equipo: lines('#a_equipo'), jefa: $('#a_jefa').value, jefaDesde: $('#a_jefaDesde').value || '2026-09', asesores: lines('#a_asesores'), sucursales: lines('#a_suc'), semEsc: [num($('#a_sem1').value), num($('#a_sem2').value), num($('#a_sem3').value)], actualizado: new Date().toISOString()};
   if (!(data.semEsc[0] > 0 && data.semEsc[1] > data.semEsc[0] && data.semEsc[2] > data.semEsc[1])) { toast('Los montos del semáforo tienen que ir de menor a mayor.', 'bad'); $('#a_sem1').focus(); return; }
   try { await conReintento(() => S.db.doc('ajustes/general').set(data)); S.ajDirty = false; toast('Ajustes guardados.'); }
   catch (e) { if (e?.code === 'invalid_argument') toast('Solo una cuenta con permiso de Editor puede cambiar los ajustes.', 'bad'); else errorEscritura(e); }
@@ -3870,6 +3881,7 @@ async function conectar() {
   S.uid = lsGet('onb_uid', null); if (!S.uid) { S.uid = 'web_' + gid() + gid(); lsSet('onb_uid', S.uid); }
   S.conectado = true;
   db.doc('ajustes/general').onSnapshot(s => { S.aj = {...DEF_AJ, ...(s.exists ? clone(s.data()) : {})}; S.ajCargado = true; renderAll(); revisarIdentidad(); }, () => { S.sinDb = true; S.errorDb = 'No se pudo conectar con Supabase. Revisar la URL y la clave de config.js, y que se haya ejecutado el archivo supabase.sql.'; renderAll(); });
+  db.doc('ajustes/logros').onSnapshot(s => { S.lgRef = s.exists ? clone(s.data()) : null; if (S.tab === 'logros') renderLogros(); }, () => {});
   db.collection('dolar').where('fecha', '>=', monthsBack(15)[14] + '-01').onSnapshot(sn => { S.dolar = sn.docs.map(d => clone(d.data())).filter(x => x.fecha && x.ingreso > 0).sort((a, b) => a.fecha.localeCompare(b.fecha)); for (const g of S.gest) recalcG(g); renderAll(); }, () => {});
   await cargarPinInfo();
   suscribir();
